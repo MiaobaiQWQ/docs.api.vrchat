@@ -1,0 +1,8 @@
+# Cloudflare Pages 配置
+# 构建命令: npm run build
+# 输出目录: docs/.vitepress/dist
+
+# 路由规则
+/* 200
+
+# SPA 回退
