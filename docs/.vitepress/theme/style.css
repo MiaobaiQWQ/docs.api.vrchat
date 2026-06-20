@@ -1,0 +1,45 @@
+:root {
+  --vp-c-brand: #3b82f6;
+  --vp-c-brand-light: #60a5fa;
+  --vp-c-brand-lighter: #93c5fd;
+  --vp-c-brand-dark: #2563eb;
+  --vp-c-brand-darker: #1d4ed8;
+}
+
+/* 自定义主题 */
+.VPDoc {
+  padding-bottom: 60px;
+}
+
+/* 侧边栏平滑过渡效果 */
+.VPDocOutlineItem details > summary {
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+}
+
+.VPDocOutlineItem details > summary:hover {
+  color: var(--vp-c-brand);
+}
+
+/* 去除 footer 和内容之间的黑线 */
+.VPFooter {
+  border-top: none !important;
+  margin-top: 0 !important;
+}
+
+.VPContent {
+  border-bottom: none !important;
+  margin-bottom: 0 !important;
+}
+
+/* 去除导航栏相关的边框 */
+.VPNavBar {
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+.VPNavBar .content-body {
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
