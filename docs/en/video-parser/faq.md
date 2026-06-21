@@ -50,7 +50,7 @@ Could be source site network issues; or the source site restricts domestic/overs
 :::
 
 ::: details I'm a public world author, I want to add support for this parser?
-Please check the [CDN List](/en/cdn) page to get the complete list of domains that need to be added to the whitelist. Send an email to the author at [admin@kipfel.link](mailto:admin@kipfel.link?subject=Domain whitelist request&body=Hello, I'm the author of [world name], I need to add support for this parser site, here's my world invite link:), and attach your world link information for collaboration, it will be added to the collaboration worlds.
+Please check the [CDN List](/en/video-parser/cdn) page to get the complete list of domains that need to be added to the whitelist. Send an email to the author at [admin@kipfel.link](mailto:admin@kipfel.link?subject=Domain whitelist request&body=Hello, I'm the author of [world name], I need to add support for this parser site, here's my world invite link:), and attach your world link information for collaboration, it will be added to the collaboration worlds.
 
 ::: warning Note
 VRChat worlds limit URLlist to maximum 100 entries, please add selectively.

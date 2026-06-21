@@ -104,4 +104,4 @@ JSON response example:
 
 ## More Help
 
-For other questions, please check the [FAQ](/en/faq) page.
+For other questions, please check the [FAQ](/en/video-parser/faq) page.
