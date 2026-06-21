@@ -16,6 +16,11 @@ This page records the update history of the Kipfel video parsing service.
 
 ## 2026
 
+### 26/06/21
+- MiaobaiQWQ reassigned to Documentation Lead, responsible for documentation section management and content maintenance
+- 海落QWQ reassigned to Backend Video Parsing Fixes, responsible for parsing service maintenance and troubleshooting
+- kole-knol role updated to Domain Provider & Server Owner
+
 ### 26/06/15
 - Removed URL cache replacement feature because same URL might not work for others even if it works for you
 - Status fix completed and deployed with minimal server impact
