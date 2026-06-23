@@ -16,10 +16,17 @@ This page records the update history of the Kipfel video parsing service.
 
 ## 2026
 
+### 26/06/23
+- Added IP ban mechanism
+- Added banned content display page
+- Removed 302 redirect for non-video platforms and non-whitelist addresses
+- [Ban reason] Service had no whitelist verification by default, today we discovered illegal video playback during investigation
+
 ### 26/06/21
+- Fixed some backend parsing exceptions causing crashes, which made some videos unable to parse properly. Now fixed
 - MiaobaiQWQ reassigned to Documentation Lead, responsible for documentation section management and content maintenance
 - 海落QWQ reassigned to Backend Video Parsing Fixes, responsible for parsing service maintenance and troubleshooting
-- kole-knol role updated to Domain Provider & Server Owner
+- kole-knol role updated to Domain Provider &amp; Server Owner
 
 ### 26/06/15
 - Removed URL cache replacement feature because same URL might not work for others even if it works for you

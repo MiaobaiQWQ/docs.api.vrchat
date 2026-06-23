@@ -92,6 +92,16 @@ Location: https://cdn.example.com/media.mp4
 
 制限がトリガーされた場合は通常 `429 Too Many Requests` を返します。
 
+### IPブロック機構
+
+不正なコンテンツを再生したIPはブロックされます。IPがブロックされた場合やご質問がある場合は、以下にお問い合わせください：
+- **Admin**: [admin@kipfel.link](mailto:admin@kipfel.link)
+- **運用**: 海落QWQ [xiao-luo@kipfel.cn](mailto:xiao-luo@kipfel.cn)
+
+### 302リダイレクト制限
+
+非動画プラットフォームおよびホワイトリスト外のアドレスへの302リダイレクトを削除しました。サポートされている動画プラットフォームのリンクのみがパースおよびリダイレクトされます。
+
 ### 著作権とコンプライアンスの制限
 
 以下のソースは直接ブロックされ `451` を返します:

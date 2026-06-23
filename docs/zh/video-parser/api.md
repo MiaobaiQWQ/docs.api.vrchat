@@ -88,9 +88,19 @@ Location: https://cdn.example.com/media.mp4
 | 范围 | 限制 |
 | --- | --- |
 | 全站 | 单个 IP `15` 分钟最多 `150` 次请求 |
-| `/v1`、`/v2` API | 单个 IP 每分钟最多 `50` 次请求 |
+| `/v1`, `/v2` API | 单个 IP 每分钟最多 `50` 次请求 |
 
 触发限制时通常返回 `429 Too Many Requests`。
+
+### IP封禁机制
+
+播放非法内容的IP将被封禁。如果您的IP被封禁或有疑问，请联系：
+- **Admin**: [admin@kipfel.link](mailto:admin@kipfel.link)
+- **运维人员**: 海落QWQ [xiao-luo@kipfel.cn](mailto:xiao-luo@kipfel.cn)
+
+### 302跳转限制
+
+取消了非视频平台以及白名单地址的302跳转，仅支持已支持的视频平台链接进行解析和跳转。
 
 ### 版权与合规限制
 

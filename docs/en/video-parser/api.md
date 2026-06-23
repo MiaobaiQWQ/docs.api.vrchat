@@ -81,7 +81,7 @@ Location: https://cdn.example.com/media.mp4
 }
 ```
 
-## Security & Limits
+## Security &amp; Limits
 
 ### Rate Limiting
 
@@ -92,7 +92,17 @@ Location: https://cdn.example.com/media.mp4
 
 Typically returns `429 Too Many Requests` when limit is triggered.
 
-### Copyright & Compliance Restrictions
+### IP Ban Mechanism
+
+IPs that play illegal content will be banned. If your IP is banned or you have questions, please contact:
+- **Admin**: [admin@kipfel.link](mailto:admin@kipfel.link)
+- **Operations**: 海落QWQ [xiao-luo@kipfel.cn](mailto:xiao-luo@kipfel.cn)
+
+### 302 Redirect Restrictions
+
+Removed 302 redirect for non-video platforms and non-whitelist addresses, only links from supported video platforms will be parsed and redirected.
+
+### Copyright &amp; Compliance Restrictions
 
 The following sources are directly blocked and return `451`:
 
