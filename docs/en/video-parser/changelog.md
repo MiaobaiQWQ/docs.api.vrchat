@@ -16,6 +16,10 @@ This page records the update history of the Kipfel video parsing service.
 
 ## 2026
 
+### 26/07/04
+- Bug fixed: Previously, Kuaishou video parsing could only return clip files, now we have fixed this issue!
+- Optimized parsing logic, prioritizing complete high-quality video links and filtering out clip files
+
 ### 26/06/23
 - Added IP ban mechanism
 - Added banned content display page
