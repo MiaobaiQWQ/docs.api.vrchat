@@ -10,7 +10,7 @@ outline: deep
 
 <div style="display: flex; gap: 2rem; flex-wrap: wrap; margin: 2rem 0;">
   <div style="flex: 1; min-width: 250px; background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 2rem; text-align: center; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 24px rgba(0,0,0,0.2)';" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';">
-    <img src="https://wx.mail.qq.com/info/get_mailhead_icon?key=MJupWM9bbggW8PkKPsAsWc4ZwcoJdROW%2BvGWC3snwbvB7Anq3qbN1%2BCEWz%2BcyTMC0Q%3D%3D&r=72947819" alt="kole-knol" style="width: 120px; height: 120px; border-radius: 50%; margin-bottom: 1rem; border: 3px solid rgba(0,119,255,0.3);">
+    <img src="/avatars/kole-knol.jpg" alt="kole-knol" style="width: 120px; height: 120px; border-radius: 50%; margin-bottom: 1rem; border: 3px solid rgba(0,119,255,0.3);">
     <h3 style="margin: 0.5rem 0; font-size: 1.25rem;">kole-knol</h3>
     <p style="color: #60a5fa; margin: 0; font-size: 0.95rem; font-weight: 500;">ドメイン & サーバー</p>
     <p style="margin-top: 1rem; font-size: 0.9rem; color: rgba(255,255,255,0.7); line-height: 1.6;">プロジェクトアーキテクチャ、動画パースエンジン開発、フロントエンドデザイン</p>
@@ -18,7 +18,7 @@ outline: deep
   </div>
 
   <div style="flex: 1; min-width: 250px; background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 2rem; text-align: center; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 24px rgba(0,0,0,0.2)';" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';">
-    <img src="http://q.qlogo.cn/headimg_dl?dst_uin=REMOVED&spec=640&img_type=jpg" alt="MiaobaiQWQ" style="width: 120px; height: 120px; border-radius: 50%; margin-bottom: 1rem; border: 3px solid rgba(0,119,255,0.3);">
+    <img src="/avatars/miaobai.jpg" alt="MiaobaiQWQ" style="width: 120px; height: 120px; border-radius: 50%; margin-bottom: 1rem; border: 3px solid rgba(0,119,255,0.3);">
     <h3 style="margin: 0.5rem 0; font-size: 1.25rem;">MiaobaiQWQ</h3>
     <p style="color: #60a5fa; margin: 0; font-size: 0.95rem; font-weight: 500;">ドキュメント</p>
     <p style="margin-top: 1rem; font-size: 0.9rem; color: rgba(255,255,255,0.7); line-height: 1.6;">ドキュメントセクションの管理、ドキュメントコンテンツの更新と保守</p>
@@ -26,7 +26,7 @@ outline: deep
   </div>
 
   <div style="flex: 1; min-width: 250px; background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 2rem; text-align: center; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 24px rgba(0,0,0,0.2)';" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';">
-    <img src="http://q.qlogo.cn/headimg_dl?dst_uin=3944397685&spec=640&img_type=jpg" alt="海落QWQ" style="width: 120px; height: 120px; border-radius: 50%; margin-bottom: 1rem; border: 3px solid rgba(0,119,255,0.3);">
+    <img src="/avatars/xiaoluo.jpg" alt="海落QWQ" style="width: 120px; height: 120px; border-radius: 50%; margin-bottom: 1rem; border: 3px solid rgba(0,119,255,0.3);">
     <h3 style="margin: 0.5rem 0; font-size: 1.25rem;">海落QWQ</h3>
     <p style="color: #60a5fa; margin: 0; font-size: 0.95rem; font-weight: 500;">パースサービス</p>
     <p style="margin-top: 1rem; font-size: 0.9rem; color: rgba(255,255,255,0.7); line-height: 1.6;">動画パースサービスの日常保守とトラブルシューティング・修正</p>
@@ -42,14 +42,14 @@ outline: deep
 
 <div style="display: flex; gap: 2rem; flex-wrap: wrap; margin: 2rem 0;">
   <div style="flex: 1; min-width: 250px; background: linear-gradient(135deg, rgba(255,215,0,0.12) 0%, rgba(255,215,0,0.05) 100%); border: 1px solid rgba(255,215,0,0.35); border-radius: 16px; padding: 2rem; text-align: center; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 24px rgba(255,215,0,0.15)';" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';">
-    <img src="http://q.qlogo.cn/headimg_dl?dst_uin=2153332716&spec=640&img_type=jpg" alt="果果喵喵" style="width: 100px; height: 100px; border-radius: 50%; margin-bottom: 1rem; border: 3px solid rgba(255,215,0,0.4);">
+    <img src="/avatars/guoguo.jpg" alt="果果喵喵" style="width: 100px; height: 100px; border-radius: 50%; margin-bottom: 1rem; border: 3px solid rgba(255,215,0,0.4);">
     <h4 style="margin: 0.5rem 0; font-size: 1.15rem;">果果喵喵</h4>
     <p style="color: #ffd700; margin: 0; font-size: 0.95rem; font-weight: 500;">ドメインサポート</p>
     <blockquote style="margin-top: 1rem; padding: 1rem; background: rgba(255,255,255,0.06); border-radius: 10px; font-style: italic; border-left: 3px solid rgba(255,215,0,0.5);">"api.kipfel.vrchat.org.cn 高防寄付"</blockquote>
   </div>
 
   <div style="flex: 1; min-width: 250px; background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, rgba(255,255,255,0.03) 100%); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; padding: 2rem; text-align: center; transition: transform 0.3s ease, box-shadow 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 12px 24px rgba(0,0,0,0.2)';" onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none';">
-    <img src="http://q.qlogo.cn/headimg_dl?dst_uin=2085564820&spec=640&img_type=jpg" alt="XChen446" style="width: 100px; height: 100px; border-radius: 50%; margin-bottom: 1rem; border: 3px solid rgba(0,255,136,0.3);">
+    <img src="/avatars/xchen.jpg" alt="XChen446" style="width: 100px; height: 100px; border-radius: 50%; margin-bottom: 1rem; border: 3px solid rgba(0,255,136,0.3);">
     <h4 style="margin: 0.5rem 0; font-size: 1.15rem;">XChen446</h4>
     <p style="color: #00ff88; margin: 0; font-size: 0.95rem; font-weight: 500;">フロントエンド協力</p>
     <blockquote style="margin-top: 1rem; padding: 1rem; background: rgba(255,255,255,0.06); border-radius: 10px; font-style: italic; border-left: 3px solid rgba(0,255,136,0.5);">"陌白を犯したい！"</blockquote>
