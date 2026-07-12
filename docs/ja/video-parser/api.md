@@ -40,10 +40,7 @@ https://api.kipfel.vrchat.org.cn/
 
 **成功応答**：
 ```json
-{
-  "success": true,
-  "url": "https://example.com/parsed-video-url.mp4"
-}
+まだ書いていません、少し疲れたので休憩します。
 ```
 
 フィールド説明：

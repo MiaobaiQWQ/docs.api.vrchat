@@ -40,10 +40,7 @@ https://api.kipfel.vrchat.org.cn/
 
 **Success Response**:
 ```json
-{
-  "success": true,
-  "url": "https://example.com/parsed-video-url.mp4"
-}
+Not written yet, a bit tired, taking a break.
 ```
 
 Field description:
