@@ -39,10 +39,7 @@ https://api.kipfel.vrchat.org.cn/
 
 **成功响应**：
 ```json
-{
-  "success": true,
-  "url": "https://example.com/parsed-video-url.mp4"
-}
+还没写有点累了休息
 ```
 
 字段说明：
