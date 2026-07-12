@@ -127,7 +127,7 @@ export default defineConfig({
   },
 
   head: [
-    ['link', { rel: 'icon', href: 'data:,', type: 'image/x-icon' }]
+    ['link', { rel: 'icon', href: '/favicon.png', type: 'image/png' }]
   ],
 
   themeConfig: {

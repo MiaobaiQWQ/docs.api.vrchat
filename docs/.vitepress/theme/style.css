@@ -6,6 +6,11 @@
   --vp-c-brand-darker: #1d4ed8;
 }
 
+/* 平滑滚动 */
+html {
+  scroll-behavior: smooth;
+}
+
 /* 自定义主题 */
 .VPDoc {
   padding-bottom: 60px;

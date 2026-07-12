@@ -2,7 +2,7 @@
 outline: deep
 ---
 
-# Tutorial
+# Usage Guide
 
 This document details how to use the Kipfel video parsing service.
 
@@ -10,14 +10,14 @@ This document details how to use the Kipfel video parsing service.
 
 ### Basic Usage
 
-Use the main interface for regular video parsing:
+Use the main interface for general video parsing:
 
 ```
 https://api.kipfel.link/v1/vrc?url=
 ```
 
-::: tip
-Just paste the video link after `url=`, no extra processing needed.
+::: tip Tip
+Simply paste the video link after `url=` without any additional processing.
 :::
 
 ### Supported Link Formats
@@ -50,7 +50,7 @@ https://api.kipfel.link/v1/vrc?url=https://b23.tv/xxxx
 
 ## Music Parsing
 
-Use the music interface to parse music, supporting playlist indexes. **Please use this interface for YouTube Music links.**
+Use the music interface to parse music, supporting playlist indexing. **YouTube Music links must use this interface.**
 
 ```
 https://api.kipfel.link/v1/music?url=
@@ -60,48 +60,15 @@ https://api.kipfel.link/v1/music?url=
 YouTube Music links must use the `/v1/music` interface, otherwise they cannot be parsed correctly.
 :::
 
-### Playlist Selection
+## Alternative Interfaces
 
-Playlists count from 1. Use `&i=1` / `&i=2` to select the Nth song; you can also add `@1` / `@2` at the end.
+If the main interface is unavailable, you can try the alternative interfaces:
 
-```
-https://api.kipfel.link/v1/music?url=https://music.163.com/playlist?id=123456&i=1
-```
-
-## Collection Parsing
-
-`/v1/collection` returns a JS format playlist, supporting Bilibili multi-part videos, YouTube lists, etc.
-
-```
-https://api.kipfel.link/v1/collection?url=
-```
-
-## Backup Interfaces
-
-If the main interface is unavailable, you can try the backup interfaces:
-
-::: info Backup Options
-- Video backup: `https://api.kipfel.link/v1/kfc?url=`
-- Music backup: `https://api.kipfel.link/v1/musickfc?url=`
+::: info Alternative Options
+- Video Alternative: `https://api.kipfel.link/v1/kfc?url=`
+- Music Alternative: `https://api.kipfel.link/v1/musickfc?url=`
 :::
-
-## JSON Mode
-
-Add the `json=1` parameter to make the interface return JSON format instead of a 302 redirect:
-
-```
-https://api.kipfel.link/v1/vrc?url=BVxxxxx&json=1
-```
-
-JSON response example:
-
-```json
-{
-  "success": true,
-  "url": "https://cdn.example.com/video.mp4"
-}
-```
 
 ## More Help
 
-For other questions, please check the [FAQ](/en/video-parser/faq) page.
+For other questions, please refer to the [FAQ](/en/video-parser/faq) page.

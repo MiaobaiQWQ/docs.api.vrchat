@@ -60,22 +60,6 @@ https://api.kipfel.link/v1/music?url=
 YouTube Music 链接必须使用 `/v1/music` 接口，否则无法正常解析。
 :::
 
-### 歌单选择
-
-歌单从 1 开始计数。用 `&i=1` / `&i=2` 选择第 N 首；也支持在末尾加 `@1` / `@2`。
-
-```
-https://api.kipfel.link/v1/music?url=https://music.163.com/playlist?id=123456&i=1
-```
-
-## 合集解析
-
-`/v1/collection` 返回 JS 格式播放列表，支持 B站多P、YouTube 列表等。
-
-```
-https://api.kipfel.link/v1/collection?url=
-```
-
 ## 备用接口
 
 如果主接口无法使用，可以尝试备用接口：
@@ -84,23 +68,6 @@ https://api.kipfel.link/v1/collection?url=
 - 视频备用：`https://api.kipfel.link/v1/kfc?url=`
 - 音乐备用：`https://api.kipfel.link/v1/musickfc?url=`
 :::
-
-## JSON 模式
-
-添加 `json=1` 参数可以让接口返回 JSON 格式而不是 302 跳转：
-
-```
-https://api.kipfel.link/v1/vrc?url=BVxxxxx&json=1
-```
-
-JSON 响应示例：
-
-```json
-{
-  "success": true,
-  "url": "https://cdn.example.com/video.mp4"
-}
-```
 
 ## 更多帮助
 

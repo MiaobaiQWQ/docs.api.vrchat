@@ -75,6 +75,36 @@ VRChat地图限制URLlist最大只有100个，请按需选添。
 ### 海外节点
 - `v16m-default.akamaized.net`
 
+## 快手直播 CDN
+
+### 主线路
+- `tx-origin.hlspull.yximgs.com`
+
+### 国内备用
+- `ws-origin.hlspull.yximgs.com`
+- `hw-origin.hlspull.yximgs.com`
+- `ali-origin.hlspull.yximgs.com`
+
+## Bilibili 直播 CDN
+
+### 主线路
+- `d1--cn-gotcha104.bilivideo.com`
+- `d1--cn-gotcha104b.bilivideo.com`
+
+### 国内可用节点
+- `cn-jssz-cm-02-08.bilivideo.com`
+- `cn-jssz-cm-02-07.bilivideo.com`
+- `cn-jxnc-cm-01-02.bilivideo.com`
+- `d1--cn-gotcha204-4.bilivideo.com`
+- `d1--cn-gotcha204b.bilivideo.com`
+
+### 海外节点（仅 HLS）
+- `d1--ov-gotcha105.bilivideo.com`（网宿）
+- `d1--ov-gotcha107.bilivideo.com`（百度云 Zenlayer）
+- `d1--ov-gotcha208.bilivideo.com`（华为云）
+- `d1--ov-gotcha209.bilivideo.com`（阿里云）
+- `d1--ov-gotcha210.bilivideo.com`（Akamai）
+
 ## 完整域名列表
 
 以下是所有需要添加到白名单中的域名汇总：
@@ -107,6 +137,10 @@ txmov2.a.yximgs.com
 ali2.a.yximgs.com
 v2.kwaicdn.com
 upmov.a.kwimgs.com
+tx-origin.hlspull.yximgs.com
+ws-origin.hlspull.yximgs.com
+hw-origin.hlspull.yximgs.com
+ali-origin.hlspull.yximgs.com
 
 v1.douyinvod.com
 v3.douyinvod.com
@@ -124,10 +158,9 @@ v16m-default.akamaized.net
 
 如果您是地图作者，需要将上述域名添加到您的地图白名单中：
 
-1. 打开您的 VRChat 地图项目
-2. 找到视频播放器的设置
-3. 在白名单配置中添加上述域名
-4. 注意 URLlist 最大只有 100 个，请按需选择
+1. 在白名单配置中添加上述域名
+2. 注意 URLlist 最大只有 100 个，请按需选择。
+3. 音乐链接需要给我发送email，我会给你提供。
 
 ## 申请添加解析站支持
 
