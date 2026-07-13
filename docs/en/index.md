@@ -4,7 +4,7 @@ layout: home
 hero:
   name: Kipfel Wiki
   text: VRChat Video Parsing Documentation Site
-  tagline: Free and fast VRChat video and audio parsing service
+  tagline: Free, maybe fast? VRChat video and audio parsing service
   actions:
     - theme: brand
       text: Quick Start
@@ -12,6 +12,9 @@ hero:
     - theme: alt
       text: API Documentation
       link: /en/video-parser/api
+    - theme: alt
+      text: Landing Page
+      link: https://www.kipfel.wiki/
 
 features:
   - title: Multi-platform Support
@@ -21,7 +24,7 @@ features:
   - title: Music Parsing
     details: Supports NetEase Cloud Music, Kugou Music, Migu Music, YouTube Music
   - title: Danmaku Parsing
-    details: Supports Bilibili Douyin danmaku parsing
+    details: Supports Bilibili, Douyin danmaku parsing, Kuaishou has no danmaku
 ---
 
 ## Special Statement

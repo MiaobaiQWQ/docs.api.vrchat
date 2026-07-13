@@ -16,6 +16,10 @@ This page records the update history of the Kipfel video parsing service.
 
 ## 2026
 
+### 2026/07/13
+- Updated animation effects and styles for the docs pages
+- Styles provided by [`Luoyuxi API`](https://api.yuki-can.top/)
+
 ### 2026/07/10
 - Do you feel that videos without danmaku are boring?
 - Currently, you can use the latest V3 interface in the cafe, and you can watch danmaku in the cafe! (Please use its built-in parsing, do not parse it yourself, otherwise you will not be able to view danmaku)

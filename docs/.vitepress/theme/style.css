@@ -1,9 +1,27 @@
 :root {
-  --vp-c-brand: #3b82f6;
-  --vp-c-brand-light: #60a5fa;
-  --vp-c-brand-lighter: #93c5fd;
-  --vp-c-brand-dark: #2563eb;
-  --vp-c-brand-darker: #1d4ed8;
+  /* 自定义颜色变量 (浅色模式基础) */
+  --bg: #F5F2EC;           /* 页面背景 */ 
+  --bg-card: #FDFAF6;      /* 卡片背景 */ 
+  --text: #3A3530;         /* 主文字 */ 
+  --accent: #9B8EC4;       /* 品牌主色 */
+
+  /* 品牌色*/
+  --vp-c-brand: var(--accent);
+  --vp-c-brand-1: var(--accent);
+  --vp-c-brand-2: var(--accent);
+  --vp-c-brand-3: var(--accent);
+  --vp-c-brand-light: #B8ACD6;    /* 稍微亮一点的紫色用于悬停 */
+  --vp-c-brand-lighter: #D4CDE6;
+  --vp-c-brand-dark: #8273AD;     /* 稍微暗一点的紫色用于点击 */
+  --vp-c-brand-darker: #6B5C96;
+}
+
+/* 仅在浅色模式（默认不带 .dark 类）下应用背景和文字的覆盖 */
+:root:not(.dark) {
+  --vp-c-bg: var(--bg);
+  --vp-c-bg-soft: var(--bg-card);
+  --vp-c-bg-alt: var(--bg-card);
+  --vp-c-text-1: var(--text);
 }
 
 /* 平滑滚动 */
@@ -38,13 +56,38 @@ html {
   margin-bottom: 0 !important;
 }
 
-/* 去除导航栏相关的边框 */
-.VPNavBar {
+/* 去除侧边栏大纲（右侧）和导航栏黑线 */
+.VPDocAsideOutline {
+  border-left: none !important;
+}
+
+.VPLocalNav {
   border-bottom: none !important;
+}
+
+/* 彻底去除所有相关的默认边框和阴影 */
+.VPDoc, .VPHome, .VPPage, .NotFound, .VPApp {
+  border: none !important;
+  box-shadow: none !important;
+  background-color: transparent !important; /* 防止背景色叠加产生的视觉黑线 */
+}
+
+/* 顶部导航栏单独去边框，但保留其背景色，防止滚动时内容文字重叠 */
+.VPNavBar, .VPNavBar .content-body, .VPNav {
+  border: none !important;
   box-shadow: none !important;
 }
 
-.VPNavBar .content-body {
-  border-bottom: none !important;
-  box-shadow: none !important;
+/* 隐藏 Vitepress 默认的 divider 线条 */
+.divider, .divider-line {
+  display: none !important;
+}
+
+@keyframes scale-enter {
+  0% { opacity: 0; transform: scale(0.98); }
+  100% { opacity: 1; transform: scale(1); }
+}
+/* 将动画应用到内部内容区域 */
+.VPDoc .content, .VPHome, .VPPage, .NotFound {
+  animation: scale-enter 0.4s ease-out forwards;
 }

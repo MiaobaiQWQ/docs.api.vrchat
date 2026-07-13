@@ -13,7 +13,7 @@ VRC ビデオ解析は、VRChat プレイヤー向けに設計された、無料
 ### インターフェースアドレス
 
 ```text
-メインサイト：https://api.kipfel.link/
+https://api.kipfel.link/
 ```
 
 #### v1 と v3 インターフェースのみ
@@ -40,12 +40,75 @@ https://api.kipfel.vrchat.org.cn/
 
 **成功応答**：
 ```json
-まだ書いていません、少し疲れたので休憩します。
+{
+  "code": 0,
+  "message": "success",
+  "log_id": "",
+  "data": {
+    "video_id": "7636287742653074728",
+    "avid": "116855574365910",
+    "bvid": "BV17PTt6fEJJ",
+    "title": "ビデオのタイトル内容",
+    "desc": "ビデオの詳細な説明情報",
+    "duration": 2136,
+    "cover": "http://example.com/cover.jpg",
+    "create_time": 1783075293,
+    "update_time": 0,
+    "status": 0,
+    "category": "130",
+    "category_name": "音楽",
+    "author": {
+      "user_id": "1035330202",
+      "nickname": "作者のニックネーム",
+      "avatar": "http://example.com/avatar.jpg"
+    },
+    "stat": {
+      "play_count": 36234,
+      "like": 2089,
+      "comment": 11,
+      "share": 32,
+      "favorite": 3237
+    },
+    "content": {
+      "play_url": "https://example.com/video_no_watermark.mp4",
+      "cover_url": "http://example.com/cover_original.jpg",
+      "hashtags": [],
+      "mentions": [],
+      "music_info": {}
+    }
+  }
+}
 ```
 
 フィールド説明：
-- `success` (boolean)：リクエストが成功したかどうか
-- `url` (string)：解析後の直リンクアドレス
+- `code` (Number)：ビジネスステータスコード、`0` は成功を示します。
+- `message` (String)：ビジネス応答メッセージ、通常は `"success"` です。
+- `log_id` (String)：プラットフォームのログリクエストID（ある場合）。
+- `data.video_id` (String)：プラットフォーム内部の固有プロジェクトID（Douyinの `aweme_id` / `item_id`、Kuaishouの `photo_id` など）。
+- `data.avid` (String)：Bilibili特有、AV番号ID（他のプラットフォームは空の文字列になる場合があります）。
+- `data.bvid` (String)：Bilibili特有、BV番号（他のプラットフォームは空の文字列になる場合があります）。
+- `data.title` (String)：ビデオまたはオーディオのタイトル。
+- `data.desc` (String)：ビデオまたはオーディオの説明/概要。
+- `data.duration` (Number)：メディアの合計時間、単位：秒。
+- `data.cover` (String)：デフォルトで表示されるカバー画像の直リンク。
+- `data.create_time` (Number)：作品が公開されたタイムスタンプ（秒単位）。
+- `data.update_time` (Number)：作品が更新されたタイムスタンプ（秒単位）。
+- `data.status` (Number)：メディアステータスコード。
+- `data.category` (String)：作品カテゴリID。
+- `data.category_name` (String)：作品カテゴリ名。
+- `data.author.user_id` (String)：プラットフォーム内のクリエイターの固有 UID / sec_uid。
+- `data.author.nickname` (String)：クリエイターのニックネーム。
+- `data.author.avatar` (String)：クリエイターのアバター画像の URL。
+- `data.stat.play_count` (Number)：総再生回数。
+- `data.stat.like` (Number)：総いいね数。
+- `data.stat.comment` (Number)：総コメント数。
+- `data.stat.share` (Number)：総シェア/転送数。
+- `data.stat.favorite` (Number)：総お気に入り数。
+- `data.content.play_url` (String)：**コアデータ**：ウォーターマークなしのメディア再生直リンク。
+- `data.content.cover_url` (String)：元の品質のカバー直リンク。
+- `data.content.hashtags` (Array)：抽出されたハッシュタグのリスト。
+- `data.content.mentions` (Array)：抽出された @ユーザー のリスト。
+- `data.content.music_info` (Object)：関連するバックグラウンドミュージック情報（オリジナルサウンドなど）。
 
 **失敗応答**：
 ```json
@@ -234,6 +297,10 @@ https://api.kipfel.vrchat.org.cn/
 
 ---
 
+::: warning 注意
+- アクセス頻度は動的に調整され、絶対的なレート制限を示すものではありません。
+:::
+
 ## アクセス頻度制限
 
 ### cloudflare と aliyun esa の制限頻度
@@ -272,13 +339,14 @@ https://api.kipfel.vrchat.org.cn/
 ::: warning 注意
 - 通常のアクセスでは 404 エラーは発生しません。私のウェブサイトの API をクラックしようとしている場合を除きます。
 - 制限は回数が増えるにつれて凍結時間が増加し、最大で 24 時間凍結されます。
+- 私はあなたのリクエストを監視します。
 :::
 
 ---
 
 ## 制限されたコンテンツ
 
-以下のプラットフォームのコンテンツは現在解析をサポートしていません：
+以下のプラットフォームのコンテンツは解析をサポートしていません：
 
 - 腾讯视频 (Tencent Video)
 - 爱奇艺 (iQiyi)

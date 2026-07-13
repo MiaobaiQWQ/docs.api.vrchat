@@ -13,7 +13,7 @@ VRC Video Parsing is a multi-source video/audio parsing proxy gateway designed f
 ### Interface Address
 
 ```text
-Main Site: https://api.kipfel.link/
+https://api.kipfel.link/
 ```
 
 #### v1 and v3 interfaces only
@@ -40,12 +40,75 @@ https://api.kipfel.vrchat.org.cn/
 
 **Success Response**:
 ```json
-Not written yet, a bit tired, taking a break.
+{
+  "code": 0,
+  "message": "success",
+  "log_id": "",
+  "data": {
+    "video_id": "7636287742653074728",
+    "avid": "116855574365910",
+    "bvid": "BV17PTt6fEJJ",
+    "title": "Video title content",
+    "desc": "Detailed description information of the video",
+    "duration": 2136,
+    "cover": "http://example.com/cover.jpg",
+    "create_time": 1783075293,
+    "update_time": 0,
+    "status": 0,
+    "category": "130",
+    "category_name": "Music",
+    "author": {
+      "user_id": "1035330202",
+      "nickname": "Author nickname",
+      "avatar": "http://example.com/avatar.jpg"
+    },
+    "stat": {
+      "play_count": 36234,
+      "like": 2089,
+      "comment": 11,
+      "share": 32,
+      "favorite": 3237
+    },
+    "content": {
+      "play_url": "https://example.com/video_no_watermark.mp4",
+      "cover_url": "http://example.com/cover_original.jpg",
+      "hashtags": [],
+      "mentions": [],
+      "music_info": {}
+    }
+  }
+}
 ```
 
 Field description:
-- `success` (boolean): Whether the request was successful
-- `url` (string): Direct link address after parsing
+- `code` (Number): Business status code, `0` indicates success.
+- `message` (String): Business response message, usually `"success"`.
+- `log_id` (String): The platform's log request ID (if any).
+- `data.video_id` (String): The unique project ID within the platform (such as Douyin's `aweme_id` / `item_id`, Kuaishou's `photo_id`).
+- `data.avid` (String): Unique to Bilibili, AV number ID (may be an empty string for other platforms).
+- `data.bvid` (String): Unique to Bilibili, BV number (may be an empty string for other platforms).
+- `data.title` (String): The title of the video or audio.
+- `data.desc` (String): The description/introduction of the video or audio.
+- `data.duration` (Number): Total media duration, unit: seconds.
+- `data.cover` (String): Direct link to the default display cover image.
+- `data.create_time` (Number): Timestamp when the work was published (in seconds).
+- `data.update_time` (Number): Timestamp when the work was updated (in seconds).
+- `data.status` (Number): Media status code.
+- `data.category` (String): Work category ID.
+- `data.category_name` (String): Work category name.
+- `data.author.user_id` (String): The creator's unique UID / sec_uid within the platform.
+- `data.author.nickname` (String): The creator's nickname.
+- `data.author.avatar` (String): URL of the creator's avatar image.
+- `data.stat.play_count` (Number): Total plays.
+- `data.stat.like` (Number): Total likes.
+- `data.stat.comment` (Number): Total comments.
+- `data.stat.share` (Number): Total shares/forwards.
+- `data.stat.favorite` (Number): Total favorites.
+- `data.content.play_url` (String): **Core data**: Direct link to play media without watermark.
+- `data.content.cover_url` (String): Direct link to the original quality cover.
+- `data.content.hashtags` (Array): Extracted list of hashtag labels.
+- `data.content.mentions` (Array): Extracted list of @users.
+- `data.content.music_info` (Object): Associated background music information (original soundtrack, etc.).
 
 **Failure Response**:
 ```json
@@ -237,6 +300,10 @@ Common error codes:
 
 ---
 
+::: warning Note
+- The access frequency will be adjusted dynamically and does not represent an absolute rate limit.
+:::
+
 ## Access Frequency Restrictions
 
 ### cloudflare and aliyun esa restriction frequency
@@ -275,13 +342,14 @@ Common error codes:
 ::: warning Note
 - Normal access will not trigger a 404 error, unless you are trying to crack my website's API.
 - The ban time will increase with the number of occurrences, up to a maximum of 24 hours.
+- I will be watching your requests.
 :::
 
 ---
 
 ## Restricted Content
 
-Content from the following platforms is currently not supported for parsing:
+Content from the following platforms is not supported for parsing:
 
 - 腾讯视频 (Tencent Video)
 - 爱奇艺 (iQiyi)

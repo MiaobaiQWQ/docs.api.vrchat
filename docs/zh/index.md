@@ -4,7 +4,7 @@ layout: home
 hero:
   name: Kipfel Wiki
   text: VRChat 视频解析文档站
-  tagline: 免费、快捷的 VRChat 视频和音频解析服务
+  tagline: 免费、可能快捷的？ VRChat 视频和音频解析服务
   actions:
     - theme: brand
       text: 快速开始
@@ -12,6 +12,9 @@ hero:
     - theme: alt
       text: API 文档
       link: /zh/video-parser/api
+    - theme: alt
+      text: 引导页
+      link: https://www.kipfel.wiki/
 
 features:
   - title: 多平台支持
@@ -21,7 +24,7 @@ features:
   - title:  音乐解析
     details: 支持网易云音乐、酷狗音乐、咪咕音乐、YouTube Music
   - title: 弹幕解析
-    details: 支持 Bilibili 抖音弹幕解析
+    details: 支持 Bilibili、抖音弹幕解析、快手没有弹幕
 ---
 
 ## 特别声明

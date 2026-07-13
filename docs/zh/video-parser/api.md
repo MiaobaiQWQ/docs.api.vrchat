@@ -12,7 +12,7 @@ VRC 视频解析是一个多源视频/音频解析代理网关，专为 VRChat �
 
 ### 接口地址
 ```text
-主站：https://api.kipfel.link/
+https://api.kipfel.link/
 ```
 
 #### 仅 v1和 v3 接口
@@ -39,12 +39,75 @@ https://api.kipfel.vrchat.org.cn/
 
 **成功响应**：
 ```json
-还没写有点累了休息
+{
+  "code": 0,
+  "message": "success",
+  "log_id": "",
+  "data": {
+    "video_id": "7636287742653074728",
+    "avid": "116855574365910",
+    "bvid": "BV17PTt6fEJJ",
+    "title": "视频标题内容",
+    "desc": "视频的详细描述信息",
+    "duration": 2136,
+    "cover": "http://example.com/cover.jpg",
+    "create_time": 1783075293,
+    "update_time": 0,
+    "status": 0,
+    "category": "130",
+    "category_name": "音乐",
+    "author": {
+      "user_id": "1035330202",
+      "nickname": "作者昵称",
+      "avatar": "http://example.com/avatar.jpg"
+    },
+    "stat": {
+      "play_count": 36234,
+      "like": 2089,
+      "comment": 11,
+      "share": 32,
+      "favorite": 3237
+    },
+    "content": {
+      "play_url": "https://example.com/video_no_watermark.mp4",
+      "cover_url": "http://example.com/cover_original.jpg",
+      "hashtags": [],
+      "mentions": [],
+      "music_info": {}
+    }
+  }
+}
 ```
 
 字段说明：
-- `success` (boolean)：请求是否成功
-- `url` (string)：解析后的直链地址
+- `code` (Number)：业务状态码，`0` 表示成功。
+- `message` (String)：业务响应信息，通常为 `"success"`。
+- `log_id` (String)：平台的日志请求ID（如有）。
+- `data.video_id` (String)：平台内部的唯一项目ID（如抖音的 `aweme_id` / `item_id`，快手的 `photo_id`）。
+- `data.avid` (String)：哔哩哔哩特有，AV号ID（其他平台可能为空字符串）。
+- `data.bvid` (String)：哔哩哔哩特有，BV号（其他平台可能为空字符串）。
+- `data.title` (String)：视频或音频的标题。
+- `data.desc` (String)：视频或音频的描述/简介。
+- `data.duration` (Number)：媒体总时长，单位：秒。
+- `data.cover` (String)：默认展示封面图直链。
+- `data.create_time` (Number)：作品发布的时间戳（秒级）。
+- `data.update_time` (Number)：作品更新的时间戳（秒级）。
+- `data.status` (Number)：媒体状态码。
+- `data.category` (String)：作品分类ID。
+- `data.category_name` (String)：作品分类名称。
+- `data.author.user_id` (String)：创作者在平台内的唯一 UID / sec_uid。
+- `data.author.nickname` (String)：创作者的昵称。
+- `data.author.avatar` (String)：创作者头像图片的 URL。
+- `data.stat.play_count` (Number)：播放总量。
+- `data.stat.like` (Number)：点赞总数。
+- `data.stat.comment` (Number)：评论总数。
+- `data.stat.share` (Number)：分享转发总数。
+- `data.stat.favorite` (Number)：收藏总数。
+- `data.content.play_url` (String)：**核心数据**：去水印媒体播放直链。
+- `data.content.cover_url` (String)：原画质封面直链。
+- `data.content.hashtags` (Array)：提取出的话题标签列表。
+- `data.content.mentions` (Array)：提取出的 @用户 列表。
+- `data.content.music_info` (Object)：关联的背景音乐信息（原声等）。
 
 **失败响应**：
 ```json
@@ -233,6 +296,10 @@ https://api.kipfel.vrchat.org.cn/
 
 ---
 
+::: warning 注意
+- 访问频率会动态调整，不代表绝对的速率限制。
+:::
+
 ## 访问频率限制
 
 ### cloudflare和阿里云esa限制频率
@@ -271,13 +338,14 @@ https://api.kipfel.vrchat.org.cn/
 ::: warning 注意
 - 正常访问不会触发404错误，除非你在破解我网站的API。
 - 限制会随次数增加而增加封禁时间，最多封禁24小时。
+- 我会视奸你的请求。
 :::
 
 ---
 
 ## 受限制内容
 
-以下平台内容暂不支持解析：
+以下平台内容不支持解析：
 
 - 腾讯视频
 - 爱奇艺

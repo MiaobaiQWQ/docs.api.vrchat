@@ -4,7 +4,7 @@ layout: home
 hero:
   name: Kipfel Wiki
   text: VRChat ビデオ解析ドキュメントサイト
-  tagline: 無料で迅速な VRChat ビデオおよびオーディオ解析サービス
+  tagline: 無料で、たぶん迅速な？ VRChat ビデオおよびオーディオ解析サービス
   actions:
     - theme: brand
       text: クイックスタート
@@ -12,6 +12,9 @@ hero:
     - theme: alt
       text: API ドキュメント
       link: /ja/video-parser/api
+    - theme: alt
+      text: ガイドページ
+      link: https://www.kipfel.wiki/
 
 features:
   - title: マルチプラットフォーム対応
@@ -21,7 +24,7 @@ features:
   - title: 音楽解析
     details: NetEase Cloud Music、Kugou Music、Migu Music、YouTube Music に対応
   - title: 弾幕解析
-    details: Bilibili Douyin 弾幕解析に対応
+    details: Bilibili、Douyin 弾幕解析に対応、Kuaishou は弾幕なし
 ---
 
 ## 特記事項
