@@ -127,7 +127,7 @@ export default defineConfig({
   },
 
   head: [
-    ['link', { rel: 'icon', href: '/favicon.png', type: 'image/png' }]
+    ['link', { rel: 'icon', href: 'https://logo.kipfel.link/logos/favicon.svg', type: 'image/svg+xml' }]
   ],
 
   themeConfig: {
