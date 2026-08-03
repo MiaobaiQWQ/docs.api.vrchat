@@ -2,29 +2,30 @@
 layout: home
 
 hero:
-  name: Kipfel Wiki
-  text: VRChat Video Parsing Documentation Site
-  tagline: Free, maybe fast? VRChat video and audio parsing service
+  name: kipfel.link API Documentation
+  text: Video parsing, Busuanzi, and related API references
+  tagline: Free, maybe fast API endpoints and documentation entry
   actions:
     - theme: brand
-      text: Quick Start
-      link: /en/video-parser/guide
-    - theme: alt
-      text: API Documentation
-      link: /en/video-parser/api
-    - theme: alt
       text: Landing Page
       link: https://www.kipfel.wiki/
+    - theme: alt
+      text: Video Parser API
+      link: /en/video-parser/api
+    - theme: alt
+      text: Busuanzi API
+      link: /en/busuanzi/api
 
 features:
-  - title: Multi-platform Support
-    details: Supports Douyin, Bilibili, Kuaishou, YouTube, X, Instagram, etc.
-  - title: Live Stream Parsing
-    details: Supports Bilibili Live, Douyin Live, Kuaishou Live, automatic short link recognition
-  - title: Music Parsing
-    details: Supports NetEase Cloud Music, Kugou Music, Migu Music, YouTube Music
-  - title: Danmaku Parsing
-    details: Supports Bilibili, Douyin danmaku parsing, Kuaishou has no danmaku
+  - title: Video Parser API
+    details: Provides video and audio parser API docs, usage instructions, and base response formats
+    link: /en/video-parser/api
+  - title: Busuanzi API
+    details: Provides the Busuanzi API doc entry for integration guidance and field references
+    link: /en/busuanzi/api
+  - title: Landing Page
+    details: Jump directly to kipfel.wiki to browse the landing page and related entries
+    link: https://www.kipfel.wiki/
 ---
 
 ## Special Statement

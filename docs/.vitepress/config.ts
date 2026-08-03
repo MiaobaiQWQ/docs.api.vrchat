@@ -1,34 +1,36 @@
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
-  title: 'Kipfel Wiki',
-  description: 'VRChat 视频解析文档站',
+  title: 'kipfel.link 接口文档',
+  description: 'kipfel.link 接口文档站',
   ignoreDeadLinks: true,
 
   locales: {
     root: {
       label: '简体中文',
       lang: 'zh-CN',
-      description: 'VRChat 视频解析文档站',
+      description: 'kipfel.link 接口文档站',
       link: '/zh/'
     },
     en: {
       label: 'English',
       lang: 'en',
-      description: 'VRChat Video Parser Documentation',
+      description: 'kipfel.link API documentation site',
       link: '/en/',
       themeConfig: {
         nav: [
           { text: 'Home', link: '/en/' },
           { 
-            text: 'Guide', 
+            text: 'Video Parser API',
             items: [
-              { text: 'Tutorial', link: '/en/video-parser/guide' },
-              { text: 'FAQ', link: '/en/video-parser/faq' }
+              { text: 'API Docs', link: '/en/video-parser/api' },
+              { text: 'Video Parser Guide', link: '/en/video-parser/guide' },
+              { text: 'Video Parser FAQ', link: '/en/video-parser/faq' },
+              { text: 'CDN List', link: '/en/video-parser/cdn' }
             ]
           },
-          { text: 'API Docs', link: '/en/video-parser/api' },
-          { text: 'CDN List', link: '/en/video-parser/cdn' },
+          { text: 'Busuanzi API', link: '/en/busuanzi/api' },
+          { text: 'Landing Page', link: 'https://www.kipfel.wiki/' },
           { 
             text: 'More', 
             items: [
@@ -41,21 +43,23 @@ export default defineConfig({
         ],
         sidebar: [
           {
-            text: 'Quick Start',
+            text: 'Site Entry',
             items: [
-              { text: 'Home', link: '/en/' }
+              { text: 'Home', link: '/en/' },
+              { text: 'Landing Page', link: 'https://www.kipfel.wiki/' }
             ]
           },
           {
-            text: 'Video Parser',
+            text: 'API Docs',
             items: [
-              { text: 'Guide', items: [
-                { text: 'Tutorial', link: '/en/video-parser/guide' },
-                { text: 'FAQ', link: '/en/video-parser/faq' }
-              ]},
-              { text: 'Reference', items: [
+              { text: 'Video Parser API', items: [
                 { text: 'API Docs', link: '/en/video-parser/api' },
+                { text: 'Video Parser Guide', link: '/en/video-parser/guide' },
+                { text: 'Video Parser FAQ', link: '/en/video-parser/faq' },
                 { text: 'CDN List', link: '/en/video-parser/cdn' }
+              ]},
+              { text: 'Busuanzi', items: [
+                { text: 'API Docs', link: '/en/busuanzi/api' }
               ]},
               { text: 'Other', items: [
                 { text: 'Changelog', link: '/en/video-parser/changelog' },
@@ -71,20 +75,22 @@ export default defineConfig({
     ja: {
       label: '日本語',
       lang: 'ja',
-      description: 'VRChat ビデオパーサードキュメント',
+      description: 'kipfel.link API ドキュメントサイト',
       link: '/ja/',
       themeConfig: {
         nav: [
           { text: 'ホーム', link: '/ja/' },
           { 
-            text: 'ガイド', 
+            text: 'ビデオ解析 API',
             items: [
-              { text: 'チュートリアル', link: '/ja/video-parser/guide' },
-              { text: 'FAQ', link: '/ja/video-parser/faq' }
+              { text: 'API ドキュメント', link: '/ja/video-parser/api' },
+              { text: 'ビデオ解析チュートリアル', link: '/ja/video-parser/guide' },
+              { text: 'ビデオ解析 FAQ', link: '/ja/video-parser/faq' },
+              { text: 'CDN リスト', link: '/ja/video-parser/cdn' }
             ]
           },
-          { text: 'API ドキュメント', link: '/ja/video-parser/api' },
-          { text: 'CDN リスト', link: '/ja/video-parser/cdn' },
+          { text: 'Busuanzi API', link: '/ja/busuanzi/api' },
+          { text: 'ランディングページ', link: 'https://www.kipfel.wiki/' },
           { 
             text: 'その他', 
             items: [
@@ -97,21 +103,23 @@ export default defineConfig({
         ],
         sidebar: [
           {
-            text: 'クイックスタート',
+            text: 'サイト入口',
             items: [
-              { text: 'ホーム', link: '/ja/' }
+              { text: 'ホーム', link: '/ja/' },
+              { text: 'ランディングページ', link: 'https://www.kipfel.wiki/' }
             ]
           },
           {
-            text: 'ビデオパーサー',
+            text: 'API ドキュメント',
             items: [
-              { text: 'ガイド', items: [
-                { text: 'チュートリアル', link: '/ja/video-parser/guide' },
-                { text: 'FAQ', link: '/ja/video-parser/faq' }
-              ]},
-              { text: 'リファレンス', items: [
+              { text: 'ビデオ解析 API', items: [
                 { text: 'API ドキュメント', link: '/ja/video-parser/api' },
+                { text: 'ビデオ解析チュートリアル', link: '/ja/video-parser/guide' },
+                { text: 'ビデオ解析 FAQ', link: '/ja/video-parser/faq' },
                 { text: 'CDN リスト', link: '/ja/video-parser/cdn' }
+              ]},
+              { text: 'Busuanzi', items: [
+                { text: 'API ドキュメント', link: '/ja/busuanzi/api' }
               ]},
               { text: 'その他', items: [
                 { text: '更新履歴', link: '/ja/video-parser/changelog' },
@@ -133,17 +141,19 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: '首页', link: '/zh/' },
-      { 
-        text: '使用指南', 
+      {
+        text: '视频解析接口',
         items: [
-          { text: '使用教程', link: '/zh/video-parser/guide' },
-          { text: '常见问题', link: '/zh/video-parser/faq' }
+          { text: '接口文档', link: '/zh/video-parser/api' },
+          { text: '视频解析使用教程', link: '/zh/video-parser/guide' },
+          { text: '视频解析常见问题', link: '/zh/video-parser/faq' },
+          { text: 'CDN 列表', link: '/zh/video-parser/cdn' }
         ]
       },
-      { text: 'API 文档', link: '/zh/video-parser/api' },
-      { text: 'CDN 列表', link: '/zh/video-parser/cdn' },
-      { 
-        text: '更多', 
+      { text: 'Busuanzi 接口', link: '/zh/busuanzi/api' },
+      { text: '引导站', link: 'https://www.kipfel.wiki/' },
+      {
+        text: '更多',
         items: [
           { text: '更新日志', link: '/zh/video-parser/changelog' },
           { text: '团队', link: '/zh/video-parser/team' },
@@ -154,21 +164,23 @@ export default defineConfig({
     ],
     sidebar: [
       {
-        text: '快速开始',
+        text: '站点入口',
         items: [
-          { text: '首页', link: '/zh/' }
+          { text: '首页', link: '/zh/' },
+          { text: '引导站', link: 'https://www.kipfel.wiki/' }
         ]
       },
       {
-        text: '视频解析',
+        text: '接口文档',
         items: [
-          { text: '使用指南', items: [
-            { text: '使用教程', link: '/zh/video-parser/guide' },
-            { text: '常见问题', link: '/zh/video-parser/faq' }
-          ]},
-          { text: '参考文档', items: [
-            { text: 'API 文档', link: '/zh/video-parser/api' },
+          { text: '视频解析接口', items: [
+            { text: '接口文档', link: '/zh/video-parser/api' },
+            { text: '视频解析使用教程', link: '/zh/video-parser/guide' },
+            { text: '视频解析常见问题', link: '/zh/video-parser/faq' },
             { text: 'CDN 列表', link: '/zh/video-parser/cdn' }
+          ]},
+          { text: 'Busuanzi', items: [
+            { text: '接口文档', link: '/zh/busuanzi/api' }
           ]},
           { text: '其他', items: [
             { text: '更新日志', link: '/zh/video-parser/changelog' },

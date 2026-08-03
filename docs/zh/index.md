@@ -2,29 +2,30 @@
 layout: home
 
 hero:
-  name: Kipfel Wiki
-  text: VRChat 视频解析文档站
-  tagline: 免费、可能快捷的？ VRChat 视频和音频解析服务
+  name: kipfel.link的接口文档
+  text: 视频解析、Busuanzi 与相关接口说明
+  tagline: 免费、可能快捷的？API 接口与文档入口
   actions:
     - theme: brand
-      text: 快速开始
-      link: /zh/video-parser/guide
+      text: 引导站
+      link: https://www.kipfel.wiki/
     - theme: alt
-      text: API 文档
+      text: 视频解析接口
       link: /zh/video-parser/api
     - theme: alt
-      text: 引导页
-      link: https://www.kipfel.wiki/
+      text: Busuanzi 接口
+      link: /zh/busuanzi/api
 
 features:
-  - title: 多平台支持
-    details: 支持抖音、Bilibili、快手、YouTube、X、Instagram、等
-  - title: 直播解析
-    details: 支持 Bilibili 直播、抖音直播、快手直播，短链自动识别
-  - title:  音乐解析
-    details: 支持网易云音乐、酷狗音乐、咪咕音乐、YouTube Music
-  - title: 弹幕解析
-    details: 支持 Bilibili、抖音弹幕解析、快手没有弹幕
+  - title: 视频解析接口
+    details: 提供视频与音频解析接口文档、调用说明与基础返回格式
+    link: /zh/video-parser/api
+  - title: Busuanzi 接口
+    details: 提供 Busuanzi 接口文档入口，便于后续补充接入与字段说明
+    link: /zh/busuanzi/api
+  - title: 引导站入口
+    details: 直接跳转到 kipfel.wiki 引导站，查看站点入口与相关页面
+    link: https://www.kipfel.wiki/
 ---
 
 ## 特别声明
