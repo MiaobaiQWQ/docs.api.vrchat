@@ -4,6 +4,12 @@ outline: deep
 
 # 合作地图
 
+::: warning 免责声明
+本API仅限地图制作者（Map Creators）在合规范围内调用使用。地图制作者基于本API解析出来的全部内容及其行为，均由该地图制作者独立承担法律责任，与本团队无任何关联。
+
+如您发现任何地图制作者存在滥用API、违规内容或其他不当行为，欢迎通过 [admin@kipfel.link](mailto:admin@kipfel.link) 向我们反馈，我们将及时核查处理。
+:::
+
 本页面列出了合作的 VRChat 地图。
 
 ## 合作地图列表

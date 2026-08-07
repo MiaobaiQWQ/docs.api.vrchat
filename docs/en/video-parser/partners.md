@@ -4,6 +4,12 @@ outline: deep
 
 # Partner Worlds
 
+::: warning Disclaimer
+This API may only be called and used by Map Creators within a compliant scope. Map Creators shall bear sole legal responsibility for all content parsed through this API and for their actions, which are entirely unrelated to our team.
+
+If you find that any Map Creator is abusing the API, publishing violating content, or engaging in other improper behavior, please report it to [admin@kipfel.link](mailto:admin@kipfel.link). We will investigate and handle it promptly.
+:::
+
 This page lists partner VRChat worlds.
 
 ## Partner Worlds List
