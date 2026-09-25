@@ -1,5 +1,6 @@
 ---
 outline: deep
+description: "Changelog for the kipfel.link video parsing service, recording interface changes, parser fixes, the IP ban mechanism and new features by date."
 ---
 
 # Changelog

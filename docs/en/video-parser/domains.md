@@ -1,5 +1,6 @@
 ---
 outline: deep
+description: "Subdomain allocation for kipfel.link and kipfel.wiki, listing the purpose and owner of the api, docs, openlist, status and picture subdomains."
 ---
 
 # Domain Allocation

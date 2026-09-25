@@ -1,5 +1,6 @@
 ---
 outline: deep
+description: "VRChat マップのホワイトリストに必要な CDN ドメインの完全なリスト：Bilibili・Kuaishou・Douyin のビデオ配信ノードとライブ配信ノード。"
 ---
 
 # CDN ドメインリスト
@@ -165,3 +166,10 @@ v16m-default.akamaized.net
 ## 解析サイトサポートの申請
 
 当サイトの解析サポートを追加したい場合は、[admin@kipfel.link](mailto:admin@kipfel.link?subject=ドメイン解析リスト申請&body=こんにちは、私はxxxマップの作成者xxxです。当サイトの解析サポートを追加したいです。これは私のマップの招待リンクです：) にメールを送信し、あなたとあなたのマップに関する情報を含めてください。
+
+## 関連ページ
+
+- [ビデオ解析 API リファレンス](/ja/video-parser/api) —— エンドポイント、パラメータ、レスポンス項目
+- [使用方法](/ja/video-parser/guide) —— 各エンドポイントの呼び出し方
+- [よくある質問](/ja/video-parser/faq) —— マップのホワイトリストと再生トラブル
+- [ドメイン割り当て](/ja/video-parser/domains) —— 各サブドメインの用途

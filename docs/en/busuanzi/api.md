@@ -1,5 +1,6 @@
 ---
 outline: deep
+description: "Self-hosted Busuanzi analytics API reference: the POST, PUT, GET /api and /jsonp endpoints, request headers, response fields and Redis key layout."
 ---
 
 # Busuanzi API Documentation
@@ -337,3 +338,8 @@ curl --location --request OPTIONS 'https://busuanzi.kipfel.link/api' \
 - GitHub: <https://github.com/soxft/busuanzi>
 - Gitee: <https://gitee.com/soxft/busuanzi>
 - Frontend Demo / Dashboard: <https://github.com/soxft/busuanzi-frontend>
+
+## Related Pages
+
+- [Video Parser API Reference](/en/video-parser/api) — the VRChat video parsing API from the same project
+- [Domain Allocation](/en/video-parser/domains) — what subdomains such as `busuanzi.kipfel.link` are used for

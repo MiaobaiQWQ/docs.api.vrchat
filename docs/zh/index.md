@@ -1,6 +1,10 @@
 ---
 layout: home
 
+title: kipfel.link 接口文档 - VRChat 视频解析与 Busuanzi API
+titleTemplate: false
+description: "kipfel.link 官方接口文档：面向 VRChat 的免费视频解析 API（v1 / v3）、弹幕与歌词接口，以及自建 Busuanzi 访问统计接口的端点地址、请求参数、返回字段与错误码。"
+
 hero:
   name: kipfel.link的接口文档
   text: 视频解析、Busuanzi 与相关接口说明

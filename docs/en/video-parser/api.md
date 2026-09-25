@@ -1,5 +1,6 @@
 ---
 outline: deep
+description: "VRChat video parsing API reference: v1 video and music endpoints with JSON variants, v3 danmaku and lyrics endpoints, parameters and error codes."
 ---
 
 # VRC Video Parsing API Call and Restriction Documentation
@@ -169,7 +170,9 @@ Field description:
 
 ### v3 Advanced Interface
 
-### User-Agent Requirements
+The v3 interface targets players that need richer content such as danmaku and lyrics: alongside direct links it returns structured JSON data.
+
+#### User-Agent Requirements
 
 ::: warning Note
 - You need to send two user agents, one containing `Unity xxxxxxxx` and one not containing `Unity xxxx`.
@@ -177,7 +180,7 @@ Field description:
 - You need to send a user agent not containing `Unity xxxxxxxx` to get direct video links/direct song links.
 :::
 
-### Recommendations
+#### Recommendations
 
 ::: tip Tip
 - It is recommended that you use different user agents for each map to prevent being blocked and to verify the source of the request.
@@ -312,7 +315,7 @@ Common error codes:
 |-----------------|-------------|-------------------|----------|
 | All interfaces    | 10 seconds  | 20 times          | 15 seconds |
 
-#### Nginx Restriction
+### Nginx Restriction
 
 | Restriction Type | Window Size | Restriction Count | Ban Time |
 |-----------------|-------------|-------------------|----------|
@@ -360,3 +363,10 @@ Content from the following platforms is not supported for parsing:
 - 搜狐视频 (Sohu Video)
 
 ---
+
+## Related Pages
+
+- [Usage Guide](/en/video-parser/guide) — how to call each endpoint and the supported link formats
+- [FAQ](/en/video-parser/faq) — troubleshooting playback and parsing failures, plus error codes
+- [CDN Domain List](/en/video-parser/cdn) — domains to add to your VRChat map whitelist
+- [Busuanzi API Reference](/en/busuanzi/api) — the website analytics API from the same project

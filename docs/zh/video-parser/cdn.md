@@ -1,5 +1,6 @@
 ---
 outline: deep
+description: "VRChat 地图白名单所需的完整 CDN 域名列表：Bilibili、快手、抖音的视频与直播节点，可直接复制添加到 URLlist。"
 ---
 
 # CDN 域名列表
@@ -165,3 +166,10 @@ v16m-default.akamaized.net
 ## 申请添加解析站支持
 
 如果您希望添加对本站点的解析支持，请发送邮件到 [admin@kipfel.link](mailto:admin@kipfel.link?subject=域名解析列表申请&body=您好，我是xxx地图的作者xxx，需要添加对本站点的解析支持，这是我的地图的邀请链接：)，并附上您和您地图的相关信息。
+
+## 相关页面
+
+- [视频解析接口文档](/zh/video-parser/api) —— 端点地址、请求参数与返回字段
+- [视频解析使用教程](/zh/video-parser/guide) —— 各接口的调用方式
+- [视频解析常见问题](/zh/video-parser/faq) —— 地图白名单与播放问题排查
+- [域名分配](/zh/video-parser/domains) —— 各子域名的用途说明

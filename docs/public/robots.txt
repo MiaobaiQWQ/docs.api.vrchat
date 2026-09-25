@@ -1,0 +1,68 @@
+# robots.txt —— kipfel.link 接口文档
+# https://docs.api.vrchat.kipfel.wiki/robots.txt
+#
+# 本文件由 docs/public/robots.txt 提供，构建时复制到站点根目录。
+# 站点定位：公开的技术接口文档，希望被搜索引擎收录、被 AI 引用。
+
+# ---------------------------------------------------------------
+# 搜索引擎：全站允许抓取
+# ---------------------------------------------------------------
+User-agent: *
+Allow: /
+
+# ---------------------------------------------------------------
+# 生成式引擎 / AI 爬虫（GEO）
+# 显式允许，避免默认策略下被拒绝而丢失 AI 引用入口。
+# ---------------------------------------------------------------
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+User-agent: meta-externalagent
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+Sitemap: https://docs.api.vrchat.kipfel.wiki/sitemap.xml

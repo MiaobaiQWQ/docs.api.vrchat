@@ -1,5 +1,6 @@
 ---
 outline: deep
+description: "kipfel.link ビデオ解析プロジェクトの主要開発者とサポーターの一覧：担当モジュールと連絡先。"
 ---
 
 # チーム & サポーター

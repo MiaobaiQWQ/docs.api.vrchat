@@ -1,5 +1,6 @@
 ---
 outline: deep
+description: "Core developers and supporters of the kipfel.link video parsing project, with the modules each of them maintains and how to reach them."
 ---
 
 # Team & Supporters

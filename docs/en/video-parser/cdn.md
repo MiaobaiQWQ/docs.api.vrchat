@@ -1,5 +1,6 @@
 ---
 outline: deep
+description: "The complete CDN domain list required for the VRChat map whitelist, covering Bilibili, Kuaishou and Douyin video and live stream nodes, ready to paste into URLlist."
 ---
 
 # CDN Domain List
@@ -165,3 +166,10 @@ If you are a map author, you need to add the above domains to your map's whiteli
 ## Apply to add parsing site support
 
 If you wish to add parsing support for this site, please send an email to [admin@kipfel.link](mailto:admin@kipfel.link?subject=Domain Parsing List Application&body=Hello, I am xxx, the author of xxx map. I need to add parsing support for this site. This is the invitation link to my map:), including relevant information about you and your map.
+
+## Related Pages
+
+- [Video Parser API Reference](/en/video-parser/api) — endpoints, parameters and response fields
+- [Usage Guide](/en/video-parser/guide) — how to call each endpoint
+- [FAQ](/en/video-parser/faq) — map whitelist and playback troubleshooting
+- [Domain Allocation](/en/video-parser/domains) — what each subdomain is used for

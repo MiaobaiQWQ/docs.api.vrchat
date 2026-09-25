@@ -1,5 +1,6 @@
 ---
 outline: deep
+description: "kipfel.link のビデオ解析を導入した VRChat パートナーワールドの一覧：ワールド名、ワールド ID、マップ作者向けの提携申請方法。"
 ---
 
 # パートナーワールド

@@ -1,5 +1,6 @@
 ---
 outline: deep
+description: "kipfel.link ビデオ解析サービスの更新履歴：インターフェース変更、解析修正、IP BAN 機構、新機能を日付順に記録しています。"
 ---
 
 # 更新履歴

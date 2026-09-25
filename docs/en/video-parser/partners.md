@@ -1,5 +1,6 @@
 ---
 outline: deep
+description: "VRChat worlds that have integrated kipfel.link video parsing, with world names, world IDs and how map creators can apply for a partnership."
 ---
 
 # Partner Worlds

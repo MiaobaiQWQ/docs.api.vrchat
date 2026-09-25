@@ -1,5 +1,6 @@
 ---
 outline: deep
+description: "VRChat 视频解析 API 完整接口文档：v1 视频与音乐解析（含 JSON 版本）、v3 弹幕与歌词接口的请求地址、参数、返回字段、错误码与访问频率限制。"
 ---
 
 # VRC 视频解析 API 调用与限制文档
@@ -168,13 +169,15 @@ https://api.kipfel.vrchat.org.cn/
 
 ### v3 高级接口
 
-### User-Agent 要求
+v3 接口面向需要弹幕、歌词等富内容的播放器：除直链外还会返回结构化 JSON 数据。
+
+#### User-Agent 要求
 ::: warning 注意
 - 你需要发送两个ua，一个包含 `Unity xxxxxxxx`，另一个不包含 `Unity xxxx`
 - 你需要发送 `Unity xxxxxxxx` 的ua，才能获取弹幕/歌词
 - 你需要发送不包含 `Unity xxxxxxxx` 的ua，才能获取视频直链/歌曲直链
 :::
-### 建议
+#### 建议
 ::: tip 提示
 - 建议你地图每个都使用不同的ua，以避免被封禁和用于核查请求来源
 - 比如我是某个地图作者，建议取名 `Unity xiaokong`或者就按照规范取名前面必须是 `Unity `开头不然无法返回弹幕/歌词，另一个随便取名
@@ -308,7 +311,7 @@ https://api.kipfel.vrchat.org.cn/
 |---------|---------|---------|---------|
 | 所有接口 | 10 秒 | 20 次 | 15 秒 |
 
-#### Nginx限制
+### Nginx限制
 
 | 限制类型 | 窗口大小 | 限制次数 | 封禁时间 |
 |---------|---------|---------|---------|
@@ -356,3 +359,10 @@ https://api.kipfel.vrchat.org.cn/
 - 搜狐视频
 
 ---
+
+## 相关页面
+
+- [视频解析使用教程](/zh/video-parser/guide) —— 各接口的调用方式与支持的链接格式
+- [视频解析常见问题](/zh/video-parser/faq) —— 播放失败、解析异常的排查方法与错误码
+- [CDN 域名列表](/zh/video-parser/cdn) —— 添加到 VRChat 地图白名单所需的域名
+- [Busuanzi 接口文档](/zh/busuanzi/api) —— 同一站点提供的访问统计接口

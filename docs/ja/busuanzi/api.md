@@ -1,5 +1,6 @@
 ---
 outline: deep
+description: "セルフホスト版 Busuanzi の API リファレンス：POST・PUT・GET /api と /jsonp のエンドポイント、リクエストヘッダー、レスポンス項目、Redis キー構造、導入方法。"
 ---
 
 # Busuanzi API ドキュメント
@@ -337,3 +338,8 @@ curl --location --request OPTIONS 'https://busuanzi.kipfel.link/api' \
 - GitHub: <https://github.com/soxft/busuanzi>
 - Gitee: <https://gitee.com/soxft/busuanzi>
 - フロントエンド Demo / Dashboard: <https://github.com/soxft/busuanzi-frontend>
+
+## 関連ページ
+
+- [ビデオ解析 API リファレンス](/ja/video-parser/api) —— 同じプロジェクトが提供する VRChat ビデオ解析 API
+- [ドメイン割り当て](/ja/video-parser/domains) —— `busuanzi.kipfel.link` などのサブドメインの用途

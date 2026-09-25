@@ -1,0 +1,40 @@
+# Cloudflare Pages 响应头配置
+# 构建命令: npm run build
+# 输出目录: docs/.vitepress/dist
+#
+# 注意：Cloudflare Pages 只读取「构建输出目录」里的 _headers，
+# 所以本文件放在 docs/public/ 下，由 VitePress 原样复制到 dist/_headers。
+
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: SAMEORIGIN
+
+# VitePress 构建产物文件名带内容哈希，可长期强缓存
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# ---------------------------------------------------------------
+# 给 AI 爬虫的纯文本资源：明确声明 UTF-8，
+# 否则部分客户端会把 .md / .txt 当作二进制下载而放弃解析。
+# ---------------------------------------------------------------
+/*.md
+  Content-Type: text/markdown; charset=utf-8
+
+/*/*.md
+  Content-Type: text/markdown; charset=utf-8
+
+/*/*/*.md
+  Content-Type: text/markdown; charset=utf-8
+
+/llms.txt
+  Content-Type: text/plain; charset=utf-8
+
+/llms-full.txt
+  Content-Type: text/plain; charset=utf-8
+
+/robots.txt
+  Content-Type: text/plain; charset=utf-8
+
+/sitemap.xml
+  Content-Type: application/xml; charset=utf-8

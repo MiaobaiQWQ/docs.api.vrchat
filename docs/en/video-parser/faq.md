@@ -1,12 +1,17 @@
 ---
 outline: deep
+description: "VRChat video parsing FAQ: supported platforms, live streams, playback failures, Douyin links, playlist tracks, map whitelists and error codes."
 ---
 
 # FAQ
 
-This document lists frequently asked questions about using the api.Kipfel.link video parsing service.
+This page answers the most frequently asked questions about the api.kipfel.link video parsing service. Every question is its own section heading, and the first sentence of each section is the direct answer.
 
-## Supported Content
+## Supported Platforms and Content
+
+### Which platforms does the VRChat video parser support?
+
+It supports six video platforms: Douyin, Bilibili, YouTube, Twitter(X), Instagram and Kuaishou.
 
 ::: info Supported Platforms
 - **Video Platforms**: Douyin, Bilibili, YouTube, Twitter(X), Instagram, Kuaishou
@@ -15,12 +20,14 @@ This document lists frequently asked questions about using the api.Kipfel.link v
 - **Music Platforms**: NetEase Cloud Music, Kugou Music, Migu Music, YouTube Music
 :::
 
-## Live Stream Parsing Description
+## Live Stream Parsing
 
-::: tip Live Stream Parsing Features
-- **Multi-platform Coverage**: Supports Bilibili, Douyin, and Kuaishou, three major live streaming platforms.
-- **Short Link Compatibility**: Supports short links shared from mobile phones (e.g., `b23.tv`, `v.douyin.com`), and the system will automatically redirect and parse.
-- **Automatic Recognition**: No need to select a type, just paste the live stream room address (remove the copy! remove the copy! remove the copy! Important things said three times!), and the system will automatically switch to the live stream parsing engine.
+### Can I just paste a live stream link and have it parsed?
+
+Yes, no type selection is needed: paste the live room address and the system automatically switches to the live stream parsing engine. Bilibili, Douyin and Kuaishou are all supported, and short links shared from mobile (such as `b23.tv` and `v.douyin.com`) are redirected and parsed automatically.
+
+::: tip Remove the surrounding text before pasting
+When pasting a live room address, remove all surrounding text (remove the copy! remove the copy! important things said three times!) and keep only the link itself.
 :::
 
 ::: warning Note
@@ -28,38 +35,43 @@ This document lists frequently asked questions about using the api.Kipfel.link v
 - **Danmaku Parsing**: Danmaku can currently only be played in cafes, and cannot be used in other maps.
 :::
 
-## Basic Questions
+## Playback and Parsing Problems
 
-::: details Why can the web page play normally, but VRChat cannot?
-VRChat built-in players/some players have incomplete support for 302 redirects or long links. First, open the link you copied in a browser to parse it once, let it redirect to the final address (usually it will become a "direct link"), and then copy the redirected link to VRChat to play.
-:::
+### Why can the web page play normally, but VRChat cannot?
 
-::: details Why can't some rooms play?
-After the official VRChat update on 2024.12.11, the official mandated that all maps must be equipped with their own [domain whitelist](https://docs.vrczh.org/creators.vrchat.com/worlds/udon/video-players/www-whitelist). Its function is to restrict that in public rooms, only resource links in the whitelist of this map configured by the author can be accessed, while private rooms are not restricted.
-:::
+VRChat built-in players, and some other players, have incomplete support for 302 redirects or long links. First open the link you copied in a browser to parse it once, let it redirect to the final address (usually it becomes a "direct link"), then copy the redirected link into VRChat to play.
 
-::: details Why can't Douyin be parsed normally?
-Do not directly paste shared content with copy, especially with the # symbol. It is recommended to delete all text and only keep the link body before retrying.
-:::
+### Why can't some rooms play?
 
-::: details How to select the Nth song in a playlist? Why isn't the song I want playing?
-Playlists are counted from 1. Use `&i=1` / `&i=2` to select the Nth song; adding `@1` / `@2` at the end is also supported. If it is out of range, it will prompt "Playlist sequence number out of range".
-:::
+After the official VRChat update on 2024.12.11, all maps are required to ship their own [domain whitelist](https://docs.vrczh.org/creators.vrchat.com/worlds/udon/video-players/www-whitelist). In public rooms only resource links that the author has put in that map's whitelist can be accessed, while private rooms are not restricted.
 
-::: details Some videos can be parsed, but they are stuck/load slowly in VRChat?
-It may be due to network fluctuations of the source site; or the source site may restrict domestic/overseas access. Since this site has stopped video traffic relay services, it is recommended to use an appropriate network environment to directly access source site resources.
-:::
+### Why can't Douyin links be parsed?
 
-::: details I am the author of a public map? I want to add support for this parsing site?
-Please refer to the [CDN List](/en/video-parser/cdn) page for the complete list of domains that need to be added to the whitelist. Send an [email](mailto:admin@kipfel.link?subject=Domain Parsing List Application&body=Hello, I am xxx, the author of xxx map. I need to add parsing support for this site. This is the invitation link to my map:) to the author, and include information about you and your map link to cooperate and be included in the cooperation world.
+Because the `#` in a share caption truncates the link in the browser, the server never receives anything after the `#`. Do not paste shared content with its caption; delete all text and keep only the link body, then retry.
+
+### How do I select the Nth song in a playlist, and why is the wrong song playing?
+
+Playlists are counted from 1: use `&i=1` / `&i=2` to select the Nth song, or append `@1` / `@2` to the end of the link. An out-of-range index returns "Playlist sequence number out of range".
+
+### Some videos parse fine but are stuck or slow to load in VRChat.
+
+That is usually network fluctuation on the source site, or the source site restricting domestic/overseas access. This site has stopped relaying video traffic, so it is recommended to use an appropriate network environment to access source resources directly.
+
+## Maps and Whitelists
+
+### I am a public map author and want to add support for this parser. What should I do?
+
+See the [CDN List](/en/video-parser/cdn) page for the complete list of domains that must be added to your whitelist, then send an [email](mailto:admin@kipfel.link?subject=Domain Parsing List Application&body=Hello, I am xxx, the author of xxx map. I need to add parsing support for this site. This is the invitation link to my map:) to the author with information about you and your map link, and we will add it to the partner worlds.
+
 ::: warning Note
 VRChat map URL lists have a maximum of 100 entries. Please add them as needed.
 :::
-:::
 
-::: details Special statement about this website?
-This website was not created by the Kipfel community, but by an individual author who loves Kipfel. This site is completely free. If anyone guides you to use it for a fee, please give me feedback or report it. I hope everyone can help promote it so that more people can use it. Thank you meow!
-:::
+## About This Site
+
+### Is this site an official project of the Kipfel community?
+
+No. This website was not created by the Kipfel community, but by an individual author who loves Kipfel. This site is completely free. If anyone guides you to use it for a fee, please give me feedback or report it. I hope everyone can help promote it so that more people can use it. Thank you meow!
 
 ## Common Error Codes
 
@@ -86,3 +98,9 @@ This website was not created by the Kipfel community, but by an individual autho
 - **Operations Staff / Error and Unusable Contact**: Hailuo QWQ [xiao-luo@kipfel.cn](mailto:xiao-luo@kipfel.cn)
 - **VRChat Group**: [https://vrc.group/KOOYL.8164](https://vrc.group/KOOYL.8164)
 :::
+
+## Related Pages
+
+- [Video Parser API Reference](/en/video-parser/api) — endpoints, request parameters, response fields and rate limits
+- [Usage Guide](/en/video-parser/guide) — how to call each endpoint and the supported link formats
+- [CDN Domain List](/en/video-parser/cdn) — the complete domain list for your map whitelist

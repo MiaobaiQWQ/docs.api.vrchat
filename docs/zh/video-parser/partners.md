@@ -1,5 +1,6 @@
 ---
 outline: deep
+description: "已接入 kipfel.link 视频解析的 VRChat 合作地图列表，包含地图名称、世界 ID 与地图作者的合作申请方式。"
 ---
 
 # 合作地图

@@ -1,5 +1,6 @@
 ---
 outline: deep
+description: "kipfel.link と kipfel.wiki のサブドメイン割り当て：api、docs、openlist、status、picture などの用途と担当を一覧にしています。"
 ---
 
 # ドメイン割り当て

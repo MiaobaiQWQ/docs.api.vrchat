@@ -1,5 +1,6 @@
 ---
 outline: deep
+description: "kipfel.link 与 kipfel.wiki 的二级域名分配说明，列出 api、docs、openlist、status、picture 等子域名的用途与负责人。"
 ---
 
 # 域名分配

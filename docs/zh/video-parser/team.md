@@ -1,5 +1,6 @@
 ---
 outline: deep
+description: "kipfel.link 视频解析项目的核心开发者与支持者名单，包含各自负责的模块与联系方式。"
 ---
 
 # 团队 & 支持者

@@ -1,5 +1,6 @@
 ---
 outline: deep
+description: "Usage guide for the api.kipfel.link video parser: calling /v1/vrc, /v1/music and the alternative endpoints with full links, BV ids and short links."
 ---
 
 # Usage Guide
@@ -7,6 +8,8 @@ outline: deep
 This document details how to use the Kipfel video parsing service.
 
 ## Video Parsing
+
+Video parsing uses the main `/v1/vrc` endpoint: append the video link directly after `url=`, and opening it in a browser returns a 302 redirect to the watermark-free direct link.
 
 ### Basic Usage
 
@@ -62,7 +65,7 @@ YouTube Music links must use the `/v1/music` interface, otherwise they cannot be
 
 ## Alternative Interfaces
 
-If the main interface is unavailable, you can try the alternative interfaces:
+If the main interface is unavailable (for example a failed route or rate limiting), switch to the alternative endpoints below, which behave identically but run on different routes.
 
 ::: info Alternative Options
 - Video Alternative: `https://api.kipfel.link/v1/kfc?url=`
@@ -72,3 +75,9 @@ If the main interface is unavailable, you can try the alternative interfaces:
 ## More Help
 
 For other questions, please refer to the [FAQ](/en/video-parser/faq) page.
+
+## Related Pages
+
+- [Video Parser API Reference](/en/video-parser/api) — endpoints, parameters, response fields and rate limits
+- [FAQ](/en/video-parser/faq) — troubleshooting playback and parsing failures
+- [CDN Domain List](/en/video-parser/cdn) — domains to add to your VRChat map whitelist

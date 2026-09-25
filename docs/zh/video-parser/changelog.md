@@ -1,5 +1,6 @@
 ---
 outline: deep
+description: "kipfel.link 视频解析服务更新日志：按日期记录接口变更、解析修复、IP 封禁机制与新增功能。"
 ---
 
 # 更新日志

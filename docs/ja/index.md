@@ -1,6 +1,10 @@
 ---
 layout: home
 
+title: kipfel.link API ドキュメント - VRChat ビデオ解析 & Busuanzi API
+titleTemplate: false
+description: "VRChat 向け kipfel.link の公式 API ドキュメント：無料ビデオ解析 API（v1 / v3）、弾幕・歌詞、Busuanzi アクセス解析 API の仕様をまとめています。"
+
 hero:
   name: kipfel.link API ドキュメント
   text: ビデオ解析、Busuanzi、および関連 API の説明

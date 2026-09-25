@@ -1,5 +1,6 @@
 ---
 outline: deep
+description: "自建 Busuanzi 访问统计接口文档：POST、PUT、GET /api 与 /jsonp 的端点、请求头、返回字段、Redis 数据结构与前端接入方法。"
 ---
 
 # Busuanzi 接口文档
@@ -337,3 +338,8 @@ curl --location --request OPTIONS 'https://busuanzi.kipfel.link/api' \
 - GitHub：<https://github.com/soxft/busuanzi>
 - Gitee：<https://gitee.com/soxft/busuanzi>
 - 前端 Demo / Dashboard：<https://github.com/soxft/busuanzi-frontend>
+
+## 相关页面
+
+- [视频解析接口文档](/zh/video-parser/api) —— 同一站点提供的 VRChat 视频解析接口
+- [域名分配](/zh/video-parser/domains) —— `busuanzi.kipfel.link` 等子域名的用途说明
