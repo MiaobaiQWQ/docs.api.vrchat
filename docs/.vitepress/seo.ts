@@ -435,6 +435,30 @@ export function transformHead(ctx: TransformContext): HeadConfig[] {
 }
 
 /* ==================================================================== *
+ *  六之二、transformHtml —— 404 页的静态兜底正文
+ * ==================================================================== */
+
+/**
+ * VitePress 对 404.md 的正文有特殊处理，模板里写死了：
+ *
+ *     <div id="app">${page === "404.md" ? "" : content}</div>
+ *
+ * 也就是说渲染好的正文会被整个丢掉，内容完全交给客户端渲染。
+ * 后果是构建产物 404.html 里没有任何 <h1>；而它同时又是 CDN 上真实存在的
+ * 静态资源（线上 /404.html 返回的是 200，而不是 404），Bing 会把它当普通
+ * 页面抓取，于是报「缺少 h1 标记」。
+ *
+ * 这里把 VitePress 丢掉的那段正文补回 <div id="app">：
+ *   - 爬虫与禁用 JavaScript 的用户能看到标题与语言入口；
+ *   - 正常浏览器加载脚本后由 Vue 接管并覆盖，视觉与之前完全一致。
+ * 正文唯一来源仍是 docs/404.md，不需要在这里重复维护一份。
+ */
+export function transformHtml(code: string, _id: string, ctx: TransformContext): string {
+  if (ctx.page !== '404.md') return code
+  return code.replace('<div id="app"></div>', `<div id="app">${ctx.content}</div>`)
+}
+
+/* ==================================================================== *
  *  七、sitemap
  *  说明：
  *  1. VitePress 只会把「根 locale」之外的翻译配对成 hreflang links，本站中文位于
@@ -442,16 +466,27 @@ export function transformHead(ctx: TransformContext): HeadConfig[] {
  *     统一交由页面 head 中的 hreflang 承担。
  *  2. 根路径 / 是一个纯跳转页（canonical 指向 /zh/），按搜索引擎规范不应出现在
  *     sitemap 中，否则会与 canonical 信号冲突。VitePress 对根 index.md 生成的
- *     item.url 是空字符串，因此两种形式都要过滤。
+ *     item.url 是空字符串（不是绝对地址），因此要按相对路径过滤。
+ *  3. 自定义 404.md 会被算进 siteConfig.pages，VitePress 的 sitemap 生成器不做
+ *     404 过滤，会多出一条 /404，同样需要剔除。
  * ==================================================================== */
 
 const ROOT_REDIRECT_URL = `${SITE_URL}/`
+
+/**
+ * 不应出现在 sitemap 中的地址。
+ *
+ * 注意：transformItems 收到的 item.url 是**相对路径**，而且不带前导斜杠 ——
+ * 根首页是空字符串 ''，404 页是 '404'（VitePress 只做 .md 后缀剥离）。
+ * 这里把带/不带斜杠的形式都列上，避免依赖上游的字符串细节。
+ */
+const SITEMAP_EXCLUDED_URLS = new Set(['', '404', '/404', '404.html', '/404.html', ROOT_REDIRECT_URL])
 
 export const sitemapOptions = {
   hostname: SITE_URL,
   transformItems: (items: Record<string, unknown>[]) =>
     items
-      .filter((item) => item.url !== '' && item.url !== ROOT_REDIRECT_URL)
+      .filter((item) => typeof item.url === 'string' && !SITEMAP_EXCLUDED_URLS.has(item.url))
       .map(({ links: _links, ...rest }) => rest)
 }
 

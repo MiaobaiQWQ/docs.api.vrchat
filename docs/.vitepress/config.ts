@@ -1,5 +1,5 @@
 import { defineConfig } from 'vitepress'
-import { buildEnd, sitemapOptions, transformHead } from './seo'
+import { buildEnd, sitemapOptions, transformHead, transformHtml } from './seo'
 
 export default defineConfig({
   title: 'kipfel.link 接口文档',
@@ -20,6 +20,9 @@ export default defineConfig({
   // 每页独立的 canonical / hreflang / Open Graph / JSON-LD
   transformHead,
 
+  // 404 页的静态兜底正文（VitePress 默认会把 404 正文清空，详见 seo.ts）
+  transformHtml,
+
   // 构建结束后发布 .md 源文件、llms.txt、llms-full.txt
   buildEnd,
 
@@ -38,6 +41,8 @@ export default defineConfig({
         'Official kipfel.link API documentation: free VRChat video parsing API (v1 / v3), danmaku and lyrics endpoints, and the self-hosted Busuanzi analytics API, with endpoints, parameters, response fields and error codes.',
       link: '/en/',
       themeConfig: {
+        // 英文页面用英文的图片描述，覆盖根 themeConfig 里的中文 alt
+        logo: { src: '/favicon.png', alt: 'kipfel.link API Documentation' },
         nav: [
           { text: 'Home', link: '/en/' },
           {
@@ -109,6 +114,8 @@ export default defineConfig({
         'kipfel.link 公式 API ドキュメント：VRChat 向け無料ビデオ解析 API（v1 / v3）、弾幕・歌詞エンドポイント、セルフホスト型 Busuanzi アクセス解析 API のエンドポイント、パラメータ、レスポンス項目、エラーコードをまとめています。',
       link: '/ja/',
       themeConfig: {
+        // 日文页面用日文的图片描述，覆盖根 themeConfig 里的中文 alt
+        logo: { src: '/favicon.png', alt: 'kipfel.link API ドキュメント' },
         nav: [
           { text: 'ホーム', link: '/ja/' },
           {
@@ -191,7 +198,11 @@ export default defineConfig({
 
   themeConfig: {
     siteTitle: 'kipfel.link 接口文档',
-    logo: '/favicon.png',
+
+    // 站点 Logo 必须写成对象形式才能带上描述性 alt。
+    // 只写字符串时 VitePress 的 VPImage 会渲染成 <img ... alt>（空 alt），
+    // Bing 站长平台会判定为「缺少图像的 Alt 属性」，屏幕阅读器也读不出内容。
+    logo: { src: '/favicon.png', alt: 'kipfel.link 接口文档' },
     nav: [
       { text: '首页', link: '/zh/' },
       {

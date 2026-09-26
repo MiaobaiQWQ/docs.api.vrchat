@@ -20,12 +20,12 @@ onMounted(() => {
 })
 </script>
 
-<noscript>
+# kipfel.link 接口文档
 
-本页会自动跳转到中文文档首页，请选择你要阅读的语言：
+面向 VRChat 的免费视频解析 API 与自建 Busuanzi 访问统计 API 的官方文档站，提供简体中文、English 与日本語三个语言版本。
+
+本页是文档站入口，会自动跳转到简体中文版首页。如果没有自动跳转，请直接选择要阅读的语言：
 
 - [简体中文文档](/zh/)
 - [English documentation](/en/)
 - [日本語ドキュメント](/ja/)
-
-</noscript>
