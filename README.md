@@ -137,6 +137,17 @@ curl -s -X POST https://isitagentready.com/api/scan \
 # 期望 checks.contentAccessibility.markdownNegotiation.status == "pass"
 ```
 
+当前线上状态（2026-09-26 实测）：
+
+| 检查项 | 结果 |
+| --- | --- |
+| `contentAccessibility.markdownNegotiation` | `pass` |
+| `botAccessControl.contentSignals` | `pass` |
+| 站点等级 | 3 · Agent-Readable |
+
+> 验收时务必带查询串或 `Cache-Control: no-cache` 绕过边缘缓存，
+> 否则可能读到上一次部署的 HTML 变体，把「已支持」误判为「不支持」。
+
 > 补充：Cloudflare 自身也有 zone 级的
 > [Markdown for Agents](https://developers.cloudflare.com/fundamentals/reference/markdown-for-agents/)，
 > 在 AI Crawl Control 里一键开启即可，但要 **Pro / Business 及以上套餐**。
