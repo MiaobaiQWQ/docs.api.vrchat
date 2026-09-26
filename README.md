@@ -88,14 +88,56 @@ Cloudflare Pages：
 
 `_headers` 必须位于**输出目录**才能生效，所以它放在 `docs/public/` 而不是仓库根目录。
 
-构建完成后可在线上自检：
+推送 `main` 后 Cloudflare Pages 自动部署，**约 2~3 分钟**线上生效。
+
+## ⚠️ 改完 head 内容后必须清缓存
+
+Cloudflare Pages 对静态资源默认返回 `Cache-Control: public, max-age=3600, must-revalidate`，
+而且**部署不会清掉边缘缓存里已有的旧条目**。实测：改完内容重新部署后，`/` 连续请求 10 次
+全是 `CF-Cache-Status: HIT`，`Age` 只增不减（超过 14 小时），内容始终是旧版本 ——
+`must-revalidate` 并不会触发重新验证，**不要指望它自愈**。
+
+所以每次改动页面 `<head>`（验证标记、canonical、meta 等）之后：
+
+> Cloudflare Dashboard → 选中 `kipfel.wiki` 这个 zone → 缓存 Caching → 配置 Configuration
+> → **清除全部缓存 Purge Everything**
+
+然后搜索引擎才抓得到新内容。只清 `/` 单条 URL 只解决该 URL。
+
+自检新旧部署是否生效的可靠手段是加查询串绕过缓存键（会 MISS 并回源）：
 
 ```bash
-curl -I https://docs.api.vrchat.kipfel.wiki/robots.txt
-curl -I https://docs.api.vrchat.kipfel.wiki/sitemap.xml
-curl -I https://docs.api.vrchat.kipfel.wiki/llms.txt
-curl -I https://docs.api.vrchat.kipfel.wiki/zh/video-parser/api.md
+curl -s "https://docs.api.vrchat.kipfel.wiki/?cb=$RANDOM" | grep -o 'google-site-verification'
 ```
+
+## 两个平台行为上的坑
+
+**1. `.html` 会被硬编码 308 重定向到无扩展名 URL，配置关不掉。**
+
+```
+/zh/video-parser/api      -> 200
+/zh/video-parser/api.html -> 308  Location: /zh/video-parser/api
+```
+
+这带来两个结论：
+
+- 开启 `cleanUrls: true` 是与平台对齐的正确选择。改之前站内每个链接都要吃一次 308。
+- **Google Search Console 的「HTML 文件」校验方式在本站必然失败**，因为 GSC 要抓的是确切的
+  `/googleXXXX.html`，被 308 掉之后内容不在原 URL 上。请一律使用 **meta 标记**方式验证，
+  标记加在 `config.ts` 的 `head` 里（全站注入，不依赖校验的是 `/` 还是 `/zh/`）。
+  另注意：GSC 的「HTML 标记」与「HTML 文件」给的 token 不一样，不能互相套用。
+
+**2. `_headers` 的重叠规则优先级未验证。** 目前 `/*` 只设安全头，`/assets/*` 设长缓存，
+两者没有冲突。如果想给 HTML 加 `max-age=0` 来免掉清缓存这一步，需要先确认 `/*` 与
+`/assets/*` 同时设 `Cache-Control` 时哪条生效，否则可能覆盖掉静态资源的 `immutable` 缓存。
+
+## 站点归属验证标记
+
+Google 与神马的验证 meta 标记统一加在 `docs/.vitepress/config.ts` 的 `head` 数组里，
+由 `siteConfig.head` 注入，因此**每个页面**的 `<head>` 都带，无论站长平台校验的是 `/`
+还是 `/zh/` 等语言首页都能命中。
+
+**验证成功后不可移除**，否则会掉验证状态；所以走配置 + 版本管理，不要临时手改 HTML。
 
 ## 提交 sitemap
 
@@ -103,5 +145,6 @@ curl -I https://docs.api.vrchat.kipfel.wiki/zh/video-parser/api.md
 
 - Google Search Console
 - Bing Webmaster Tools
+- 神马搜索站长平台
 
 `robots.txt` 已包含 `Sitemap:` 声明，多数爬虫会自动发现。
