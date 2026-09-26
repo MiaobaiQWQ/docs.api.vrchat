@@ -179,7 +179,14 @@ export default defineConfig({
     ['link', { rel: 'icon', href: 'https://logo.kipfel.link/logos/favicon.svg', type: 'image/svg+xml' }],
     ['link', { rel: 'apple-touch-icon', href: '/favicon.png' }],
     ['link', { rel: 'sitemap', type: 'application/xml', href: '/sitemap.xml' }],
-    ['meta', { name: 'format-detection', content: 'telephone=no' }]
+    ['meta', { name: 'format-detection', content: 'telephone=no' }],
+
+    // ---- 搜索引擎站长平台「站点归属」验证标记 ----
+    // 由 siteConfig.head 注入，每个页面的 <head> 都会带上，
+    // 因此无论站长平台校验的是 / 还是 /zh/ 等语言首页都能命中。
+    // 验证成功后请勿移除，否则会丢失验证状态。
+    ['meta', { name: 'google-site-verification', content: 'MyYXuCaWXn-soj8Tafx6W3ZkEEukzI-SF0Pd4VPzfHY' }],
+    ['meta', { name: 'shenma-site-verification', content: '64bc51f477cfed602ea043c70f35bdec_1790407898' }]
   ],
 
   themeConfig: {
