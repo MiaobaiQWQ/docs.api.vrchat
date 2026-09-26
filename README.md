@@ -26,11 +26,16 @@ docs/
 │  ├─ video-parser/          视频解析：api / guide / faq / cdn / changelog / domains / partners / team
 │  └─ busuanzi/api.md        Busuanzi 接口文档
 ├─ public/                   直接复制到站点根目录的静态资源
-│  ├─ robots.txt             搜索引擎与 AI 爬虫规则 + sitemap 声明
-│  └─ _headers               Cloudflare Pages 响应头（含 .md 的 Content-Type）
+│  ├─ robots.txt             搜索引擎与 AI 爬虫规则 + Content Signals + sitemap 声明
+│  ├─ _headers               Cloudflare Pages 响应头（含 .md 的 Content-Type、Vary: Accept）
+│  └─ _routes.json           让 Pages Function 接管全站请求
 └─ .vitepress/
    ├─ config.ts              站点配置：导航、侧边栏、SEO 开关
-   └─ seo.ts                 SEO / GEO 的全部实现（head、JSON-LD、sitemap、llms.txt）
+   ├─ seo.ts                 SEO / GEO 的全部实现（head、JSON-LD、sitemap、llms.txt、协商清单）
+   └─ markdown-negotiation.ts 内容协商规则与 token 估算（构建期使用）
+
+functions/
+└─ [[path]].ts               Cloudflare Pages Function：Accept 内容协商（运行期使用）
 ```
 
 ## SEO / GEO 实现说明
@@ -50,6 +55,8 @@ docs/
 | FAQ 结构化 | `seo.ts` → `extractFaq` | 从正文的 `### 问题？` + 首句答案自动生成 `FAQPage`，无需重复维护 |
 | 教程步骤结构化 | `seo.ts` → `transformHead` | 由 H2 标题自动生成 `HowTo.step` |
 | `robots.txt` | `docs/public/robots.txt` | 显式允许 GPTBot / ClaudeBot / PerplexityBot 等 AI 爬虫 |
+| Content Signals 内容使用信号 | `docs/public/robots.txt` | `Content-Signal: ai-train=yes, search=yes, ai-input=yes` |
+| Markdown 内容协商 | `functions/[[path]].ts` | `Accept: text/markdown` 时返回页面的 Markdown 版本 |
 | `llms.txt` | 构建时生成 | 由各页 frontmatter 的 title / description 自动汇总 |
 | `llms-full.txt` | 构建时生成 | 全部页面 Markdown 正文拼接 |
 | 页面 `.md` 直出版本 | 构建时生成 | 每个页面同时发布一份 Markdown 源文件，供 AI 直接抓取 |
@@ -57,9 +64,83 @@ docs/
 构建时 `seo.ts` 的 `buildEnd` 会自动：
 
 1. 把 `docs/**/*.md` 原样复制到 `docs/.vitepress/dist/` 下同名路径；
-2. 依据收集到的页面元数据生成 `llms.txt` 与 `llms-full.txt`。
+2. 依据收集到的页面元数据生成 `llms.txt` 与 `llms-full.txt`；
+3. 生成内容协商清单 `docs/.vitepress/dist/_agents/markdown.json`。
 
-因此 **`.md`、`llms.txt`、`llms-full.txt` 都不需要手动维护**，新增页面后重新构建即可。
+因此 **`.md`、`llms.txt`、`llms-full.txt`、协商清单都不需要手动维护**，新增页面后重新构建即可。
+
+## Markdown 内容协商（Markdown for Agents）
+
+Agent 抓网页时最想要的是正文 Markdown，而不是带导航、样式、脚本的 HTML 外壳。
+本站通过 [内容协商](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Guides/Content_negotiation)
+在同一个 URL 上提供两种表示：
+
+```bash
+curl -H "Accept: text/markdown" https://docs.api.vrchat.kipfel.wiki/zh/video-parser/api
+```
+
+```
+HTTP/2 200
+content-type: text/markdown; charset=utf-8
+vary: Accept
+x-markdown-tokens: 3216
+x-original-tokens: 19539
+link: </zh/video-parser/api.md>; rel="alternate"; type="text/markdown"
+```
+
+实现拆成两半，都在仓库里：
+
+| 环节 | 位置 | 职责 |
+| --- | --- | --- |
+| 构建期 | `.vitepress/markdown-negotiation.ts` + `seo.ts` 的 `buildEnd` | 算出每个路由的 `.md` 资源与 token 数，写出 `/_agents/markdown.json` |
+| 运行期 | `functions/[[path]].ts` | 读清单做协商，命中就返回 `.md`，否则原样透传静态资源 |
+
+协商判定（只认**显式**点名 `text/markdown`）：
+
+| 请求的 `Accept` | 返回 |
+| --- | --- |
+| `text/markdown` / `text/markdown, text/plain, */*` | Markdown |
+| `text/html,application/xhtml+xml,*/*;q=0.8`（浏览器） | HTML |
+| `text/markdown;q=0` | HTML（显式拒绝） |
+| `text/html` 的 q 更高 | HTML（尊重客户端偏好） |
+| 没有 `Accept` / 只有 `*/*` | HTML（HTML 仍是默认） |
+
+几个容易踩的点，都已经在实现里处理：
+
+- **`Vary: Accept` 必须存在**。同一个 URL 有两种表示，少了它边缘缓存会把 HTML 变体
+  喂给要 Markdown 的 Agent（反之亦然）。函数响应和 `_headers` 里都声明了。
+- **首页路由的路径映射**：VitePress 把 `zh/index.md` 发布成 `/zh/index.md`，
+  而 `/zh` 与 `/zh/` 指的是同一个页面，清单键统一收成 `/zh`。
+  清单是**按构建产物实际存在的文件**生成的，不靠猜 VitePress 的落盘规则。
+- **`.md` 正文与文档源文件同源**：协商返回的就是 `buildEnd` 发布的那份 Markdown，
+  不存在两份内容需要同步。
+- **静态资源不受影响**：图片、字体、`llms.txt`、`robots.txt` 即使带上
+  `Accept: text/markdown` 也按原样返回（末段带扩展名的路径不参与协商）。
+- `functions/[[path]].ts` 与 `.vitepress/markdown-negotiation.ts` 里的
+  「协商规则 + token 估算」是同一套逻辑的两份副本（函数里必须用相对路径 import 才能被打包）。
+  **改其中一处务必同步另一处**，否则构建期清单与线上行为会不一致。
+
+本地验证（`functions/` 需要 wrangler 才能真正执行）：
+
+```bash
+npx wrangler pages dev docs/.vitepress/dist --port 8799
+curl -s -D- -o- -H "Accept: text/markdown" http://127.0.0.1:8799/zh/video-parser/api | head -20
+curl -s -D- -o- http://127.0.0.1:8799/zh/video-parser/api | head -5   # 应为 HTML
+```
+
+线上验收（第三方探针）：
+
+```bash
+curl -s -X POST https://isitagentready.com/api/scan \
+  -H "Content-Type: application/json" \
+  -d '{"url":"https://docs.api.vrchat.kipfel.wiki"}'
+# 期望 checks.contentAccessibility.markdownNegotiation.status == "pass"
+```
+
+> 补充：Cloudflare 自身也有 zone 级的
+> [Markdown for Agents](https://developers.cloudflare.com/fundamentals/reference/markdown-for-agents/)，
+> 在 AI Crawl Control 里一键开启即可，但要 **Pro / Business 及以上套餐**。
+> 本仓库的实现不依赖套餐，并且在功能上更可控（直接返回文档源 Markdown，而不是把 HTML 反推回 Markdown）。
 
 ## 维护约定
 
@@ -78,6 +159,13 @@ docs/
 6. **保持品牌口径统一**：对外一律使用 `kipfel.link 接口文档`、`docs.api.vrchat.kipfel.wiki`
    与 `https://github.com/MiaobaiQWQ/docs.api.vrchat`。站点名称、仓库地址等常量集中在
    `seo.ts` 顶部，改一处即可全站生效。
+7. **改内容信号 / 爬虫策略时改 `docs/public/robots.txt`**。
+   `Content-Signal` 只写一行、放在文件顶部的全局段：`ai-train` / `search` / `ai-input`
+   三项分别代表「训练或微调模型」「建立搜索索引」「送入模型做检索增强」。
+   本站是公开接口文档，三项均为 `yes`。
+8. **改了 `_headers` 或函数后，测试时要重启本地 wrangler**（`_headers` 会热重载，
+   但 `functions/` 的改动不一定立刻生效）。另外 `_headers` 每条规则**只允许一个通配符**，
+   `/*/*.md` 这类写法会被 wrangler 警告并整条跳过 —— 单条 `/*.md` 已经能匹配任意层级。
 
 ## 部署
 
@@ -86,9 +174,15 @@ Cloudflare Pages：
 - 构建命令：`npm run build`
 - 输出目录：`docs/.vitepress/dist`
 
-`_headers` 必须位于**输出目录**才能生效，所以它放在 `docs/public/` 而不是仓库根目录。
+`_headers` 与 `_routes.json` 必须位于**输出目录**才能生效，所以它们放在 `docs/public/`
+而不是仓库根目录（`_routes.json` 的作用是让 Pages 把全站请求交给 `functions/` 处理）。
+
+`functions/` 目录放在**仓库根目录**（不是 `docs/` 下），Pages 会在构建时自动识别并打包成 Worker。
 
 推送 `main` 后 Cloudflare Pages 自动部署，**约 2~3 分钟**线上生效。
+
+> 首次带 `functions/` 部署后，建议用 `curl -H "Accept: text/markdown"` 复核一次线上行为：
+> 函数生效但 `_headers` 或清单没跟上，都会表现为「仍然返回 HTML」。
 
 ## ⚠️ 改完 head 内容后必须清缓存
 

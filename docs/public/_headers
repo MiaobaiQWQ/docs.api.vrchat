@@ -10,6 +10,23 @@
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: SAMEORIGIN
 
+# ---------------------------------------------------------------
+# 页面（HTML）与 Markdown 是同一 URL 的两种表示，靠 Accept 协商区分。
+# 必须声明 Vary: Accept，否则边缘缓存会把 HTML 变体喂给要 Markdown 的 Agent
+# （反过来也一样）。函数响应里也会带这个头，这里覆盖静态回退路径。
+# ---------------------------------------------------------------
+/
+  Vary: Accept
+
+/zh/*
+  Vary: Accept
+
+/en/*
+  Vary: Accept
+
+/ja/*
+  Vary: Accept
+
 # VitePress 构建产物文件名带内容哈希，可长期强缓存
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
@@ -17,15 +34,19 @@
 # ---------------------------------------------------------------
 # 给 AI 爬虫的纯文本资源：明确声明 UTF-8，
 # 否则部分客户端会把 .md / .txt 当作二进制下载而放弃解析。
+#
+# 注意：Cloudflare Pages 的 _headers 每条规则只允许一个通配符，
+# 所以这里只写 /*.md —— 通配符会跨路径分隔符匹配，
+# /zh/video-parser/api.md 这类深层文件同样命中（已实测通过）。
+# 多写 /*/*.md 之类的规则不但无效，wrangler 还会警告并整条跳过。
 # ---------------------------------------------------------------
 /*.md
   Content-Type: text/markdown; charset=utf-8
 
-/*/*.md
-  Content-Type: text/markdown; charset=utf-8
-
-/*/*/*.md
-  Content-Type: text/markdown; charset=utf-8
+# Markdown 内容协商的构建期清单：只在部署时变化，边缘缓存 5 分钟
+/_agents/markdown.json
+  Content-Type: application/json; charset=utf-8
+  Cache-Control: public, max-age=300
 
 /llms.txt
   Content-Type: text/plain; charset=utf-8

@@ -1,6 +1,8 @@
 import fs from 'node:fs'
+import fsp from 'node:fs/promises'
 import path from 'node:path'
 import type { HeadConfig, SiteConfig, TransformContext } from 'vitepress'
+import { writeMarkdownManifest } from './markdown-negotiation'
 
 /* ==================================================================== *
  *  一、站点品牌常量
@@ -573,6 +575,23 @@ export async function buildEnd(siteConfig: SiteConfig) {
   }
   fs.writeFileSync(path.join(outDir, 'llms.txt'), renderLlmsTxt(entries), 'utf-8')
 
+  // 3) 生成 Markdown 内容协商清单（/_agents/markdown.json）
+  //    Pages Function 靠它把 Accept: text/markdown 的请求映射到上面的 .md 文件，
+  //    并给出 x-markdown-tokens / x-original-tokens。
+  //    注意：registry 里包含三语首页（前面 llms.txt 会跳过它们），首页同样需要协商。
+  const manifest = await writeMarkdownManifest({
+    // 运行时查表用的是规整后的路径（/zh/、/zh/index 都归到 /zh），清单键必须与之一致
+    routes: [...registry.keys()].sort(),
+    outDir,
+    resolve: (sitePath) => path.join(outDir, sitePath.replace(/^\//, '')),
+    readFile: (filePath) => fsp.readFile(filePath),
+    writeFile: (filePath, data) => fsp.writeFile(filePath, data, 'utf-8'),
+    join: (...parts) => path.join(...parts),
+    mkdir: (dir, opts) => fsp.mkdir(dir, opts),
+    exists: (filePath) => fs.existsSync(filePath)
+  })
+  const negotiated = Object.keys(manifest.routes).length
+
   // 3) 生成 llms-full.txt
   const full: string[] = [
     '# kipfel.link 接口文档 — 全文 / Full content',
@@ -600,6 +619,6 @@ export async function buildEnd(siteConfig: SiteConfig) {
   fs.writeFileSync(path.join(outDir, 'llms-full.txt'), full.join('\n'), 'utf-8')
 
   siteConfig.logger.info(
-    `seo: published ${copied} markdown source file(s), llms.txt (${entries.length} pages) and llms-full.txt`
+    `seo: published ${copied} markdown source file(s), llms.txt (${entries.length} pages), llms-full.txt and markdown negotiation manifest (${negotiated} routes)`
   )
 }

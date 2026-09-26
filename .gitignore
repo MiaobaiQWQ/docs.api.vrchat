@@ -6,6 +6,11 @@ dist
 docs/.vitepress/cache
 docs/.vitepress/dist
 
+# 本地调试产物（wrangler pages dev、临时验证脚本、本地 npm 缓存）
+.wrangler
+_verify
+.npm-cache
+
 # 日志
 *.log
 npm-debug.log*
