@@ -5,7 +5,8 @@
   "description": "Kipfel Wiki - VRChat 视频解析文档站",
   "scripts": {
     "dev": "vitepress dev docs",
-    "build": "vitepress build docs",
+    "build": "vitepress build docs && node scripts/check-seo.mjs",
+    "check:seo": "node scripts/check-seo.mjs",
     "preview": "vitepress preview docs"
   },
   "devDependencies": {

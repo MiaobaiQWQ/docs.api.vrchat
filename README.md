@@ -21,6 +21,7 @@ npm run preview   # 预览构建产物
 ```
 docs/
 ├─ index.md                  根路径，跳转到 /zh/（canonical 指向 /zh/）
+├─ 404.md                    自定义 404 页（含 <h1>，并声明 noindex）
 ├─ zh|en|ja/                 三个语言版本的内容
 │  ├─ index.md               首页
 │  ├─ video-parser/          视频解析：api / guide / faq / cdn / changelog / domains / partners / team
@@ -36,6 +37,9 @@ docs/
 
 functions/
 └─ [[path]].ts               Cloudflare Pages Function：Accept 内容协商（运行期使用）
+
+scripts/
+└─ check-seo.mjs             构建后 SEO 自检：缺 <h1> / 图片 alt 为空 / sitemap 收录 404 即失败
 ```
 
 ## SEO / GEO 实现说明
@@ -45,7 +49,7 @@ functions/
 | 能力 | 实现位置 | 说明 |
 | --- | --- | --- |
 | 每页独立 `<title>` / `description` | 各页面 frontmatter | `description` 是必填项，见下方「维护约定」 |
-| `sitemap.xml` | `seo.ts` → `sitemapOptions` | 由 VitePress 内置生成，附带 git 提交日期作为 `lastmod` |
+| `sitemap.xml` | `seo.ts` → `sitemapOptions` | 由 VitePress 内置生成，附带 git 提交日期作为 `lastmod`；剔除根跳转页与 404 页 |
 | 干净 URL | `config.ts` → `cleanUrls: true` | 页面地址为 `/zh/video-parser/api`，不带 `.html` |
 | `canonical` | `seo.ts` → `transformHead` | 每页指向自身；`/` 通过 frontmatter `canonical: /zh/` 归并 |
 | `hreflang` 三语互链 | `seo.ts` → `transformHead` | zh-CN / en / ja + `x-default` |
@@ -60,6 +64,8 @@ functions/
 | `llms.txt` | 构建时生成 | 由各页 frontmatter 的 title / description 自动汇总 |
 | `llms-full.txt` | 构建时生成 | 全部页面 Markdown 正文拼接 |
 | 页面 `.md` 直出版本 | 构建时生成 | 每个页面同时发布一份 Markdown 源文件，供 AI 直接抓取 |
+| 每页 `<h1>` 与图片 `alt` | `scripts/check-seo.mjs` | 构建后扫描产物，缺 `<h1>` 或 `<img alt>` 为空即让构建失败 |
+| 自定义 404 页 | `docs/404.md` + `seo.ts` → `transformHtml` | VitePress 会清空 404 正文，这里补回静态兜底并声明 `noindex` |
 
 构建时 `seo.ts` 的 `buildEnd` 会自动：
 
@@ -68,6 +74,19 @@ functions/
 3. 生成内容协商清单 `docs/.vitepress/dist/_agents/markdown.json`。
 
 因此 **`.md`、`llms.txt`、`llms-full.txt`、协商清单都不需要手动维护**，新增页面后重新构建即可。
+
+构建的最后一步是 `scripts/check-seo.mjs`（`npm run build` 已经串上，也可单独跑 `npm run check:seo`）。
+它扫描 `docs/.vitepress/dist` 里的每一份 HTML 与 `sitemap.xml`，任何一项不达标就让构建失败：
+
+| 检查项 | 判定 |
+| --- | --- |
+| 页面缺少 `<h1>` | 错误（Bing「缺少 h1 标记」） |
+| 页面有多个 `<h1>` | 警告（不失败） |
+| `<img>` 没有 `alt`，或 `alt=""` | 错误（Bing「缺少图像的 Alt 属性」） |
+| `sitemap.xml` 收录了 `/`、`/404`、`/404.html` | 错误 |
+
+纯 Node 标准库实现，不依赖任何第三方服务，且只看最终 HTML，
+因此与托管平台无关（Cloudflare Pages / Vercel / Netlify / 本地都一样生效）。
 
 ## Markdown 内容协商（Markdown for Agents）
 
@@ -161,6 +180,9 @@ curl -s -X POST https://isitagentready.com/api/scan \
    它是页面的 `<meta name="description">`，也是 `llms.txt` 里该页的摘要。
 2. **正文只用一个 H1**，层级不要跳级（`## → ### → ####`）。
    标题层级既影响搜索引擎理解，也决定 `HowTo` 步骤的生成。
+   **每张图片都要有非空的 `alt`**（写描述性文字；空字符串 `alt=""` 会被 Bing 判成
+   「缺少图像的 Alt 属性」，屏幕阅读器也读不出内容）。
+   这两条由 `scripts/check-seo.mjs` 在构建末尾强制校验，违规直接构建失败。
 3. **FAQ 页每个问题写成 `### 问题？`，紧接着用一段话直接给出答案**，
    容器块（`:::`）放在答案段落之后。`FAQPage` 结构化数据就是按这个结构自动提取的。
 4. **新增页面后把页面键加进 `seo.ts` 的 `PAGE_ORDER`**，用于控制 `llms.txt` 里的排序；
@@ -177,6 +199,15 @@ curl -s -X POST https://isitagentready.com/api/scan \
 8. **改了 `_headers` 或函数后，测试时要重启本地 wrangler**（`_headers` 会热重载，
    但 `functions/` 的改动不一定立刻生效）。另外 `_headers` 每条规则**只允许一个通配符**，
    `/*/*.md` 这类写法会被 wrangler 警告并整条跳过 —— 单条 `/*.md` 已经能匹配任意层级。
+9. **站点 Logo 的 `alt` 在 `config.ts` 里维护**，且必须把 `themeConfig.logo` 写成对象形式：
+
+   ```ts
+   logo: { src: '/favicon.png', alt: 'kipfel.link 接口文档' }
+   ```
+
+   写成字符串（`logo: '/favicon.png'`）时 VitePress 的 `VPImage` 会渲染出 `<img ... alt>`
+   —— 一个空 `alt`，于是**全站每一页**都会被 Bing 报「缺少图像的 Alt 属性」。
+   `en` / `ja` 两个 locale 各自覆盖了本地语言的 `alt`，新增语言时记得一并补上。
 
 ## 部署
 
