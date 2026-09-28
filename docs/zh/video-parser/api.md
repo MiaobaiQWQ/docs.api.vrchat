@@ -1,6 +1,6 @@
 ---
 outline: deep
-description: "VRChat 视频解析 API 完整接口文档：v1 视频与音乐解析（含 JSON 版本）、v3 弹幕与歌词接口的请求地址、参数、返回字段、错误码与访问频率限制。"
+description: "VRChat 视频解析 API 完整接口文档：v1 视频与音乐解析（含 JSON 版本）、v3 弹幕与歌词接口（含哔哩哔哩 AI 字幕、歌词封面图）的请求地址、参数、返回字段、错误码与访问频率限制。"
 ---
 
 # VRC 视频解析 API 调用与限制文档
@@ -188,37 +188,104 @@ v3 接口面向需要弹幕、歌词等富内容的播放器：除直链外还�
 **接口**：`/v3/vrc-danmaku?url={视频链接}`  
 **参数**：
 - `url` (必填)：视频链接
-- `limit` (可选)：弹幕数量限制，默认 10000
+- `limit` (可选)：弹幕数量限制，默认 10000；**只限制弹幕，不影响字幕**
+- `start_time` (可选)：起始时间（秒），只返回该时间点之后的内容；与 `duration` 搭配组成时间窗
+- `duration` (可选)：时间窗长度（秒），需与 `start_time` 一起传
+- `ai_subtitle` (可选)：是否返回哔哩哔哩字幕（AI 字幕 + UP主上传的 CC 字幕）。`1` / `true` / `yes` / `on` 为开启，`0` / `false` / `no` / `off` 为关闭；不传时跟随服务端默认值（当前默认开启）
+- `lang` (可选)：字幕语言过滤，逗号分隔（如 `ai-zh,zh-CN,ja`）；传 `*` 或留空表示返回全部可用语言。也可以写成 `subtitle_lang`
+
+::: tip 字幕（哔哩哔哩）
+- 字幕只对**哔哩哔哩**生效，其它平台会自动忽略 `ai_subtitle` / `lang`
+- AI 字幕（`ai-zh`、`ai-ja` …）与 UP主上传的 CC 字幕（`zh`、`zh-CN`、`zh-Hans` …）一并返回，用条目里的 `l` 区分
+- 语言码大小写不敏感，并支持主语言前缀匹配（传 `zh` 会命中 `zh-CN`）
+- 字幕正文需要服务端配置 B 站登录态 Cookie；未配置时 `subtitles` 为空数组，**不影响弹幕**
+- 只要某一种语言时，建议直接用 `lang=` 让服务端过滤，比拉全量再自己筛更省流量
+- `start_time` + `duration` 的时间窗过滤对弹幕和字幕分别生效
+:::
 
 **响应**：
 
-**Unity Player（User-Agent 包含 Unity）：**
+**Unity Player（User-Agent 包含 Unity），以哔哩哔哩为例：**
 
 ```json
 {
   "success": true,
-  "data": {
-    "platform": "bilibili",
-    "comments": [
-      {
-        "time": 10.5,
-        "text": "弹幕内容",
-        "user": "用户名",
-        "color": "FFFFFF"
-      }
-    ]
-  }
+  "platform": "哔哩哔哩",
+  "video_id": "BV1aAhm6vEA6",
+  "title": "视频标题",
+  "has_more": false,
+  "danmaku": [
+    {
+      "t": 0.5,
+      "c": "弹幕内容",
+      "ty": 1,
+      "co": 16777215,
+      "fs": 25
+    }
+  ],
+  "subtitles": [
+    {
+      "t": 0.04,
+      "to": 1.72,
+      "c": "字幕文本",
+      "l": "ai-zh"
+    },
+    {
+      "t": 0.04,
+      "to": 1.72,
+      "c": "subtitle",
+      "l": "ai-ja"
+    }
+  ],
+  "subtitle_langs": ["ai-zh", "ai-ja"]
 }
 ```
 
 字段说明：
-- `success` (boolean)：请求是否成功
-- `data.platform` (string)：平台标识
-- `data.comments` (array)：弹幕列表
-  - `comments[].time` (number)：弹幕时间点（秒）
-  - `comments[].text` (string)：弹幕内容
-  - `comments[].user` (string)：用户标识
-  - `comments[].color` (string)：弹幕颜色（十六进制）
+- `success` (boolean)：请求是否成功（字幕取不到也照样为 `true`，只是 `subtitles` 为空数组）
+- `platform` (string)：平台中文名，如 `哔哩哔哩`
+- `video_id` (string)：视频 ID，哔哩哔哩为 BV 号
+- `title` (string)：视频标题
+- `has_more` (boolean)：使用 `start_time` + `duration` 切片时，后面是否还有内容
+- `danmaku` (array)：弹幕列表
+  - `danmaku[].t` (number)：弹幕时间点（秒）
+  - `danmaku[].c` (string)：弹幕内容
+  - `danmaku[].ty` (number)：弹幕类型（`1` 滚动、`4` 底部、`5` 顶部等）
+  - `danmaku[].co` (number)：弹幕颜色，十进制 RGB（`16777215` = 白色）
+  - `danmaku[].fs` (number)：字号
+- `subtitles` (array)：字幕**扁平数组**，所有语言混在一起、没有嵌套字典；无字幕时为 `[]`
+  - `subtitles[].t` (number)：字幕开始时间（秒）
+  - `subtitles[].to` (number)：字幕结束时间（秒）
+  - `subtitles[].c` (string)：字幕文本（已去掉换行与首尾空白）
+  - `subtitles[].l` (string)：语言码（如 `ai-zh`、`zh-CN`、`ja`）
+- `subtitle_langs` (array，可选)：本次**实际返回**的语言码，与 `subtitles[].l` 出现过的值一致；没有字幕时不返回该字段
+- `subtitle_locked` (boolean，可选)：`true` 表示该视频确实有字幕轨，但服务端没配置登录态 Cookie，拿不到正文；只有"尝试取字幕却没取到"时才会出现（主动 `ai_subtitle=0` 关闭不会出现）
+- `subtitle_locked_langs` (array，可选)：被登录态挡住的语言码，与 `subtitle_locked` 一起出现
+
+::: tip 调用示例
+
+```bash
+# 默认：弹幕 + 全部可用语言的字幕
+curl -A "Unity demo" "https://api.kipfel.link/v3/vrc-danmaku?url=https://www.bilibili.com/video/BV1aAhm6vEA6"
+
+# 只要中文 AI 字幕
+curl -A "Unity demo" "https://api.kipfel.link/v3/vrc-danmaku?url=https://www.bilibili.com/video/BV1aAhm6vEA6&lang=ai-zh"
+
+# 只要 UP主上传的中/英文字幕（排除 ai- 开头的 AI 字幕）
+curl -A "Unity demo" "https://api.kipfel.link/v3/vrc-danmaku?url=https://www.bilibili.com/video/BV1aAhm6vEA6&lang=zh-CN,zh-Hans,en-US"
+
+# 不要字幕
+curl -A "Unity demo" "https://api.kipfel.link/v3/vrc-danmaku?url=https://www.bilibili.com/video/BV1aAhm6vEA6&ai_subtitle=0"
+```
+
+:::
+
+::: warning 字段顺序
+`title` 等小字段**始终排在 `danmaku` / `subtitles` 两个大数组前面**。
+Udon 侧有些 JSON 解析只在响应开头若干字符内找 key，数组一旦把字段挤到后面就会读不到，客户端不要依赖这些字段出现在末尾。
+:::
+
+**其它平台（抖音、快手等）** 返回同样的 `danmaku` 数组，但不含 `subtitles` / `subtitle_langs` 等字幕字段。
 
 **非 Unity Player：**
 - **成功**：302 重定向到直链地址
@@ -231,6 +298,13 @@ v3 接口面向需要弹幕、歌词等富内容的播放器：除直链外还�
 **接口**：`/v3/vrc-lyric?url={音乐链接}`  
 **参数**：
 - `url` (必填)：音乐链接
+- `size` / `cover_size` (可选)：返回封面图的分辨率，只支持 `64` 或 `128`，缺省为 `128`；两个参数名等价（`size` 优先），传其它**数值**按 `128` 处理
+
+::: tip 封面图
+- 封面以 **base64 内嵌**在歌词 JSON 里返回，不额外给图片地址，Udon 侧直接解码成贴图即可
+- `size` / `cover_size` 是本接口自己的参数，不会被当成音乐链接的一部分（`url` 里带同名参数也不会影响解析结果）
+- 服务端没取到封面（平台无封面、图片下载失败等）时，两个字段都为空字符串，不会报错
+:::
 
 **响应**：
 
@@ -252,13 +326,15 @@ v3 接口面向需要弹幕、歌词等富内容的播放器：除直链外还�
         "time": 0.0,
         "text": "翻译歌词内容"
       }
-    ]
+    ],
+    "cover_base64": "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUDBAQEAwUEBAQFBQ...",
+    "cover_size": "128x128"
   }
 }
 ```
 
 字段说明：
-- `success` (boolean)：请求是否成功
+- `success` (boolean)：请求是否成功（取不到歌词时也为 `true`，只是 `lyrics` 为空）
 - `data.platform` (string)：平台标识
 - `data.lyrics` (array)：原歌词列表
   - `lyrics[].time` (number)：歌词时间点（秒）
@@ -266,6 +342,20 @@ v3 接口面向需要弹幕、歌词等富内容的播放器：除直链外还�
 - `data.tlyrics` (array)：翻译歌词列表
   - `tlyrics[].time` (number)：歌词时间点（秒）
   - `tlyrics[].text` (string)：翻译歌词内容
+- `data.cover_base64` (string)：专辑封面图，压缩成正方形后 base64 编码（**不回传原始图片地址**）；没有封面时为空字符串 `""`
+- `data.cover_size` (string)：封面实际尺寸，取值 `"64x64"` 或 `"128x128"`；没有封面时为空字符串 `""`
+
+::: tip 调用示例
+```bash
+# 默认 128×128 封面
+curl -A "Unity demo" "https://api.kipfel.link/v3/vrc-lyric?url=https://music.163.com/song?id=347230"
+
+# 64×64 封面（两个参数名等价）
+curl -A "Unity demo" "https://api.kipfel.link/v3/vrc-lyric?url=https://music.163.com/song?id=347230&size=64"
+curl -A "Unity demo" "https://api.kipfel.link/v3/vrc-lyric?url=https://music.163.com/song?id=347230&cover_size=64"
+```
+
+:::
 
 **非 Unity Player：**
 - **成功**：302 重定向到直链地址

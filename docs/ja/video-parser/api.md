@@ -1,6 +1,6 @@
 ---
 outline: deep
-description: "VRChat ビデオ解析 API のリファレンス：v1 のビデオ・音楽解析（JSON 版含む）、v3 の弾幕・歌詞、パラメータ、レスポンス項目、エラーコード。"
+description: "VRChat ビデオ解析 API のリファレンス：v1 のビデオ・音楽解析（JSON 版含む）、v3 の弾幕・歌詞（Bilibili の AI 字幕とカバー画像を含む）、パラメータ、レスポンス項目、エラーコード。"
 ---
 
 # VRC ビデオ解析 API 呼び出しと制限ドキュメント
@@ -189,37 +189,104 @@ v3 インターフェースは弾幕や歌詞などのリッチなコンテン�
 **インターフェース**：`/v3/vrc-danmaku?url={ビデオリンク}`  
 **パラメータ**：
 - `url` (必須)：ビデオリンク
-- `limit` (オプション)：弾幕数制限、デフォルト 10000
+- `limit` (オプション)：弾幕数制限、デフォルト 10000；**制限されるのは弾幕のみで、字幕には影響しません**
+- `start_time` (オプション)：開始時間（秒）。この時点以降の内容だけを返します。`duration` と組み合わせて時間ウィンドウを構成します
+- `duration` (オプション)：時間ウィンドウの長さ（秒）。`start_time` と一緒に送信する必要があります
+- `ai_subtitle` (オプション)：Bilibili の字幕（AI 字幕 + UP主がアップロードした CC 字幕）を返すかどうか。`1` / `true` / `yes` / `on` で有効、`0` / `false` / `no` / `off` で無効。指定しない場合はサーバー側のデフォルト値に従います（現在はデフォルトで有効）
+- `lang` (オプション)：字幕の言語フィルタ。カンマ区切り（例：`ai-zh,zh-CN,ja`）。`*` または空の値ですべての利用可能な言語を返します。`subtitle_lang` と書くこともできます
+
+::: tip 字幕（Bilibili）
+- 字幕が有効なのは **Bilibili** のみで、他のプラットフォームでは `ai_subtitle` / `lang` は自動的に無視されます
+- AI 字幕（`ai-zh`、`ai-ja` …）と UP主がアップロードした CC 字幕（`zh`、`zh-CN`、`zh-Hans` …）はまとめて返され、各項目の `l` で区別します
+- 言語コードは大文字と小文字を区別せず、主要言語のプレフィックス一致にも対応しています（`zh` を渡すと `zh-CN` にも一致します）
+- 字幕の本文にはサーバー側で Bilibili のログイン状態 Cookie を設定する必要があります。未設定の場合は `subtitles` が空配列になり、**弾幕には影響しません**
+- 特定の 1 言語だけが必要な場合は、全量を取得してから自分で絞り込むよりも `lang=` でサーバー側にフィルタさせる方が通信量を節約できます
+- `start_time` + `duration` の時間ウィンドウフィルタは、弾幕と字幕にそれぞれ適用されます
+:::
 
 **応答**：
 
-**Unity Player（User-Agent に Unity を含む）：**
+**Unity Player（User-Agent に Unity を含む）、Bilibili を例に：**
 
 ```json
 {
   "success": true,
-  "data": {
-    "platform": "bilibili",
-    "comments": [
-      {
-        "time": 10.5,
-        "text": "弾幕内容",
-        "user": "ユーザー名",
-        "color": "FFFFFF"
-      }
-    ]
-  }
+  "platform": "哔哩哔哩",
+  "video_id": "BV1aAhm6vEA6",
+  "title": "ビデオのタイトル",
+  "has_more": false,
+  "danmaku": [
+    {
+      "t": 0.5,
+      "c": "弾幕内容",
+      "ty": 1,
+      "co": 16777215,
+      "fs": 25
+    }
+  ],
+  "subtitles": [
+    {
+      "t": 0.04,
+      "to": 1.72,
+      "c": "字幕テキスト",
+      "l": "ai-zh"
+    },
+    {
+      "t": 0.04,
+      "to": 1.72,
+      "c": "subtitle",
+      "l": "ai-ja"
+    }
+  ],
+  "subtitle_langs": ["ai-zh", "ai-ja"]
 }
 ```
 
 フィールド説明：
-- `success` (boolean)：リクエストが成功したかどうか
-- `data.platform` (string)：プラットフォーム識別子
-- `data.comments` (array)：弾幕リスト
-  - `comments[].time` (number)：弾幕時間点（秒）
-  - `comments[].text` (string)：弾幕内容
-  - `comments[].user` (string)：ユーザー識別子
-  - `comments[].color` (string)：弾幕色（16 進数）
+- `success` (boolean)：リクエストが成功したかどうか（字幕が取得できなくても `true` のままで、`subtitles` が空配列になるだけです）
+- `platform` (string)：プラットフォームの中国語名（例：`哔哩哔哩`）
+- `video_id` (string)：ビデオ ID。Bilibili では BV 番号
+- `title` (string)：ビデオのタイトル
+- `has_more` (boolean)：`start_time` + `duration` で分割した場合に、この後ろにまだ内容があるかどうか
+- `danmaku` (array)：弾幕リスト
+  - `danmaku[].t` (number)：弾幕の時間点（秒）
+  - `danmaku[].c` (string)：弾幕内容
+  - `danmaku[].ty` (number)：弾幕の種類（`1` スクロール、`4` 下部、`5` 上部など）
+  - `danmaku[].co` (number)：弾幕の色、10 進数 RGB（`16777215` = 白）
+  - `danmaku[].fs` (number)：フォントサイズ
+- `subtitles` (array)：字幕の**フラット配列**。すべての言語が混ざっており、ネストした辞書はありません。字幕がない場合は `[]`
+  - `subtitles[].t` (number)：字幕の開始時間（秒）
+  - `subtitles[].to` (number)：字幕の終了時間（秒）
+  - `subtitles[].c` (string)：字幕テキスト（改行と前後の空白は除去済み）
+  - `subtitles[].l` (string)：言語コード（`ai-zh`、`zh-CN`、`ja` など）
+- `subtitle_langs` (array、オプション)：今回**実際に返された**言語コード。`subtitles[].l` に現れた値と一致します。字幕がない場合はこのフィールドは返されません
+- `subtitle_locked` (boolean、オプション)：`true` は、そのビデオに字幕トラックが確かに存在するものの、サーバーにログイン状態 Cookie が設定されていないため本文を取得できないことを示します。「字幕を取得しようとしたが取れなかった」場合にのみ現れます（`ai_subtitle=0` で明示的に無効にした場合は現れません）
+- `subtitle_locked_langs` (array、オプション)：ログイン状態によって遮られた言語コード。`subtitle_locked` と一緒に現れます
+
+::: tip 呼び出し例
+
+```bash
+# デフォルト：弾幕 + 利用可能なすべての言語の字幕
+curl -A "Unity demo" "https://api.kipfel.link/v3/vrc-danmaku?url=https://www.bilibili.com/video/BV1aAhm6vEA6"
+
+# 中国語の AI 字幕のみ
+curl -A "Unity demo" "https://api.kipfel.link/v3/vrc-danmaku?url=https://www.bilibili.com/video/BV1aAhm6vEA6&lang=ai-zh"
+
+# UP主がアップロードした中国語/英語の字幕のみ（ai- で始まる AI 字幕は除外）
+curl -A "Unity demo" "https://api.kipfel.link/v3/vrc-danmaku?url=https://www.bilibili.com/video/BV1aAhm6vEA6&lang=zh-CN,zh-Hans,en-US"
+
+# 字幕なし
+curl -A "Unity demo" "https://api.kipfel.link/v3/vrc-danmaku?url=https://www.bilibili.com/video/BV1aAhm6vEA6&ai_subtitle=0"
+```
+
+:::
+
+::: warning フィールドの順序
+`title` などの小さなフィールドは**常に `danmaku` / `subtitles` という 2 つの大きな配列より前に並びます**。
+Udon 側の一部の JSON パーサーはレスポンスの先頭から数文字の範囲でしか key を探さないため、配列がフィールドを後ろに押し出すと読み取れなくなります。クライアント側はこれらのフィールドが末尾に現れることを前提にしないでください。
+:::
+
+**その他のプラットフォーム（Douyin、Kuaishou など）** は同じ `danmaku` 配列を返しますが、`subtitles` / `subtitle_langs` などの字幕フィールドは含まれません。
 
 **非 Unity Player：**
 - **成功**：302 リダイレクト到直リンクアドレス
@@ -232,6 +299,13 @@ v3 インターフェースは弾幕や歌詞などのリッチなコンテン�
 **インターフェース**：`/v3/vrc-lyric?url={音楽リンク}`  
 **パラメータ**：
 - `url` (必須)：音楽リンク
+- `size` / `cover_size` (オプション)：返されるカバー画像の解像度。`64` または `128` のみ対応、省略時は `128`。2 つのパラメータ名は同等です（`size` が優先）。それ以外の**数値**は `128` として扱われます
+
+::: tip カバー画像
+- カバーは歌詞 JSON に **base64 で埋め込んで**返され、画像のアドレスは別途提供されません。Udon 側でそのままデコードしてテクスチャにできます
+- `size` / `cover_size` はこのインターフェース自身のパラメータで、音楽リンクの一部としては扱われません（`url` に同名のパラメータが含まれていても解析結果には影響しません）
+- サーバーがカバーを取得できなかった場合（プラットフォームにカバーがない、画像のダウンロードに失敗したなど）は、両方のフィールドが空文字列になり、エラーにはなりません
+:::
 
 **応答**：
 
@@ -253,13 +327,15 @@ v3 インターフェースは弾幕や歌詞などのリッチなコンテン�
         "time": 0.0,
         "text": "翻訳歌詞内容"
       }
-    ]
+    ],
+    "cover_base64": "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUDBAQEAwUEBAQFBQ...",
+    "cover_size": "128x128"
   }
 }
 ```
 
 フィールド説明：
-- `success` (boolean)：リクエストが成功したかどうか
+- `success` (boolean)：リクエストが成功したかどうか（歌詞が取得できなくても `true` のままで、`lyrics` が空になるだけです）
 - `data.platform` (string)：プラットフォーム識別子
 - `data.lyrics` (array)：元の歌詞リスト
   - `lyrics[].time` (number)：歌詞時間点（秒）
@@ -267,6 +343,20 @@ v3 インターフェースは弾幕や歌詞などのリッチなコンテン�
 - `data.tlyrics` (array)：翻訳歌詞リスト
   - `tlyrics[].time` (number)：歌詞時間点（秒）
   - `tlyrics[].text` (string)：翻訳歌詞内容
+- `data.cover_base64` (string)：アルバムのカバー画像。正方形に圧縮したうえで base64 エンコードされています（**元の画像アドレスは返されません**）。カバーがない場合は空文字列 `""`
+- `data.cover_size` (string)：カバーの実際のサイズ。値は `"64x64"` または `"128x128"`。カバーがない場合は空文字列 `""`
+
+::: tip 呼び出し例
+```bash
+# デフォルトの 128×128 カバー
+curl -A "Unity demo" "https://api.kipfel.link/v3/vrc-lyric?url=https://music.163.com/song?id=347230"
+
+# 64×64 カバー（2 つのパラメータ名は同等）
+curl -A "Unity demo" "https://api.kipfel.link/v3/vrc-lyric?url=https://music.163.com/song?id=347230&size=64"
+curl -A "Unity demo" "https://api.kipfel.link/v3/vrc-lyric?url=https://music.163.com/song?id=347230&cover_size=64"
+```
+
+:::
 
 **非 Unity Player：**
 - **成功**：302 リダイレクト到直リンクアドレス

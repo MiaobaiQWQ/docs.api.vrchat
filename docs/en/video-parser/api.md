@@ -1,6 +1,6 @@
 ---
 outline: deep
-description: "VRChat video parsing API reference: v1 video and music endpoints with JSON variants, v3 danmaku and lyrics endpoints, parameters and error codes."
+description: "VRChat video parsing API reference: v1 video and music parsing with JSON variants, v3 danmaku and lyrics with Bilibili AI subtitles and cover images, error codes."
 ---
 
 # VRC Video Parsing API Call and Restriction Documentation
@@ -27,7 +27,7 @@ https://api.kipfel.vrchat.org.cn/
 
 #### Video Parsing
 
-**Interface**: `/v1/vrc?url={video link}`
+**Interface**: `/v1/vrc?url={video link}`  
 **Parameters**:
 - `url` (required): Video link
 
@@ -131,7 +131,7 @@ Field description:
 
 #### Alternative Video Parsing Interface
 
-**Interface**: `/v1/kfc?url={video link}`
+**Interface**: `/v1/kfc?url={video link}`  
 **Parameters**: Same as `/v1/vrc`
 
 **Response**: Same as `/v1/vrc`
@@ -142,7 +142,7 @@ Field description:
 
 #### Music Parsing
 
-**Interface**: `/v1/music?url={music link}&i={index}`
+**Interface**: `/v1/music?url={music link}&i={index}`  
 **Parameters**:
 - `url` (required): Music link or playlist link
 - `i` (optional): Playlist index (starts from 1)
@@ -159,7 +159,7 @@ Field description:
 
 #### Alternative Music Parsing Interface
 
-**Interface**: `/v1/musickfc?url={music link}&i={index}`
+**Interface**: `/v1/musickfc?url={music link}&i={index}`  
 **Parameters**: Same as `/v1/music`
 
 **Response**: Same as `/v1/music`
@@ -189,40 +189,107 @@ The v3 interface targets players that need richer content such as danmaku and ly
 
 #### Danmaku Interface
 
-**Interface**: `/v3/vrc-danmaku?url={video link}`
+**Interface**: `/v3/vrc-danmaku?url={video link}`  
 **Parameters**:
 - `url` (required): Video link
-- `limit` (optional): Danmaku quantity limit, default 10000
+- `limit` (optional): Danmaku quantity limit, default 10000; **it only limits danmaku and does not affect subtitles**
+- `start_time` (optional): Start time (seconds); only content after this point is returned. Combine it with `duration` to form a time window
+- `duration` (optional): Length of the time window (seconds); must be sent together with `start_time`
+- `ai_subtitle` (optional): Whether to return Bilibili subtitles (AI subtitles + CC subtitles uploaded by the uploader). `1` / `true` / `yes` / `on` turns it on, `0` / `false` / `no` / `off` turns it off; when omitted the server default applies (currently on by default)
+- `lang` (optional): Subtitle language filter, comma separated (e.g. `ai-zh,zh-CN,ja`); `*` or an empty value returns every available language. It can also be written as `subtitle_lang`
+
+::: tip Subtitles (Bilibili)
+- Subtitles only apply to **Bilibili**; other platforms ignore `ai_subtitle` / `lang` automatically
+- AI subtitles (`ai-zh`, `ai-ja`, …) and CC subtitles uploaded by the uploader (`zh`, `zh-CN`, `zh-Hans`, …) are returned together, and the `l` of each entry tells them apart
+- Language codes are case-insensitive and support primary-language prefix matching (passing `zh` also matches `zh-CN`)
+- The subtitle text requires a logged-in Bilibili cookie configured on the server; when it is missing, `subtitles` is an empty array, which **does not affect danmaku**
+- If you only need one language, filter it on the server with `lang=` instead of fetching everything and filtering yourself — it saves bandwidth
+- The `start_time` + `duration` time window applies to danmaku and subtitles separately
+:::
 
 **Response**:
 
-**Unity Player (User-Agent contains Unity):**
+**Unity Player (User-Agent contains Unity), Bilibili as an example:**
 
 ```json
 {
   "success": true,
-  "data": {
-    "platform": "bilibili",
-    "comments": [
-      {
-        "time": 10.5,
-        "text": "Danmaku content",
-        "user": "Username",
-        "color": "FFFFFF"
-      }
-    ]
-  }
+  "platform": "哔哩哔哩",
+  "video_id": "BV1aAhm6vEA6",
+  "title": "Video title",
+  "has_more": false,
+  "danmaku": [
+    {
+      "t": 0.5,
+      "c": "Danmaku content",
+      "ty": 1,
+      "co": 16777215,
+      "fs": 25
+    }
+  ],
+  "subtitles": [
+    {
+      "t": 0.04,
+      "to": 1.72,
+      "c": "Subtitle text",
+      "l": "ai-zh"
+    },
+    {
+      "t": 0.04,
+      "to": 1.72,
+      "c": "subtitle",
+      "l": "ai-ja"
+    }
+  ],
+  "subtitle_langs": ["ai-zh", "ai-ja"]
 }
 ```
 
 Field description:
-- `success` (boolean): Whether the request was successful
-- `data.platform` (string): Platform identifier
-- `data.comments` (array): Danmaku list
-  - `comments[].time` (number): Danmaku timestamp (seconds)
-  - `comments[].text` (string): Danmaku content
-  - `comments[].user` (string): User identifier
-  - `comments[].color` (string): Danmaku color (hexadecimal)
+- `success` (boolean): Whether the request was successful (it stays `true` even when subtitles cannot be fetched, `subtitles` is simply an empty array)
+- `platform` (string): Chinese platform name, such as `哔哩哔哩`
+- `video_id` (string): Video ID; the BV number for Bilibili
+- `title` (string): Video title
+- `has_more` (boolean): Whether more content follows when slicing with `start_time` + `duration`
+- `danmaku` (array): Danmaku list
+  - `danmaku[].t` (number): Danmaku timestamp (seconds)
+  - `danmaku[].c` (string): Danmaku content
+  - `danmaku[].ty` (number): Danmaku type (`1` scrolling, `4` bottom, `5` top, etc.)
+  - `danmaku[].co` (number): Danmaku color, decimal RGB (`16777215` = white)
+  - `danmaku[].fs` (number): Font size
+- `subtitles` (array): Subtitles as a **flat array** — all languages mixed together with no nested dictionary; `[]` when there are none
+  - `subtitles[].t` (number): Subtitle start time (seconds)
+  - `subtitles[].to` (number): Subtitle end time (seconds)
+  - `subtitles[].c` (string): Subtitle text (line breaks and leading/trailing whitespace already stripped)
+  - `subtitles[].l` (string): Language code (such as `ai-zh`, `zh-CN`, `ja`)
+- `subtitle_langs` (array, optional): The language codes **actually returned** this time, matching the values that appear in `subtitles[].l`; the field is not returned when there are no subtitles
+- `subtitle_locked` (boolean, optional): `true` means the video really does have a subtitle track, but the server has no logged-in cookie configured so the text cannot be fetched; it only appears when "subtitles were attempted but not obtained" (explicitly disabling with `ai_subtitle=0` does not produce it)
+- `subtitle_locked_langs` (array, optional): The language codes blocked by the login requirement; it appears together with `subtitle_locked`
+
+::: tip Call examples
+
+```bash
+# Default: danmaku + subtitles in every available language
+curl -A "Unity demo" "https://api.kipfel.link/v3/vrc-danmaku?url=https://www.bilibili.com/video/BV1aAhm6vEA6"
+
+# Chinese AI subtitles only
+curl -A "Unity demo" "https://api.kipfel.link/v3/vrc-danmaku?url=https://www.bilibili.com/video/BV1aAhm6vEA6&lang=ai-zh"
+
+# Only the Chinese/English subtitles uploaded by the uploader (excludes AI subtitles starting with ai-)
+curl -A "Unity demo" "https://api.kipfel.link/v3/vrc-danmaku?url=https://www.bilibili.com/video/BV1aAhm6vEA6&lang=zh-CN,zh-Hans,en-US"
+
+# No subtitles
+curl -A "Unity demo" "https://api.kipfel.link/v3/vrc-danmaku?url=https://www.bilibili.com/video/BV1aAhm6vEA6&ai_subtitle=0"
+```
+
+:::
+
+::: warning Field order
+Small fields such as `title` **always come before the two large arrays `danmaku` / `subtitles`**.
+Some JSON parsers on the Udon side only look for keys within the first few characters of the response, so once the arrays push those fields to the back they can no longer be read; clients must not rely on those fields appearing at the end.
+:::
+
+**Other platforms (Douyin, Kuaishou, etc.)** return the same `danmaku` array, but without subtitle fields such as `subtitles` / `subtitle_langs`.
 
 **Non-Unity Player:**
 - **Success**: 302 redirect to direct link address
@@ -232,9 +299,16 @@ Field description:
 
 #### Lyrics Interface
 
-**Interface**: `/v3/vrc-lyric?url={music link}`
+**Interface**: `/v3/vrc-lyric?url={music link}`  
 **Parameters**:
 - `url` (required): Music link
+- `size` / `cover_size` (optional): Resolution of the returned cover image; only `64` or `128` are supported, defaulting to `128`. The two parameter names are equivalent (`size` wins), and any other **numeric** value is treated as `128`
+
+::: tip Cover image
+- The cover is returned **embedded as base64** inside the lyrics JSON — no separate image URL is provided, so the Udon side can decode it into a texture directly
+- `size` / `cover_size` are parameters of this endpoint itself and are not treated as part of the music link (a same-named parameter inside `url` does not affect the parsing result either)
+- When the server cannot get a cover (the platform has none, the image download fails, etc.) both fields are empty strings and no error is raised
+:::
 
 **Response**:
 
@@ -256,13 +330,15 @@ Field description:
         "time": 0.0,
         "text": "Translated lyric content"
       }
-    ]
+    ],
+    "cover_base64": "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUDBAQEAwUEBAQFBQ...",
+    "cover_size": "128x128"
   }
 }
 ```
 
 Field description:
-- `success` (boolean): Whether the request was successful
+- `success` (boolean): Whether the request was successful (it stays `true` even when lyrics cannot be fetched, `lyrics` is simply empty)
 - `data.platform` (string): Platform identifier
 - `data.lyrics` (array): Original lyric list
   - `lyrics[].time` (number): Lyric timestamp (seconds)
@@ -270,6 +346,20 @@ Field description:
 - `data.tlyrics` (array): Translated lyric list
   - `tlyrics[].time` (number): Lyric timestamp (seconds)
   - `tlyrics[].text` (string): Translated lyric content
+- `data.cover_base64` (string): Album cover image, compressed into a square and then base64-encoded (**the original image URL is not returned**); an empty string `""` when there is no cover
+- `data.cover_size` (string): The cover's actual size, either `"64x64"` or `"128x128"`; an empty string `""` when there is no cover
+
+::: tip Call examples
+```bash
+# Default 128×128 cover
+curl -A "Unity demo" "https://api.kipfel.link/v3/vrc-lyric?url=https://music.163.com/song?id=347230"
+
+# 64×64 cover (the two parameter names are equivalent)
+curl -A "Unity demo" "https://api.kipfel.link/v3/vrc-lyric?url=https://music.163.com/song?id=347230&size=64"
+curl -A "Unity demo" "https://api.kipfel.link/v3/vrc-lyric?url=https://music.163.com/song?id=347230&cover_size=64"
+```
+
+:::
 
 **Non-Unity Player:**
 - **Success**: 302 redirect to direct link address
