@@ -328,6 +328,12 @@ Udon 側の一部の JSON パーサーはレスポンスの先頭から数文字
         "text": "翻訳歌詞内容"
       }
     ],
+    "song_name": "와",
+    "singer": "李贞贤",
+    "audio_id": "25645594",
+    "album_id": "2264131",
+    "duration": 212,
+    "singer_id": "125616",
     "cover_base64": "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUDBAQEAwUEBAQFBQ...",
     "cover_size": "128x128"
   }
@@ -343,6 +349,12 @@ Udon 側の一部の JSON パーサーはレスポンスの先頭から数文字
 - `data.tlyrics` (array)：翻訳歌詞リスト
   - `tlyrics[].time` (number)：歌詞時間点（秒）
   - `tlyrics[].text` (string)：翻訳歌詞内容
+- `data.song_name` (string、オプション)：楽曲名。プラットフォームが提供しない場合はこのフィールド自体が返されません
+- `data.singer` (string、オプション)：歌手名
+- `data.audio_id` (string、オプション)：プラットフォーム内部のオーディオ ID
+- `data.album_id` (string、オプション)：アルバム ID
+- `data.duration` (number、オプション)：楽曲の総再生時間（秒）
+- `data.singer_id` (string、オプション)：歌手 ID
 - `data.cover_base64` (string)：アルバムのカバー画像。正方形に圧縮したうえで base64 エンコードされています（**元の画像アドレスは返されません**）。カバーがない場合は空文字列 `""`
 - `data.cover_size` (string)：カバーの実際のサイズ。値は `"64x64"` または `"128x128"`。カバーがない場合は空文字列 `""`
 

@@ -327,6 +327,12 @@ Udon 侧有些 JSON 解析只在响应开头若干字符内找 key，数组一�
         "text": "翻译歌词内容"
       }
     ],
+    "song_name": "와",
+    "singer": "李贞贤",
+    "audio_id": "25645594",
+    "album_id": "2264131",
+    "duration": 212,
+    "singer_id": "125616",
     "cover_base64": "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUDBAQEAwUEBAQFBQ...",
     "cover_size": "128x128"
   }
@@ -342,6 +348,12 @@ Udon 侧有些 JSON 解析只在响应开头若干字符内找 key，数组一�
 - `data.tlyrics` (array)：翻译歌词列表
   - `tlyrics[].time` (number)：歌词时间点（秒）
   - `tlyrics[].text` (string)：翻译歌词内容
+- `data.song_name` (string，可选)：歌曲名称；平台未提供时不返回该字段
+- `data.singer` (string，可选)：歌手名称
+- `data.audio_id` (string，可选)：平台内部的音频 ID
+- `data.album_id` (string，可选)：专辑 ID
+- `data.duration` (number，可选)：歌曲总时长，单位：秒
+- `data.singer_id` (string，可选)：歌手 ID
 - `data.cover_base64` (string)：专辑封面图，压缩成正方形后 base64 编码（**不回传原始图片地址**）；没有封面时为空字符串 `""`
 - `data.cover_size` (string)：封面实际尺寸，取值 `"64x64"` 或 `"128x128"`；没有封面时为空字符串 `""`
 

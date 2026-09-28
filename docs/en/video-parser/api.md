@@ -331,6 +331,12 @@ Some JSON parsers on the Udon side only look for keys within the first few chara
         "text": "Translated lyric content"
       }
     ],
+    "song_name": "와",
+    "singer": "李贞贤",
+    "audio_id": "25645594",
+    "album_id": "2264131",
+    "duration": 212,
+    "singer_id": "125616",
     "cover_base64": "/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUDBAQEAwUEBAQFBQ...",
     "cover_size": "128x128"
   }
@@ -346,6 +352,12 @@ Field description:
 - `data.tlyrics` (array): Translated lyric list
   - `tlyrics[].time` (number): Lyric timestamp (seconds)
   - `tlyrics[].text` (string): Translated lyric content
+- `data.song_name` (string, optional): Song name; the field is not returned when the platform does not provide it
+- `data.singer` (string, optional): Singer name
+- `data.audio_id` (string, optional): The platform's internal audio ID
+- `data.album_id` (string, optional): Album ID
+- `data.duration` (number, optional): Total song duration, in seconds
+- `data.singer_id` (string, optional): Singer ID
 - `data.cover_base64` (string): Album cover image, compressed into a square and then base64-encoded (**the original image URL is not returned**); an empty string `""` when there is no cover
 - `data.cover_size` (string): The cover's actual size, either `"64x64"` or `"128x128"`; an empty string `""` when there is no cover
 
