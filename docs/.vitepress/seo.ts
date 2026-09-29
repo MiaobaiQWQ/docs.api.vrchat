@@ -20,7 +20,6 @@ export const REPO_URL = 'https://github.com/MiaobaiQWQ/docs.api.vrchat'
 export const CONTACT_EMAIL = 'admin@kipfel.link'
 
 export const API_BASE = 'https://api.kipfel.link/'
-export const BUSUANZI_BASE = 'https://busuanzi.kipfel.link/'
 
 const OG_IMAGE = `${SITE_URL}/favicon.png`
 
@@ -94,8 +93,7 @@ function kindOf(routePath: string): PageKind {
 }
 
 const SECTION_LABEL: Record<string, Record<Locale, string>> = {
-  '/video-parser': { zh: '视频解析接口', en: 'Video Parser API', ja: 'ビデオ解析 API' },
-  '/busuanzi': { zh: 'Busuanzi 接口', en: 'Busuanzi API', ja: 'Busuanzi API' }
+  '/video-parser': { zh: '视频解析接口', en: 'Video Parser API', ja: 'ビデオ解析 API' }
 }
 
 /* ==================================================================== *
@@ -119,12 +117,6 @@ const API_ENDPOINTS: Record<string, EndpointDef[]> = {
     { method: 'GET', urlTemplate: `${API_BASE}v1/musickfc?url={url}&i={index}`, name: { zh: '备用音乐解析接口', en: 'Alternative music parsing endpoint', ja: '代替音楽解析エンドポイント' } },
     { method: 'GET', urlTemplate: `${API_BASE}v3/vrc-danmaku?url={url}&limit={limit}`, name: { zh: '弹幕接口（需 Unity User-Agent）', en: 'Danmaku endpoint (requires Unity User-Agent)', ja: '弾幕エンドポイント（Unity User-Agent 必須）' } },
     { method: 'GET', urlTemplate: `${API_BASE}v3/vrc-lyric?url={url}`, name: { zh: '歌词接口（需 Unity User-Agent）', en: 'Lyrics endpoint (requires Unity User-Agent)', ja: '歌詞エンドポイント（Unity User-Agent 必須）' } }
-  ],
-  '/busuanzi/api': [
-    { method: 'POST', urlTemplate: `${BUSUANZI_BASE}api`, name: { zh: '上报访问并返回统计值', en: 'Report a visit and return counters', ja: 'アクセスを送信して統計値を返す' } },
-    { method: 'PUT', urlTemplate: `${BUSUANZI_BASE}api`, name: { zh: '仅上报访问（PV/UV +1）', en: 'Report a visit only (PV/UV +1)', ja: 'アクセス送信のみ（PV/UV +1）' } },
-    { method: 'GET', urlTemplate: `${BUSUANZI_BASE}api`, name: { zh: '仅读取统计值（不改变计数）', en: 'Read counters only (does not mutate)', ja: '統計値の読み取りのみ（カウントは変更しない）' } },
-    { method: 'GET', urlTemplate: `${BUSUANZI_BASE}jsonp?callback={callback}`, name: { zh: 'JSONP 兼容接口', en: 'JSONP compatible endpoint', ja: 'JSONP 互換エンドポイント' } }
   ]
 }
 
@@ -187,7 +179,7 @@ function mainEntityFor(kind: PageKind, routePath: string, locale: Locale) {
     if (!endpoints) return undefined
     return {
       '@type': 'WebAPI',
-      name: key.startsWith('/busuanzi') ? 'Busuanzi API' : 'VRChat Video Parser API',
+      name: 'VRChat Video Parser API',
       documentation: `${SITE_URL}${routePath}`,
       provider: { '@id': `${SITE_URL}/#organization` },
       potentialAction: endpoints.map((endpoint) => ({
@@ -499,7 +491,6 @@ const PAGE_ORDER = [
   '/video-parser/guide',
   '/video-parser/faq',
   '/video-parser/cdn',
-  '/busuanzi/api',
   '/video-parser/changelog',
   '/video-parser/domains',
   '/video-parser/partners',
@@ -514,19 +505,18 @@ const LOCALE_SECTION: Record<Locale, string> = {
 
 const LLMS_INTRO = `# kipfel.link 接口文档 (kipfel.link API Documentation)
 
-> kipfel.link 是面向 VRChat 玩家的免费视频 / 音频解析与网站访问统计接口服务。本站是它的官方接口文档站，
-> 覆盖 VRChat 视频解析 API（v1 / v3）、弹幕与歌词接口、Busuanzi 访问统计接口的端点地址、请求参数、
+> kipfel.link 是面向 VRChat 玩家的免费视频 / 音频解析接口服务。本站是它的官方接口文档站，
+> 覆盖 VRChat 视频解析 API（v1 / v3）、弹幕、字幕与歌词接口的端点地址、请求参数、
 > 返回字段与错误码，并提供简体中文、English、日本語 三个语言版本。
 >
-> kipfel.link is the official documentation site for the free VRChat video/audio parsing API and the
-> self-hosted Busuanzi analytics API. It documents every endpoint, parameter, response field and error
+> kipfel.link is the official documentation site for the free VRChat video/audio parsing API.
+> It documents every danmaku, subtitle and lyrics endpoint, parameter, response field and error
 > code in Simplified Chinese, English and Japanese.
 
 ## 关键事实 / Key facts
 
 - 文档站 / Docs: ${SITE_URL}/zh/
 - 视频解析接口基础地址 / Video parser API base: ${API_BASE}
-- Busuanzi 接口基础地址 / Busuanzi API base: ${BUSUANZI_BASE}
 - 源码仓库 / Source repository: ${REPO_URL}
 - 联系方式 / Contact: ${CONTACT_EMAIL}
 - 授权模式 / Licensing: 免费使用，禁止转售；非 Kipfel 社区官方项目，由个人作者维护 / Free to use, not for resale; an independent personal project, not affiliated with the Kipfel community.

@@ -4,7 +4,7 @@ import { buildEnd, sitemapOptions, transformHead, transformHtml } from './seo'
 export default defineConfig({
   title: 'kipfel.link 接口文档',
   description:
-    'kipfel.link 官方接口文档：面向 VRChat 的免费视频解析 API（v1 / v3）、弹幕与歌词接口、Busuanzi 访问统计接口的端点、参数、返回字段与错误码说明。',
+    'kipfel.link 官方接口文档：面向 VRChat 的免费视频解析 API（v1 / v3），包含弹幕、字幕与歌词接口的端点、参数、返回字段与错误码说明。',
   lang: 'zh-CN',
   ignoreDeadLinks: true,
 
@@ -31,14 +31,14 @@ export default defineConfig({
       label: '简体中文',
       lang: 'zh-CN',
       description:
-        'kipfel.link 官方接口文档：面向 VRChat 的免费视频解析 API（v1 / v3）、弹幕与歌词接口、Busuanzi 访问统计接口的端点、参数、返回字段与错误码说明。',
+        'kipfel.link 官方接口文档：面向 VRChat 的免费视频解析 API（v1 / v3），包含弹幕、字幕与歌词接口的端点、参数、返回字段与错误码说明。',
       link: '/zh/'
     },
     en: {
       label: 'English',
       lang: 'en',
       description:
-        'Official kipfel.link API documentation: free VRChat video parsing API (v1 / v3), danmaku and lyrics endpoints, and the self-hosted Busuanzi analytics API, with endpoints, parameters, response fields and error codes.',
+        'Official kipfel.link API documentation: the free VRChat video parsing API (v1 / v3) with danmaku, subtitle and lyrics endpoints, including endpoints, parameters, response fields and error codes.',
       link: '/en/',
       themeConfig: {
         // 英文页面用英文的图片描述，覆盖根 themeConfig 里的中文 alt
@@ -54,7 +54,6 @@ export default defineConfig({
               { text: 'CDN List', link: '/en/video-parser/cdn' }
             ]
           },
-          { text: 'Busuanzi API', link: '/en/busuanzi/api' },
           { text: 'Landing Page', link: 'https://www.kipfel.wiki/' },
           {
             text: 'More',
@@ -83,9 +82,6 @@ export default defineConfig({
                 { text: 'Video Parser FAQ', link: '/en/video-parser/faq' },
                 { text: 'CDN List', link: '/en/video-parser/cdn' }
               ]},
-              { text: 'Busuanzi', items: [
-                { text: 'API Docs', link: '/en/busuanzi/api' }
-              ]},
               { text: 'Other', items: [
                 { text: 'Changelog', link: '/en/video-parser/changelog' },
                 { text: 'Team', link: '/en/video-parser/team' },
@@ -111,7 +107,7 @@ export default defineConfig({
       label: '日本語',
       lang: 'ja',
       description:
-        'kipfel.link 公式 API ドキュメント：VRChat 向け無料ビデオ解析 API（v1 / v3）、弾幕・歌詞エンドポイント、セルフホスト型 Busuanzi アクセス解析 API のエンドポイント、パラメータ、レスポンス項目、エラーコードをまとめています。',
+        'kipfel.link 公式 API ドキュメント：VRChat 向け無料ビデオ解析 API（v1 / v3）と弾幕・字幕・歌詞のエンドポイント、パラメータ、レスポンス項目、エラーコードをまとめています。',
       link: '/ja/',
       themeConfig: {
         // 日文页面用日文的图片描述，覆盖根 themeConfig 里的中文 alt
@@ -127,7 +123,6 @@ export default defineConfig({
               { text: 'CDN リスト', link: '/ja/video-parser/cdn' }
             ]
           },
-          { text: 'Busuanzi API', link: '/ja/busuanzi/api' },
           { text: 'ランディングページ', link: 'https://www.kipfel.wiki/' },
           {
             text: 'その他',
@@ -155,9 +150,6 @@ export default defineConfig({
                 { text: 'ビデオ解析チュートリアル', link: '/ja/video-parser/guide' },
                 { text: 'ビデオ解析 FAQ', link: '/ja/video-parser/faq' },
                 { text: 'CDN リスト', link: '/ja/video-parser/cdn' }
-              ]},
-              { text: 'Busuanzi', items: [
-                { text: 'API ドキュメント', link: '/ja/busuanzi/api' }
               ]},
               { text: 'その他', items: [
                 { text: '更新履歴', link: '/ja/video-parser/changelog' },
@@ -214,7 +206,6 @@ export default defineConfig({
           { text: 'CDN 列表', link: '/zh/video-parser/cdn' }
         ]
       },
-      { text: 'Busuanzi 接口', link: '/zh/busuanzi/api' },
       { text: '引导站', link: 'https://www.kipfel.wiki/' },
       {
         text: '更多',
@@ -242,9 +233,6 @@ export default defineConfig({
             { text: '视频解析使用教程', link: '/zh/video-parser/guide' },
             { text: '视频解析常见问题', link: '/zh/video-parser/faq' },
             { text: 'CDN 列表', link: '/zh/video-parser/cdn' }
-          ]},
-          { text: 'Busuanzi', items: [
-            { text: '接口文档', link: '/zh/busuanzi/api' }
           ]},
           { text: '其他', items: [
             { text: '更新日志', link: '/zh/video-parser/changelog' },

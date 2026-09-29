@@ -1,13 +1,13 @@
 ---
 layout: home
 
-title: kipfel.link API Docs - VRChat Video Parser & Busuanzi API
+title: kipfel.link API Docs - VRChat Video Parser API
 titleTemplate: false
-description: "Official kipfel.link API docs for VRChat: the free video parsing API (v1 / v3), danmaku and lyrics endpoints, and the self-hosted Busuanzi analytics API."
+description: "Official kipfel.link API docs for VRChat: the free video parsing API (v1 / v3), plus danmaku, subtitle, lyrics and cover art endpoints."
 
 hero:
   name: kipfel.link API Documentation
-  text: Video parsing, Busuanzi, and related API references
+  text: Video parsing and related API references
   tagline: Free, maybe fast API endpoints and documentation entry
   actions:
     - theme: brand
@@ -16,17 +16,11 @@ hero:
     - theme: alt
       text: Video Parser API
       link: /en/video-parser/api
-    - theme: alt
-      text: Busuanzi API
-      link: /en/busuanzi/api
 
 features:
   - title: Video Parser API
     details: Provides video and audio parser API docs, usage instructions, and base response formats
     link: /en/video-parser/api
-  - title: Busuanzi API
-    details: Provides the Busuanzi API doc entry for integration guidance and field references
-    link: /en/busuanzi/api
   - title: Landing Page
     details: Jump directly to kipfel.wiki to browse the landing page and related entries
     link: https://www.kipfel.wiki/

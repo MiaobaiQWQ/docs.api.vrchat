@@ -1,6 +1,6 @@
 # kipfel.link 接口文档（docs.api.vrchat.kipfel.wiki）
 
-面向 VRChat 的免费视频解析 API 与自建 Busuanzi 访问统计 API 的官方文档站，基于
+面向 VRChat 的免费视频解析 API 的官方文档站，基于
 [VitePress](https://vitepress.dev/) 构建，部署在 Cloudflare Pages。
 
 - 线上地址：<https://docs.api.vrchat.kipfel.wiki>
@@ -24,8 +24,7 @@ docs/
 ├─ 404.md                    自定义 404 页（含 <h1>，并声明 noindex）
 ├─ zh|en|ja/                 三个语言版本的内容
 │  ├─ index.md               首页
-│  ├─ video-parser/          视频解析：api / guide / faq / cdn / changelog / domains / partners / team
-│  └─ busuanzi/api.md        Busuanzi 接口文档
+│  └─ video-parser/          视频解析：api / guide / faq / cdn / changelog / domains / partners / team
 ├─ public/                   直接复制到站点根目录的静态资源
 │  ├─ robots.txt             搜索引擎与 AI 爬虫规则 + Content Signals + sitemap 声明
 │  ├─ _headers               Cloudflare Pages 响应头（含 .md 的 Content-Type、Vary: Accept）
