@@ -101,6 +101,6 @@ No. This website was not created by the Kipfel community, but by an individual a
 
 ## Related Pages
 
-- [Video Parser API Reference](/en/video-parser/api) — endpoints, request parameters, response fields and rate limits
+- [Video Parser API Reference](/en/video-parser/api) — endpoints, request parameters and response fields
 - [Usage Guide](/en/video-parser/guide) — how to call each endpoint and the supported link formats
 - [CDN Domain List](/en/video-parser/cdn) — the complete domain list for your map whitelist

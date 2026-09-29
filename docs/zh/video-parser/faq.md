@@ -101,6 +101,6 @@ VRChat地图限制URLlist最大只有100个，请按需选添。
 
 ## 相关页面
 
-- [视频解析接口文档](/zh/video-parser/api) —— 端点地址、请求参数、返回字段与频率限制
+- [视频解析接口文档](/zh/video-parser/api) —— 端点地址、请求参数与返回字段
 - [视频解析使用教程](/zh/video-parser/guide) —— 各接口的调用方式与支持的链接格式
 - [CDN 域名列表](/zh/video-parser/cdn) —— 添加到地图白名单所需的完整域名清单

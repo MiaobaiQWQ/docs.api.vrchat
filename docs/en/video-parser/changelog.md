@@ -17,6 +17,13 @@ This page records the update history of the Kipfel video parsing service.
 
 ## 2026
 
+### 2026/09/29
+- The V3 danmaku endpoint now supports Bilibili subtitles: AI subtitles and CC subtitles uploaded by the uploader are returned together, with `ai_subtitle` to toggle them and `lang` to filter by language
+- The danmaku endpoint gains `start_time` + `duration` time-window slicing, so long videos can be fetched segment by segment
+- The lyrics endpoint now returns the album cover image (embedded as base64, in 64 / 128 sizes)
+- The lyrics endpoint now includes song information: song name, singer, audio ID, album ID, duration and singer ID
+- The docs now list the music CDN domains (NetEase Cloud Music, Kugou Music, QQ Music); music parsing requires adding them to your map whitelist
+
 ### 2026/07/13
 - Updated animation effects and styles for the docs pages
 - Styles provided by [`Luoyuxi API`](https://api.yuki-can.top/)
@@ -39,7 +46,7 @@ This page records the update history of the Kipfel video parsing service.
 
 ### 26/06/21
 - Fixed some abnormal crashes in backend parsing, which caused some video parsing to not work properly. It has now been fixed.
-- Mo Bai QWQ has been adjusted to be the document负责人 (person in charge of documents), responsible for document area management and content maintenance.
+- Mo Bai QWQ has been adjusted to be the documentation lead, responsible for document area management and content maintenance.
 - Hailuo QWQ has been adjusted to be the backend video parsing repair, responsible for parsing service maintenance and fault repair.
 - kole-knol's position has been updated to domain provider server holder.
 

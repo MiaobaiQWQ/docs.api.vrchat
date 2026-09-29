@@ -1,6 +1,6 @@
 ---
 outline: deep
-description: "VRChat 地图白名单所需的完整 CDN 域名列表：Bilibili、快手、抖音的视频与直播节点，可直接复制添加到 URLlist。"
+description: "VRChat 地图白名单所需的完整 CDN 域名列表：Bilibili、快手、抖音与音乐平台的视频、直播与音频节点，可直接复制添加到 URLlist。"
 ---
 
 # CDN 域名列表
@@ -106,6 +106,19 @@ VRChat地图限制URLlist最大只有100个，请按需选添。
 - `d1--ov-gotcha209.bilivideo.com`（阿里云）
 - `d1--ov-gotcha210.bilivideo.com`（Akamai）
 
+## 音乐 CDN
+
+### 网易云音乐
+- `m701.music.126.net`
+- `m801.music.126.net`
+
+### 酷狗音乐
+- `sharefs.kugou.com`
+
+### QQ 音乐
+- `aqqmusic.tc.qq.com`
+- `sjy6.stream.qqmusic.qq.com`
+
 ## 完整域名列表
 
 以下是所有需要添加到白名单中的域名汇总：
@@ -153,6 +166,12 @@ v3-default.ixigua.com
 v3-default.365yg.com
 v5-dy-o-abtest.zjcdn.com
 v16m-default.akamaized.net
+
+m701.music.126.net
+m801.music.126.net
+sharefs.kugou.com
+aqqmusic.tc.qq.com
+sjy6.stream.qqmusic.qq.com
 ```
 
 ## 如何添加到 VRChat 地图

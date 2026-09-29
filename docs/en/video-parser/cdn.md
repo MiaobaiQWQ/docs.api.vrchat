@@ -1,6 +1,6 @@
 ---
 outline: deep
-description: "The complete CDN domain list required for the VRChat map whitelist, covering Bilibili, Kuaishou and Douyin video and live stream nodes, ready to paste into URLlist."
+description: "The complete CDN domain list for the VRChat map whitelist, covering Bilibili, Kuaishou, Douyin and music service nodes, ready to paste into URLlist."
 ---
 
 # CDN Domain List
@@ -106,6 +106,19 @@ It is recommended to use the `api.kipfel.vrchat.org.cn` domain as the interface 
 - `d1--ov-gotcha209.bilivideo.com` (Aliyun)
 - `d1--ov-gotcha210.bilivideo.com` (Akamai)
 
+## Music CDN
+
+### NetEase Cloud Music
+- `m701.music.126.net`
+- `m801.music.126.net`
+
+### Kugou Music
+- `sharefs.kugou.com`
+
+### QQ Music
+- `aqqmusic.tc.qq.com`
+- `sjy6.stream.qqmusic.qq.com`
+
 ## Full Domain List
 
 Below is a summary of all domains that need to be added to the whitelist:
@@ -153,6 +166,12 @@ v3-default.ixigua.com
 v3-default.365yg.com
 v5-dy-o-abtest.zjcdn.com
 v16m-default.akamaized.net
+
+m701.music.126.net
+m801.music.126.net
+sharefs.kugou.com
+aqqmusic.tc.qq.com
+sjy6.stream.qqmusic.qq.com
 ```
 
 ## How to add to VRChat map

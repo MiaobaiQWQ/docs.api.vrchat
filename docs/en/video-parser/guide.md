@@ -78,6 +78,6 @@ For other questions, please refer to the [FAQ](/en/video-parser/faq) page.
 
 ## Related Pages
 
-- [Video Parser API Reference](/en/video-parser/api) — endpoints, parameters, response fields and rate limits
+- [Video Parser API Reference](/en/video-parser/api) — endpoints, parameters and response fields
 - [FAQ](/en/video-parser/faq) — troubleshooting playback and parsing failures
 - [CDN Domain List](/en/video-parser/cdn) — domains to add to your VRChat map whitelist

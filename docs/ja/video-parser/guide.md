@@ -78,6 +78,6 @@ YouTube Music のリンクは、`/v1/music` インターフェースを使用し
 
 ## 関連ページ
 
-- [ビデオ解析 API リファレンス](/ja/video-parser/api) —— エンドポイント、パラメータ、レスポンス項目、レート制限
+- [ビデオ解析 API リファレンス](/ja/video-parser/api) —— エンドポイント、パラメータ、レスポンス項目
 - [よくある質問](/ja/video-parser/faq) —— 再生・解析トラブルの切り分け
 - [CDN ドメインリスト](/ja/video-parser/cdn) —— VRChat マップのホワイトリストに追加するドメイン

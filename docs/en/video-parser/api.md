@@ -180,13 +180,6 @@ The v3 interface targets players that need richer content such as danmaku and ly
 - You need to send a user agent not containing `Unity xxxxxxxx` to get direct video links/direct song links.
 :::
 
-#### Recommendations
-
-::: tip Tip
-- It is recommended that you use different user agents for each map to prevent being blocked and to verify the source of the request.
-- For example, if I am a map author, I recommend naming it `Unity xiaokong` or following the specification that the name must start with `Unity ` otherwise danmaku/lyrics will not be returned. The other can be named freely.
-:::
-
 #### Danmaku Interface
 
 **Interface**: `/v3/vrc-danmaku?url={video link}`  
@@ -202,7 +195,6 @@ The v3 interface targets players that need richer content such as danmaku and ly
 - Subtitles only apply to **Bilibili**; other platforms ignore `ai_subtitle` / `lang` automatically
 - AI subtitles (`ai-zh`, `ai-ja`, …) and CC subtitles uploaded by the uploader (`zh`, `zh-CN`, `zh-Hans`, …) are returned together, and the `l` of each entry tells them apart
 - Language codes are case-insensitive and support primary-language prefix matching (passing `zh` also matches `zh-CN`)
-- The subtitle text requires a logged-in Bilibili cookie configured on the server; when it is missing, `subtitles` is an empty array, which **does not affect danmaku**
 - If you only need one language, filter it on the server with `lang=` instead of fetching everything and filtering yourself — it saves bandwidth
 - The `start_time` + `duration` time window applies to danmaku and subtitles separately
 :::
@@ -405,53 +397,6 @@ Common error codes:
 
 ---
 
-::: warning Note
-- The access frequency will be adjusted dynamically and does not represent an absolute rate limit.
-:::
-
-## Access Frequency Restrictions
-
-### cloudflare and aliyun esa restriction frequency
-
-| Restriction Type | Window Size | Restriction Count | Ban Time |
-|-----------------|-------------|-------------------|----------|
-| All interfaces    | 10 seconds  | 20 times          | 15 seconds |
-
-### Nginx Restriction
-
-| Restriction Type | Window Size | Restriction Count | Ban Time |
-|-----------------|-------------|-------------------|----------|
-| Some interfaces   | 10 seconds  | 20 times          | 15 seconds |
-
-### Rate Limit (Underlying)
-
-| Restriction Type | Window Size | Restriction Count |
-|-----------------|-------------|-------------------|
-| All v1 and v3 interfaces | 1 minute | 50 times |
-
-**Response when exceeding limit**:
-```json
-{
-  "error": "API rate limit exceeded",
-  "message": "Parsing frequency is too high, please slow down a bit",
-  "code": "API_LIMIT_EXCEEDED"
-}
-```
-
-### 404 Ban
-
-| Restriction Type | Window Size | Restriction Count | Ban Time |
-|-----------------|-------------|-------------------|----------|
-| All interfaces    | 1 minute    | 3 times           | 5 minutes |
-
-::: warning Note
-- Normal access will not trigger a 404 error, unless you are trying to crack my website's API.
-- The ban time will increase with the number of occurrences, up to a maximum of 24 hours.
-- I will be watching your requests.
-:::
-
----
-
 ## Restricted Content
 
 Content from the following platforms is not supported for parsing:
@@ -471,4 +416,3 @@ Content from the following platforms is not supported for parsing:
 - [Usage Guide](/en/video-parser/guide) — how to call each endpoint and the supported link formats
 - [FAQ](/en/video-parser/faq) — troubleshooting playback and parsing failures, plus error codes
 - [CDN Domain List](/en/video-parser/cdn) — domains to add to your VRChat map whitelist
-- [Busuanzi API Reference](/en/busuanzi/api) — the website analytics API from the same project

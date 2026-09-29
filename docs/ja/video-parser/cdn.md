@@ -1,6 +1,6 @@
 ---
 outline: deep
-description: "VRChat マップのホワイトリストに必要な CDN ドメインの完全なリスト：Bilibili・Kuaishou・Douyin のビデオ配信ノードとライブ配信ノード。"
+description: "VRChat マップのホワイトリストに必要な CDN ドメインの完全なリスト：Bilibili・Kuaishou・Douyin のビデオ配信ノードとライブ配信ノード、音楽サービスのノード。"
 ---
 
 # CDN ドメインリスト
@@ -106,6 +106,19 @@ VRChat プレイヤーでは、インターフェースとして `api.kipfel.vrc
 - `d1--ov-gotcha209.bilivideo.com`（Aliyun）
 - `d1--ov-gotcha210.bilivideo.com`（Akamai）
 
+## 音楽 CDN
+
+### NetEase Cloud Music
+- `m701.music.126.net`
+- `m801.music.126.net`
+
+### Kugou Music
+- `sharefs.kugou.com`
+
+### QQ Music
+- `aqqmusic.tc.qq.com`
+- `sjy6.stream.qqmusic.qq.com`
+
 ## 完全なドメインリスト
 
 以下は、ホワイトリストに追加する必要があるすべてのドメインの概要です。
@@ -153,6 +166,12 @@ v3-default.ixigua.com
 v3-default.365yg.com
 v5-dy-o-abtest.zjcdn.com
 v16m-default.akamaized.net
+
+m701.music.126.net
+m801.music.126.net
+sharefs.kugou.com
+aqqmusic.tc.qq.com
+sjy6.stream.qqmusic.qq.com
 ```
 
 ## VRChat マップへの追加方法

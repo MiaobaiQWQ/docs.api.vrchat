@@ -78,6 +78,6 @@ YouTube Music 链接必须使用 `/v1/music` 接口，否则无法正常解析�
 
 ## 相关页面
 
-- [视频解析接口文档](/zh/video-parser/api) —— 端点地址、请求参数、返回字段与频率限制
+- [视频解析接口文档](/zh/video-parser/api) —— 端点地址、请求参数与返回字段
 - [视频解析常见问题](/zh/video-parser/faq) —— 播放失败与解析异常的排查方法
 - [CDN 域名列表](/zh/video-parser/cdn) —— 添加到 VRChat 地图白名单所需的域名
