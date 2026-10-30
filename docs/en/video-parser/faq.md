@@ -11,13 +11,17 @@ This page answers the most frequently asked questions about the api.kipfel.link 
 
 ### Which platforms does the VRChat video parser support?
 
-It supports six video platforms: Douyin, Bilibili, YouTube, Twitter(X), Instagram and Kuaishou.
+The current Go workspace has native parsers for six video platforms: Douyin, Bilibili, Twitter(X), Instagram, Kuaishou and AcFun. Music parsers cover NetEase, Kugou, QQ Music, Kuwo and Qishui.
 
 ::: info Supported Platforms
-- **Video Platforms**: Douyin, Bilibili, YouTube, Twitter(X), Instagram, Kuaishou
+- **Video Platforms**: Douyin, Bilibili, Twitter(X), Instagram, Kuaishou, AcFun
 - **Danmaku Support**: Douyin, Bilibili
 - **Live Stream Support**: Bilibili Live, Douyin Live, Kuaishou Live (supports automatic short link recognition)
-- **Music Platforms**: NetEase Cloud Music, Kugou Music, Migu Music, YouTube Music
+- **Music Platforms**: NetEase Cloud Music, Kugou Music, QQ Music, Kuwo Music, Qishui Music
+:::
+
+::: warning Note
+YouTube, YouTube Music and Migu are retired / not implemented in the current workspace. The list above describes native parsers; separately deployed nodes depend on their actual configuration.
 :::
 
 ## Live Stream Parsing
@@ -51,7 +55,7 @@ Because the `#` in a share caption truncates the link in the browser, the server
 
 ### How do I select the Nth song in a playlist, and why is the wrong song playing?
 
-Playlists are counted from 1: use `&i=1` / `&i=2` to select the Nth song, or append `@1` / `@2` to the end of the link. An out-of-range index returns "Playlist sequence number out of range".
+Fetch `/v4/playlist?url={NetEase playlist link}` and use the selected song's `tracks[].url`. For world playback, load `/p?world={world ID}&u={playlist ID}`, then use `/s/{i}?world={world ID}` with the returned `songs[].i`. The old `i` / `index` / `@N` selection methods are not connected; list positions are not record IDs.
 
 ### Some videos parse fine but are stuck or slow to load in VRChat.
 
@@ -77,19 +81,22 @@ No. This website was not created by the Kipfel community, but by an individual a
 
 | HTTP Status Code | Business Code | Description |
 | --- | --- | --- |
-| `403` | No fixed business code | Unsupported platform link redirect denied |
-| `405` | `METHOD_NOT_ALLOWED` | Missing `url` parameter key |
-| `418` | `IM_A_TEAPOT` | `url` parameter is an empty string |
-| `422` | `INVALID_URL` | Failed to extract a valid URL from the input |
-| `422` | `MISSING_PARAMETER` | Missing required parameter |
-| `422` | `UNSUPPORTED_PLATFORM` | Current platform or current link type not supported |
-| `451` | `CONTENT_RESTRICTED` | Not supported due to copyright or compliance reasons |
-| `500` | `PARSE_ERROR` | General parsing failed |
-| `500` | `COLLECTION_PARSE_ERROR` | Collection parsing failed |
-| `500` | `PLAYLIST_ERROR` | Failed to get playlist details |
-| `503` | `NO_NODES_AVAILABLE` | No parsing nodes currently available |
-| `504` | `PARSE_ERROR` | Upstream parsing node timed out or refused connection |
-| `429` | `API_LIMIT_EXCEEDED` | API request too frequent |
+| `405` | `METHOD_NOT_ALLOWED` | Missing url parameter |
+| `418` | `IM_A_TEAPOT` | Empty url |
+| `422` | `INVALID_URL / UNSUPPORTED_PLATFORM` | Invalid URL / unsupported platform |
+| `451` | `CONTENT_RESTRICTED` | Restricted content |
+| `400 / 403` | `PARSE_ERROR` | Playback / non-Unity JSON parsing failure; rule blocks use 403 |
+| `400` | `INVALID_WORLD / INVALID_POOL` | Invalid world or pool parameter |
+| `400` | `INVALID_INPUT / INVALID_LIST_SCOPE` | Missing list source or invalid scope |
+| `400` | `UNSUPPORTED_PLAYLIST` | Unsupported platform for lists |
+| `404` | `WORLD_OR_SLOT_NOT_FOUND` | World or record not found |
+| `403` | `WORLD_DISABLED` | World disabled |
+| `409` | `SLOT_POOL_FULL` | Pool full and remaining records protected |
+| `502` | `SLOT_MEDIA_ERROR` | Record media URL parsing failed |
+
+::: tip Checking JSON
+v1 JSON parsing failures usually return HTTP 200 with `code: -1`. The Unity branch of v3 / v4 may return `success: true` with empty arrays on parsing failure. Parameter validation still returns HTTP errors. See the [API reference](/en/video-parser/api) for the exact structures.
+:::
 
 ## Contact Information
 

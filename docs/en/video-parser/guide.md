@@ -20,7 +20,7 @@ https://api.kipfel.link/v1/vrc?url=
 ```
 
 ::: tip Tip
-Simply paste the video link after `url=` without any additional processing.
+Append a simple link after `url=`. URL-encode inner links containing `&`, `#` or part parameters so they are not truncated. For scripted calls, use `--data-urlencode`.
 :::
 
 ### Supported Link Formats
@@ -29,19 +29,19 @@ You can use any of the following formats:
 
 ::: details 1. Full Link
 ```
-https://api.kipfel.link/v1/vrc?url=https://www.bilibili.com/video/BVxxxxx
+https://api.kipfel.link/v1/vrc?url=https://www.bilibili.com/video/BV1aAhm6vEA6
 ```
 :::
 
 ::: details 2. BV Number
 ```
-https://api.kipfel.link/v1/vrc?url=BVxxxxx
+https://api.kipfel.link/v1/vrc?url=BV1aAhm6vEA6
 ```
 :::
 
 ::: details 3. Full Link with Parameters
 ```
-https://api.kipfel.link/v1/vrc?url=https://www.bilibili.com/video/BVxxxx/?spm_id_from=333.1007.tianma.1-1-1.click&vd_source=f7c54e4cff604fb7865caae2a39f8041
+https://api.kipfel.link/v1/vrc?url=https%3A%2F%2Fwww.bilibili.com%2Fvideo%2FBV1aAhm6vEA6%3Fp%3D2
 ```
 :::
 
@@ -53,24 +53,39 @@ https://api.kipfel.link/v1/vrc?url=https://b23.tv/xxxx
 
 ## Music Parsing
 
-Use the music interface to parse music, supporting playlist indexing. **YouTube Music links must use this interface.**
+Use `/v1/music?url={music link}` for an individual song; success redirects to playable media. Current native parsers cover NetEase, Kugou, QQ Music, Kuwo and Qishui.
 
-```
-https://api.kipfel.link/v1/music?url=
-```
+::: tip Selecting Playlist Songs
+Read each song's `tracks[].url` from `/v4/playlist?url={NetEase playlist link}`, or load it through `/p?world={world ID}&u={playlist ID}` and play `/s/{i}?world={world ID}` using the returned `songs[].i`. `i` / `index` / `@N` selection is not connected.
+:::
 
-::: warning Important
-YouTube Music links must use the `/v1/music` interface, otherwise they cannot be parsed correctly.
+::: warning Note
+YouTube, YouTube Music and Migu native parsers are not connected in the current workspace. Switching to the music interface does not restore them.
 :::
 
 ## Alternative Interfaces
 
-If the main interface is unavailable (for example a failed route or rate limiting), switch to the alternative endpoints below, which behave identically but run on different routes.
+The alternative addresses below currently use the same handlers as the main interfaces. They preserve existing addresses but do not guarantee independent routes.
 
 ::: info Alternative Options
 - Video Alternative: `https://api.kipfel.link/v1/kfc?url=`
 - Music Alternative: `https://api.kipfel.link/v1/musickfc?url=`
 :::
+
+## JSON, Lyrics and Danmaku
+
+Use an ordinary player UA for playable media. Lyrics / danmaku components use a UA containing `Unity`, or `json=1`. These are separate requests, not two UAs in one request.
+
+```bash
+curl -G "https://api.kipfel.link/v1/music" --data-urlencode "url=https://music.163.com/song?id=347230" --data-urlencode "json=1"
+curl -G -A "Unity demo" "https://api.kipfel.link/v4/vrc" --data-urlencode "url=https://music.163.com/song?id=347230" --data-urlencode "media=1"
+```
+
+v1 JSON uses `code` / `data.content.play_url`. For v3 / v4, read danmaku from `data.comments`, lyrics from `data.lyrics` (timestamps in seconds), and covers according to `cover_mode` / `cover_encoding`. See the [API reference](/en/video-parser/api) for complete fields.
+
+## World Slots and Video Parts
+
+Have an administrator create a world ID first, then bake `/s/{n}?world={world ID}` (music) and `/sell/{n}?world={world ID}` (video) into the world. Read music through `/poll?world=...`, video through `/pocl?world=...`, and load lists through `/p?world=...&u={link}`. Bilibili supports `scope=parts` / `scope=collection`; always use returned `i` values.
 
 ## More Help
 

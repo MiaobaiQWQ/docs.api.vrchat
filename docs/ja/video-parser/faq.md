@@ -11,13 +11,17 @@ description: "VRChat ビデオ解析のよくある質問：対応プラット�
 
 ### VRChat ビデオ解析はどのプラットフォームに対応していますか？
 
-Douyin、Bilibili、YouTube、Twitter(X)、Instagram、Kuaishou の 6 つのビデオプラットフォームに対応しています。
+現在の Go ワークスペースは Douyin、Bilibili、Twitter(X)、Instagram、Kuaishou、AcFun の 6 つのビデオプラットフォームにネイティブ対応しています。音楽は NetEase、Kugou、QQ Music、Kuwo、Qishui に対応しています。
 
 ::: info サポートされているプラットフォーム
-- **ビデオプラットフォーム**: Douyin、Bilibili、YouTube、Twitter(X)、Instagram、Kuaishou
+- **ビデオプラットフォーム**: Douyin、Bilibili、Twitter(X)、Instagram、Kuaishou、AcFun
 - **弾幕サポート**: Douyin、Bilibili
 - **ライブストリームサポート**: Bilibili ライブ、Douyin ライブ、Kuaishou ライブ (ショートリンクの自動認識をサポート)
-- **音楽プラットフォーム**: NetEase Cloud Music、Kugou Music、Migu Music、YouTube Music
+- **音楽プラットフォーム**: NetEase Cloud Music、Kugou Music、QQ Music、Kuwo Music、Qishui Music
+:::
+
+::: warning 注意
+YouTube、YouTube Music、Migu は現在のワークスペースでは無効 / 未実装です。上記はネイティブ解析器の範囲で、別途デプロイしたノードの機能は実際の設定によります。
 :::
 
 ## ライブ配信の解析
@@ -51,7 +55,7 @@ VRChat 公式が 2024.12.11 の更新で、すべてのマップに独自の[ド
 
 ### プレイリストで N 番目の曲を選ぶには？ 思った曲が再生されないのはなぜですか？
 
-プレイリストは 1 から数えます。`&i=1` / `&i=2` で N 番目の曲を選べます。末尾に `@1` / `@2` を付ける方法にも対応しています。範囲外の場合は「プレイリストのシーケンス番号が範囲外です」と表示されます。
+`/v4/playlist?url={NetEaseプレイリストリンク}` を取得し、選んだ曲の `tracks[].url` を使用してください。ワールドでは `/p?world={ワールド番号}&u={プレイリストID}` でロードし、返された `songs[].i` で `/s/{i}?world={ワールド番号}` を使います。旧版の `i` / `index` / `@N` 選曲は接続されていません。一覧順と記録番号は別です。
 
 ### 解析はできるのに VRChat でカクつく・読み込みが遅いのはなぜですか？
 
@@ -77,19 +81,22 @@ VRChat マップの URL リストは最大 100 個しかありません。必要
 
 | HTTP ステータスコード | ビジネスコード | 説明 |
 | --- | --- | --- |
-| `403` | 固定ビジネスコードなし | サポートされていないプラットフォームリンクのリダイレクトが拒否されました |
-| `405` | `METHOD_NOT_ALLOWED` | `url` パラメータキーがありません |
-| `418` | `IM_A_TEAPOT` | `url` パラメータが空文字列です |
-| `422` | `INVALID_URL` | 入力から有効な URL を抽出できませんでした |
-| `422` | `MISSING_PARAMETER` | 必要なパラメータがありません |
-| `422` | `UNSUPPORTED_PLATFORM` | 現在のプラットフォームまたは現在のリンクタイプはサポートされていません |
-| `451` | `CONTENT_RESTRICTED` | 著作権またはコンプライアンス上の理由によりサポートされていません |
-| `500` | `PARSE_ERROR` | 一般的な解析失敗 |
-| `500` | `COLLECTION_PARSE_ERROR` | コレクション解析失敗 |
-| `500` | `PLAYLIST_ERROR` | プレイリスト詳細の取得失敗 |
-| `503` | `NO_NODES_AVAILABLE` | 現在利用可能な解析ノードがありません |
-| `504` | `PARSE_ERROR` | 上流解析ノードがタイムアウトまたは接続拒否 |
-| `429` | `API_LIMIT_EXCEEDED` | API リクエストが頻繁すぎます |
+| `405` | `METHOD_NOT_ALLOWED` | url パラメータなし |
+| `418` | `IM_A_TEAPOT` | url が空 |
+| `422` | `INVALID_URL / UNSUPPORTED_PLATFORM` | 無効な URL / 未対応プラットフォーム |
+| `451` | `CONTENT_RESTRICTED` | 制限対象コンテンツ |
+| `400 / 403` | `PARSE_ERROR` | 再生 / Unity 以外の JSON 解析失敗。ルール拒否は 403 |
+| `400` | `INVALID_WORLD / INVALID_POOL` | ワールド番号またはプール指定が無効 |
+| `400` | `INVALID_INPUT / INVALID_LIST_SCOPE` | 一覧の入力なし、または scope が無効 |
+| `400` | `UNSUPPORTED_PLAYLIST` | 未対応プラットフォームの一覧 |
+| `404` | `WORLD_OR_SLOT_NOT_FOUND` | ワールドまたは記録が存在しない |
+| `403` | `WORLD_DISABLED` | ワールド無効 |
+| `409` | `SLOT_POOL_FULL` | プール満杯、残りの記録は保護期間内 |
+| `502` | `SLOT_MEDIA_ERROR` | 記録の再生直リンク解析失敗 |
+
+::: tip JSON の判定
+v1 JSON の解析失敗は通常 HTTP 200、`code: -1`。v3 / v4 の Unity 分岐では失敗時も `success: true` と空配列を返す場合があります。パラメータ検証エラーは通常どおり HTTP エラーです。詳細は [API ドキュメント](/ja/video-parser/api) を参照してください。
+:::
 
 ## 連絡先
 

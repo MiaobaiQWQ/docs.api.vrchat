@@ -3,7 +3,7 @@ layout: home
 
 title: kipfel.link API Docs - VRChat Video Parser API
 titleTemplate: false
-description: "Official kipfel.link API docs for VRChat: the free video parsing API (v1 / v3), plus danmaku, subtitle, lyrics and cover art endpoints."
+description: "Official kipfel.link API docs for VRChat: the free video parsing API (v1 / v3 / v4), plus danmaku, lyrics and cover art endpoints."
 
 hero:
   name: kipfel.link API Documentation

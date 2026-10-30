@@ -3,7 +3,7 @@ layout: home
 
 title: kipfel.link API ドキュメント - VRChat ビデオ解析 API
 titleTemplate: false
-description: "VRChat 向け kipfel.link の公式 API ドキュメント：無料ビデオ解析 API（v1 / v3）、弾幕・字幕・歌詞の仕様をまとめています。"
+description: "VRChat 向け kipfel.link の公式 API ドキュメント：無料ビデオ解析 API（v1 / v3 / v4）、弾幕・歌詞の仕様をまとめています。"
 
 hero:
   name: kipfel.link API ドキュメント

@@ -11,13 +11,17 @@ description: "VRChat 视频解析常见问题解答：支持哪些平台、直�
 
 ### VRChat 视频解析支持哪些平台？
 
-支持抖音、Bilibili、YouTube、Twitter(X)、Instagram、快手六个视频平台。
+当前 Go 工作区原生支持抖音、Bilibili、Twitter(X)、Instagram、快手、AcFun 六个视频平台；音乐支持网易云、酷狗、QQ音乐、酷我、汽水音乐。
 
 ::: info 已支持的平台
-- **视频平台**：抖音、Bilibili、YouTube、Twitter(X)、Instagram、快手
+- **视频平台**：抖音、Bilibili、Twitter(X)、Instagram、快手、AcFun
 - **弹幕支持**：抖音、Bilibili
 - **直播支持**：Bilibili 直播、抖音直播、快手直播 (支持短链自动识别)
-- **音乐平台**：网易云音乐、酷狗音乐、咪咕音乐、YouTube Music
+- **音乐平台**：网易云音乐、酷狗音乐、QQ音乐、酷我音乐、汽水音乐
+:::
+
+::: warning 注意
+YouTube、YouTube Music、咪咕在当前工作区中为停用 / 未接入状态。以上是原生实现范围；独立部署的节点能力请以实际配置为准。
 :::
 
 ## 直播解析
@@ -51,7 +55,7 @@ VRChat 官方于 2024.12.11 更新后，强制所有地图自行配备[域名白
 
 ### 歌单怎么选第 N 首？为什么播放的不是我想要的那首？
 
-歌单从 1 开始计数：用 `&i=1` / `&i=2` 选择第 N 首，也支持在链接末尾加 `@1` / `@2`。索引超出范围时会提示「歌单序号超出范围」。
+先用 `/v4/playlist?url={网易云歌单链接}` 取到各首歌的 `tracks[].url`，选择后直接使用该链接。世界点歌则用 `/p?world={世界编号}&u={歌单ID}` 加载，再按返回的 `songs[].i` 使用 `/s/{i}?world={世界编号}`。当前代码没有接入旧版的 `i` / `index` / `@N` 选曲，不要自己用列表序号替代记录编号。
 
 ### 有些视频能解析，但在 VRChat 里卡顿/加载慢？
 
@@ -75,21 +79,24 @@ VRChat地图限制URLlist最大只有100个，请按需选添。
 
 ## 常见错误码
 
-| HTTP 状态码 | 业务码 | 说明 |
+| HTTP 状态码 | 业务代码 | 说明 |
 | --- | --- | --- |
-| `403` | 无固定业务码 | 非受支持平台链接被拒绝重定向 |
-| `405` | `METHOD_NOT_ALLOWED` | 缺少 `url` 参数键名 |
-| `418` | `IM_A_TEAPOT` | `url` 参数为空字符串 |
-| `422` | `INVALID_URL` | 未能从输入中提取出合法 URL |
-| `422` | `MISSING_PARAMETER` | 缺失必要参数 |
-| `422` | `UNSUPPORTED_PLATFORM` | 当前平台或当前链接类型不支持 |
-| `451` | `CONTENT_RESTRICTED` | 因版权或合规原因不支持 |
-| `500` | `PARSE_ERROR` | 通用解析失败 |
-| `500` | `COLLECTION_PARSE_ERROR` | 合集解析失败 |
-| `500` | `PLAYLIST_ERROR` | 歌单详情获取失败 |
-| `503` | `NO_NODES_AVAILABLE` | 当前没有可用解析节点 |
-| `504` | `PARSE_ERROR` | 上游解析节点超时或拒绝连接 |
-| `429` | `API_LIMIT_EXCEEDED` | API 请求过于频繁 |
+| `405` | `METHOD_NOT_ALLOWED` | 缺少 url 参数 |
+| `418` | `IM_A_TEAPOT` | url 为空 |
+| `422` | `INVALID_URL / UNSUPPORTED_PLATFORM` | 无效链接 / 不支持的平台 |
+| `451` | `CONTENT_RESTRICTED` | 受限制内容 |
+| `400 / 403` | `PARSE_ERROR` | 普通播放 / 非 Unity JSON 解析失败；规则拦截为 403 |
+| `400` | `INVALID_WORLD / INVALID_POOL` | 世界编号或池参数无效 |
+| `400` | `INVALID_INPUT / INVALID_LIST_SCOPE` | 缺少列表来源或 scope 无效 |
+| `400` | `UNSUPPORTED_PLAYLIST` | 不支持该平台的列表 |
+| `404` | `WORLD_OR_SLOT_NOT_FOUND` | 世界或记录不存在 |
+| `403` | `WORLD_DISABLED` | 世界已停用 |
+| `409` | `SLOT_POOL_FULL` | 池满且剩余记录仍受保护 |
+| `502` | `SLOT_MEDIA_ERROR` | 记录的播放直链解析失败 |
+
+::: tip JSON 判断
+v1 JSON 的解析失败通常为 HTTP 200、`code: -1`；v3 / v4 Unity 分支解析失败可能仍为 `success: true` 的空数组。参数校验错误仍正常返回 HTTP 错误。详细结构见 [接口文档](/zh/video-parser/api)。
+:::
 
 ## 联系方式
 

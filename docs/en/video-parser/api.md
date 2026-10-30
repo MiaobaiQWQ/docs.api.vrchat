@@ -1,6 +1,6 @@
 ---
 outline: deep
-description: "VRChat video API reference: v1 video/music parsing, v3 danmaku, subtitles and lyrics, v4 merged endpoint, playlist parsing and the slot relay."
+description: "VRChat video API reference: v1 video and music, v3 danmaku and lyrics, v4 unified parsing, cover encoding, playlists, world slots and JSON responses."
 ---
 
 # VRC Video Parsing API Call and Restriction Documentation
@@ -22,19 +22,13 @@ https://api.kipfel.link/
 https://api.kipfel.vrchat.org.cn/
 ```
 
-The two domains are **not the same deployment**, and the available interfaces differ (measured on 2026-10-09):
-
-| Interface | `api.kipfel.link` | `api.kipfel.vrchat.org.cn` |
-|---|---|---|
-| `/v1/*` (video / music parsing) | ✅ | ✅ |
-| `/v3/*` (danmaku / lyrics) | ✅ | ✅ |
-| `/v4/vrc` (merged endpoint) | ✅ | ✅ |
-| `/v1/playlist`, `/v4/playlist` (playlist) | ✅ | ❌ (returns the homepage HTML) |
-| `/poll`, `/s/<n>`, `/p` (slot relay) | ✅ | ✅ |
+::: tip Documented Version
+The calls and JSON structures below describe the current Go gateway workspace. The domains are separate deployments; this list does not confirm that both have been updated. Check the deployed version you use.
+:::
 
 ### User-Agent Requirements
 ::: warning Note
-- You need to send two UAs, one containing `Unity xxxxxxxx` and one not containing `Unity xxxx`
+- For v3 / v4, lyrics and danmaku components use a UA containing `Unity`; media players use one without it. These are **two separate requests**, not two UAs in one request. Non-Unity clients can use `json=1` for JSON.
 :::
 
 ---
@@ -60,11 +54,11 @@ The two domains are **not the same deployment**, and the available interfaces di
 {
   "code": 0,
   "message": "success",
-  "log_id": "",
+  "log_id": "req_example",
   "data": {
-    "video_id": "7636287742653074728",
-    "avid": "116855574365910",
-    "bvid": "BV17PTt6fEJJ",
+    "video_id": "BV17PTT6FEJJ",
+    "avid": "",
+    "bvid": "BV17PTT6FEJJ",
     "title": "视频标题内容",
     "desc": "视频的详细描述信息",
     "duration": 2136,
@@ -72,10 +66,10 @@ The two domains are **not the same deployment**, and the available interfaces di
     "create_time": 1783075293,
     "update_time": 0,
     "status": 0,
-    "category": "130",
-    "category_name": "音乐",
+    "category": "",
+    "category_name": "",
     "author": {
-      "user_id": "1035330202",
+      "user_id": "",
       "nickname": "作者昵称",
       "avatar": "http://example.com/avatar.jpg"
     },
@@ -84,11 +78,11 @@ The two domains are **not the same deployment**, and the available interfaces di
       "like": 2089,
       "comment": 11,
       "share": 32,
-      "favorite": 3237
+      "favorite": 0
     },
     "content": {
       "play_url": "https://example.com/video_no_watermark.mp4",
-      "cover_url": "http://example.com/cover_original.jpg",
+      "cover_url": "http://example.com/cover.jpg",
       "hashtags": [],
       "mentions": [],
       "music_info": {}
@@ -100,32 +94,32 @@ The two domains are **not the same deployment**, and the available interfaces di
 Field description:
 - `code` (Number): Business status code, `0` indicates success.
 - `message` (String): Business response message, usually `"success"`.
-- `log_id` (String): The platform's log request ID (if any).
-- `data.video_id` (String): The unique item ID within the platform (such as Douyin's `aweme_id` / `item_id`, Kuaishou's `photo_id`).
-- `data.avid` (String): Unique to Bilibili, the AV number ID (may be an empty string for other platforms).
-- `data.bvid` (String): Unique to Bilibili, the BV number (may be an empty string for other platforms).
+- `log_id` (String): Gateway request ID.
+- `data.video_id` (String): BV ID extracted from the link; otherwise the request ID.
+- `data.avid` (String): AV ID extracted from an av input link; otherwise empty.
+- `data.bvid` (String): BV ID extracted from input and uppercased; otherwise empty.
 - `data.title` (String): The title of the video or audio.
 - `data.desc` (String): The description/introduction of the video or audio.
 - `data.duration` (Number): Total media duration, unit: seconds.
 - `data.cover` (String): Direct link to the default display cover image.
 - `data.create_time` (Number): Timestamp when the work was published (in seconds).
-- `data.update_time` (Number): Timestamp when the work was updated (in seconds).
+- `data.update_time` (Number): Currently 0.
 - `data.status` (Number): Media status code.
-- `data.category` (String): Work category ID.
-- `data.category_name` (String): Work category name.
-- `data.author.user_id` (String): The creator's unique UID / sec_uid within the platform.
+- `data.category` (String): Currently an empty string.
+- `data.category_name` (String): Currently an empty string.
+- `data.author.user_id` (String): Currently an empty string.
 - `data.author.nickname` (String): The creator's nickname.
 - `data.author.avatar` (String): URL of the creator's avatar image.
 - `data.stat.play_count` (Number): Total plays.
 - `data.stat.like` (Number): Total likes.
 - `data.stat.comment` (Number): Total comments.
 - `data.stat.share` (Number): Total shares/forwards.
-- `data.stat.favorite` (Number): Total favorites.
+- `data.stat.favorite` (Number): Currently 0.
 - `data.content.play_url` (String): **Core data**: Direct link to the watermark-free media playback.
-- `data.content.cover_url` (String): Direct link to the original quality cover.
-- `data.content.hashtags` (Array): Extracted list of hashtag labels.
-- `data.content.mentions` (Array): Extracted list of @users.
-- `data.content.music_info` (Object): Associated background music information (original soundtrack, etc.).
+- `data.content.cover_url` (String): The same cover URL as `data.cover`.
+- `data.content.hashtags` (Array): Currently an empty array.
+- `data.content.mentions` (Array): Currently an empty array.
+- `data.content.music_info` (Object): Currently an empty object.
 
 **Failure Response**:
 ```json
@@ -145,6 +139,10 @@ Field description:
 
 ---
 
+::: tip Response Fields
+In v1, `log_id` is the gateway request ID. `video_id` uses an extracted BV ID, otherwise the request ID. `avid` / `bvid` are extracted from input only; original casing and AV / BV conversion are not guaranteed. `author.user_id` and category fields are empty, `favorite` is 0, and hashtags, mentions and music information are empty arrays / objects. Select JSON through `-json`, `json=1` or `Accept: application/json`.
+:::
+
 ### Alternative Video Parsing Interface
 
 **Interface**: `/v1/kfc?url={video link}`  
@@ -158,351 +156,180 @@ Field description:
 
 ### Music Parsing
 
-**Interface**: `/v1/music?url={music link}&i={index}`  
-**Parameters**:
-- `url` (required): Music link or playlist link
-- `i` (optional): Playlist index (starts from 1)
+**Interface**: `/v1/music?url={music link}`\
+**Parameters**: `url` (required); use individual song links. Fetch playlists through the list interfaces below first.
 
-**Response**:
-- **Success**: 302 redirect to the direct link address
-- **Failure**: Returns JSON formatted error information
+**Response**: 302 to playable media on success. Add `json=1` or send `Accept: application/json` for JSON in the `/v1/vrc-json` format.
 
-**JSON Version**: `/v1/music-json`
-
-**JSON Response Format**: Same as `/v1/vrc-json`
+::: warning JSON Address
+`/v1/music-json` is not registered. Use `/v1/music?url=...&json=1`; `/v1/musickfc-json` remains available. `i` / `index` / `@N` song selection is not connected.
+:::
 
 ---
 
 ### Alternative Music Parsing Interface
 
-**Interface**: `/v1/musickfc?url={music link}&i={index}`  
+**Interface**: `/v1/musickfc?url={music link}`\
 **Parameters**: Same as `/v1/music`
 
 **Response**: Same as `/v1/music`
 
-**JSON Version**: `/v1/musickfc-json` - response format is the same as `/v1/music-json`
+**JSON Version**: `/v1/musickfc-json` - response format is the same as `/v1/music?json=1`
 
 ---
 
+
 ## v3 Advanced Interface
 
-The v3 interface targets players that need rich content such as danmaku and lyrics: besides direct links it also returns structured JSON data.
+v3 is intended for players that need danmaku or lyrics. **A UA containing `Unity` or `unity`, or `json=1`, returns JSON**; other clients receive a 302 redirect on success.
 
 ### Danmaku Interface
 
 **Interface**: `/v3/vrc-danmaku?url={video link}`  
-**Parameters**:
-- `url` (required): Video link
-- `limit` (optional): Danmaku quantity limit, default 10000; **it only limits danmaku and does not affect subtitles**
-- `start_time` (optional): Start time (seconds); only content after this point is returned; combine it with `duration` to form a time window
-- `duration` (optional): Length of the time window (seconds); must be sent together with `start_time`
-- `ai_subtitle` (optional): Whether to return Bilibili subtitles (AI subtitles + CC subtitles uploaded by the uploader). `1` / `true` / `yes` / `on` turns it on, `0` / `false` / `no` / `off` turns it off; when omitted the server default applies (currently on by default)
-- `lang` (optional): Subtitle language filter, comma separated (e.g. `ai-zh,zh-CN,ja`); `*` or an empty value returns every available language. It can also be written as `subtitle_lang`
+**Parameters**: `url` (required); `json=1` (optional, returns JSON for non-Unity clients too).
 
-::: tip Subtitles (Bilibili)
-- Subtitles only apply to **Bilibili**; other platforms ignore `ai_subtitle` / `lang` automatically
-- AI subtitles (`ai-zh`, `ai-ja`, …) and CC subtitles uploaded by the uploader (`zh`, `zh-CN`, `zh-Hans`, …) are returned together, and the `l` of each entry tells them apart
-- Language codes are case-insensitive and support primary-language prefix matching (passing `zh` also matches `zh-CN`)
-- If you only need one language, filter it on the server with `lang=` instead of fetching everything and filtering yourself — it saves bandwidth
-- The `start_time` + `duration` time window applies to danmaku and subtitles separately
-:::
-
-**Response**:
-
-**Unity Player (User-Agent contains Unity), Bilibili as an example:**
-
-```json
-{
-  "success": true,
-  "platform": "哔哩哔哩",
-  "video_id": "BV1aAhm6vEA6",
-  "title": "视频标题",
-  "has_more": false,
-  "danmaku": [
-    {
-      "t": 0.5,
-      "c": "弹幕内容",
-      "ty": 1,
-      "co": 16777215,
-      "fs": 25
-    }
-  ],
-  "subtitles": [
-    {
-      "t": 0.04,
-      "to": 1.72,
-      "c": "字幕文本",
-      "l": "ai-zh"
-    },
-    {
-      "t": 0.04,
-      "to": 1.72,
-      "c": "subtitle",
-      "l": "ai-ja"
-    }
-  ],
-  "subtitle_langs": ["ai-zh", "ai-ja"]
-}
-```
-
-Field description:
-- `success` (boolean): Whether the request was successful (it stays `true` even when subtitles cannot be fetched, `subtitles` is simply an empty array)
-- `platform` (string): Chinese platform name, such as `哔哩哔哩`
-- `video_id` (string): Video ID; the BV number for Bilibili
-- `title` (string): Video title
-- `has_more` (boolean): Whether more content follows when slicing with `start_time` + `duration`
-- `danmaku` (array): Danmaku list
-  - `danmaku[].t` (number): Danmaku timestamp (seconds)
-  - `danmaku[].c` (string): Danmaku content
-  - `danmaku[].ty` (number): Danmaku type (`1` scrolling, `4` bottom, `5` top, etc.)
-  - `danmaku[].co` (number): Danmaku color, decimal RGB (`16777215` = white)
-  - `danmaku[].fs` (number): Font size
-- `subtitles` (array): Subtitles as a **flat array** — all languages mixed together with no nested dictionary; `[]` when there are none
-  - `subtitles[].t` (number): Subtitle start time (seconds)
-  - `subtitles[].to` (number): Subtitle end time (seconds)
-  - `subtitles[].c` (string): Subtitle text (line breaks and leading/trailing whitespace already stripped)
-  - `subtitles[].l` (string): Language code (such as `ai-zh`, `zh-CN`, `ja`)
-- `subtitle_langs` (array, optional): The language codes **actually returned** this time, matching the values that appear in `subtitles[].l`; the field is not returned when there are no subtitles
-- `subtitle_locked` (boolean, optional): `true` means the video really does have a subtitle track, but the server has no logged-in cookie configured so the text cannot be fetched; it only appears when "subtitles were attempted but not obtained" (explicitly disabling with `ai_subtitle=0` does not produce it)
-- `subtitle_locked_langs` (array, optional): The language codes blocked by the login requirement; it appears together with `subtitle_locked`
-
-::: tip Call examples
-
-```bash
-# Default: danmaku + subtitles in every available language
-curl -A "Unity demo" "https://api.kipfel.link/v3/vrc-danmaku?url=https://www.bilibili.com/video/BV1aAhm6vEA6"
-
-# Chinese AI subtitles only
-curl -A "Unity demo" "https://api.kipfel.link/v3/vrc-danmaku?url=https://www.bilibili.com/video/BV1aAhm6vEA6&lang=ai-zh"
-
-# Only the Chinese/English subtitles uploaded by the uploader (excludes AI subtitles starting with ai-)
-curl -A "Unity demo" "https://api.kipfel.link/v3/vrc-danmaku?url=https://www.bilibili.com/video/BV1aAhm6vEA6&lang=zh-CN,zh-Hans,en-US"
-
-# No subtitles
-curl -A "Unity demo" "https://api.kipfel.link/v3/vrc-danmaku?url=https://www.bilibili.com/video/BV1aAhm6vEA6&ai_subtitle=0"
-```
-
-:::
-
-::: warning Field order
-Small fields such as `title` **always come before the two large arrays `danmaku` / `subtitles`**.
-Some JSON parsers on the Udon side only look for keys within the first few characters of the response, so once the arrays push those fields to the back they can no longer be read; clients must not rely on those fields appearing at the end.
-:::
-
-**Other platforms (Douyin, Kuaishou, etc.)** return the same `danmaku` array, but without subtitle fields such as `subtitles` / `subtitle_langs`.
-
-**Non-Unity Player:**
-- **Success**: 302 redirect to the direct link address
-- **Failure**: Returns JSON formatted error information
-
----
-
-### Lyrics Interface
-
-**Interface**: `/v3/vrc-lyric?url={music link}`  
-**Parameters**:
-- `url` (required): Music link
-- `size` / `cover_size` (optional): Cover image size, meaning the **upper bound of the longest side**; the aspect ratio is preserved and the original image is never upscaled. The two parameter names are equivalent (`size` wins); the values are `64` / `128` / `256` / `512` / `1024`, and `max` is also accepted (equivalent to the largest step, 1024); any other value is handled as the default step. When omitted: **NetEase Cloud Music defaults to 1024 (the largest image)**, other platforms default to `64`
-
-::: tip Cover image
-- The cover is returned **embedded as base64** inside the lyrics JSON — no separate image URL is provided, so the Udon side can decode it into a texture directly
-- `size` / `cover_size` are parameters of this endpoint itself and are not treated as part of the music link (a same-named parameter inside `url` does not affect the parsing result either)
-- When the server cannot get a cover (the platform has none, the image download fails, etc.) both `cover_base64` / `cover_size` are empty strings and no error is raised
-:::
-
-**Response**:
-
-**Unity Player (User-Agent contains Unity):**
+**JSON Response Format**:
 
 ```json
 {
   "success": true,
   "data": {
-    "platform": "网易云音乐",
-    "lyrics": [
+    "platform": "bilibili",
+    "comments": [
       {
-        "time": 0,
-        "text": "作词 : 黄家驹"
-      },
-      {
-        "time": 18466,
-        "text": "今天我 寒夜里看雪飘过"
+        "t": 0.5,
+        "c": "Comment text",
+        "ty": 1,
+        "co": 16777215,
+        "fs": 25
       }
-    ],
-    "tlyrics": [
-      {
-        "time": 0,
-        "text": "翻译歌词内容"
-      }
-    ],
-    "song_name": "海阔天空",
-    "singer": "Beyond",
-    "audio_id": "347230",
-    "album_id": "2264131",
-    "duration": 326,
-    "singer_id": "125616",
-    "cover_base64": "iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAYAAAD0...",
-    "cover_size": "1024x1024",
-    "cover_w": 1024,
-    "cover_h": 1024
+    ]
   }
 }
 ```
 
-Field description:
-- `success` (boolean): Whether the request was successful (it stays `true` even when lyrics cannot be fetched, `lyrics` is simply empty)
-- `data.platform` (string): Chinese platform name (such as `网易云音乐`)
-- `data.lyrics` (array): Original lyric list
-  - `lyrics[].time` (number): Lyric timestamp, **unit: milliseconds (integer)** (NetEase Cloud Music / Kugou / QQ Music all use milliseconds)
-  - `lyrics[].text` (string): Lyric content
-- `data.tlyrics` (array): Translated lyric list (same structure as `lyrics`)
-- `data.song_name` (string, optional): Song name; the field is not returned when the platform does not provide it
-- `data.singer` (string, optional): Singer name
-- `data.audio_id` (string, optional): The platform's internal audio ID
-- `data.album_id` (string, optional): Album ID
-- `data.duration` (number, optional): Total song duration, in seconds
-- `data.singer_id` (string, optional): Singer ID
-- `data.cover_base64` (string): Cover image base64 (**the original image URL is not returned**); an empty string `""` when there is no cover
-- `data.cover_size` (string): The size of the **cover itself**, such as `"1024x1024"`; an empty string when there is no cover
-- `data.cover_w` / `data.cover_h` (number): Cover (after scaling) width and height, equal to the two numbers of `cover_size`
 
-::: tip Call examples
-```bash
-# Default step (NetEase Cloud Music = 1024, the largest image)
-curl -A "Unity demo" "https://api.kipfel.link/v3/vrc-lyric?url=https://music.163.com/song?id=347230"
+Field descriptions:
+- `success` (boolean): whether the request succeeded; the Unity branch also returns an empty response on parsing failure, as explained below.
+- `data.platform` (string): platform key, such as `bilibili` or `douyin`, rather than a display name.
+- `data.comments` (array): danmaku entries; `[]` when empty.
+- `comments[].t` (number): timestamp in seconds.
+- `comments[].c` (string): comment text.
+- `comments[].ty` (number): type, such as `1` scrolling, `4` bottom or `5` top.
+- `comments[].co` (number): decimal RGB color; `16777215` = white.
+- `comments[].fs` (number): font size.
 
-# Specify a size / the largest step (the two parameter names are equivalent)
-curl -A "Unity demo" "https://api.kipfel.link/v3/vrc-lyric?url=https://music.163.com/song?id=347230&cover_size=512"
-curl -A "Unity demo" "https://api.kipfel.link/v3/vrc-lyric?url=https://music.163.com/song?id=347230&size=max"
-```
-
+::: warning Note
+The current interface does not return top-level `danmaku`, `subtitles`, `subtitle_langs` or `has_more`. The old `limit`, `start_time`, `duration`, `ai_subtitle`, `lang` / `subtitle_lang` parameters are not connected. Read `data.comments` in your client.
 :::
 
-**Non-Unity Player:**
-- **Success**: 302 redirect to the direct link address
-- **Failure**: Returns JSON formatted error information
+### Lyrics Interface
+
+**Interface**: `/v3/vrc-lyric?url={music link}`  
+**Parameters**: `url` (required); `json=1` (optional).
+
+**JSON Response Format** (default Base64 mode, with no cover available):
+
+```json
+{
+  "success": true,
+  "data": {
+    "platform": "netease",
+    "lyrics": [
+      {
+        "time": 18.466,
+        "text": "Lyrics"
+      }
+    ],
+    "tlyrics": [],
+    "song_name": "Song title",
+    "singer": "Artist",
+    "audio_id": "",
+    "album_id": "",
+    "duration": 326,
+    "singer_id": "",
+    "cover_mode": "base64",
+    "cover_encoding": "jpeg",
+    "cover_origin": "top-left",
+    "cover_width": 0,
+    "cover_height": 0,
+    "cover_palette": [],
+    "cover_pixels": "",
+    "cover_size": "",
+    "cover_base64": ""
+  }
+}
+```
+
+
+Field descriptions:
+- `data.platform` (string): platform key, such as `netease`, `kugou` or `qqmusic`.
+- `data.lyrics` / `data.tlyrics` (array): original / translated lyrics. Entries use `{ "time": 18.466, "text": "Lyrics" }`; **timestamps are in seconds and may contain decimals**. Missing lyrics produce empty arrays.
+- `data.song_name` / `data.singer` (string): song title / artist.
+- `data.duration` (number): total duration in seconds.
+- `data.audio_id` / `data.album_id` / `data.singer_id` (string): currently empty strings in this compatibility response.
+
+::: tip Cover Image
+The server administrator selects the cover mode. Check `cover_mode` / `cover_encoding` before reading it:
+- `base64` (default): `cover_encoding: "jpeg"`; read `cover_base64`. A successful conversion sets `cover_size: "128x128"`.
+- `palette`: `cover_encoding: "palette64"`; read `cover_width`, `cover_height`, `cover_palette` and `cover_pixels`. A successful image is 128×128 with 64 colors and `cover_origin: "top-left"`. Pixels run left to right, top to bottom. Each character's position in `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_` is its palette index; palette colors are decimal RGB. **This pixel string is not a Base64 image**.
+- `url`: `cover_encoding: "url"`; download the image from `cover_url`.
+
+The base palette fields remain present and empty in other modes. Missing covers leave dimensions at 0 and arrays / strings empty without failing the lyrics request. The old `size` / `cover_size` request parameters have no effect, and `cover_w` / `cover_h` are not returned.
+:::
+
+```bash
+curl -G -A "Unity demo" "https://api.kipfel.link/v3/vrc-danmaku" --data-urlencode "url=https://www.bilibili.com/video/BV1aAhm6vEA6"
+curl -G "https://api.kipfel.link/v3/vrc-lyric" --data-urlencode "url=https://music.163.com/song?id=347230" --data-urlencode "json=1"
+```
 
 ---
 
 ## v4 Merged Endpoint
 
-v4 combines the two v3 endpoints into a single entry point and **dispatches automatically** according to the platform the link belongs to:
+v4 provides one entry point for video and music, selecting danmaku or lyrics automatically from the link by default.
 
-| Link type | Which branch it takes |
-|---|---|
-| Music platforms (NetEase Cloud Music / Kugou / Migu / QQ Music / YouTube Music) | Lyrics branch |
-| Video / live platforms (Bilibili / Douyin / Kuaishou / AcFun / YouTube / Twitter / Instagram) | Danmaku branch |
-| Platform not recognized | Handled by the danmaku branch (`mode=lyric` can force the lyrics branch) |
-
-**Interface**: `/v4/vrc?url={link}`
-
-**Parameters**:
+**Interface**: `/v4/vrc?url={link}`; `/v4/url` is an alias handled by the same function.
 
 | Parameter | Description |
 |---|---|
-| `url` (required) | Video / music / playlist link |
-| `mode` | `auto` (default, automatic dispatch) / `danmaku` danmaku only / `lyric` lyrics only / `both` fetch both (equivalent to `merge=1`) |
-| `merge` | `1` returns the merged structure (see below); default `0`, i.e. "direct replacement mode" |
-| `media` | `1` appends a top-level `url` field (a playable direct link) to the response body; default `0` |
-| `json` | `1` makes non-Unity clients return JSON too (by default non-Unity clients get a 302 redirect to the direct link) |
-| `limit` / `start_time` / `duration` / `ai_subtitle` / `subtitle_lang` / `lang` | Danmaku branch parameters, exactly the same as `/v3/vrc-danmaku` |
-| `size` / `cover_size` | Lyrics branch parameters, exactly the same as `/v3/vrc-lyric` |
-| `i` / `index` | Which track of a music playlist to take (starts from 1) |
+| `url` (required) | Video / music link; use the playlist interfaces below for lists |
+| `mode` | Default `auto`; `lyric` / `music` selects the lyrics response, other values select danmaku; auto mode returns lyrics for music |
+| `json` | `1` returns the full branch JSON for non-Unity clients too |
+| `media` | `1` adds a top-level `url` with the playable direct link to successful JSON responses |
+| `world` | World ID; assigning video part / collection IDs requires an existing, enabled world |
 
-### Direct Replacement Mode (default, `merge=0`)
-
-The behavior is **exactly the same field by field** as v3: the client only has to change the address from `/v3/vrc-lyric` or `/v3/vrc-danmaku` to `/v4/vrc`, and not a single line of parsing code needs changing.
-
-| Client | Behavior of `/v4/vrc` |
-|---|---|
-| UA contains `Unity` | Returns the full JSON of the corresponding branch (music → same as `/v3/vrc-lyric`; video → same as `/v3/vrc-danmaku`) |
-| Other UA | 302 redirect to the direct link |
-| Other UA + `json=1` | Returns `{ "success": true, "url": "<direct link>" }` |
-
-```bash
-# Music (Unity gets the lyrics JSON, with fields identical to /v3/vrc-lyric)
-curl -A "Unity demo" "https://api.kipfel.link/v4/vrc?url=https://music.163.com/song?id=347230"
-
-# Video (Unity gets the danmaku JSON)
-curl -A "Unity demo" "https://api.kipfel.link/v4/vrc?url=https://www.bilibili.com/video/BV1aAhm6vEA6&limit=2000"
-
-# Player (non-Unity: 302 to the direct link)
-curl -I "https://api.kipfel.link/v4/vrc?url=https://music.163.com/song?id=347230"
-
-# Non-Unity clients also want JSON
-curl "https://api.kipfel.link/v4/vrc?url=https://music.163.com/song?id=347230&json=1"
-```
-
-### Merge Mode (`merge=1` or `mode=both`)
-
-Get "direct link + danmaku + lyrics" in one call:
-
-```json
-{
-  "success": true,
-  "url": "http://m704.music.126.net/xxxx.mp3?vuutv=...",
-  "data": {
-    "platform": "netease",
-    "kind": "music",
-    "mode": "lyric",
-    "url": "http://m704.music.126.net/xxxx.mp3?vuutv=...",
-    "is_direct_link": false,
-    "danmaku": null,
-    "lyric": {
-      "success": true,
-      "data": {
-        "platform": "网易云音乐",
-        "lyrics": [],
-        "tlyrics": [],
-        "cover_base64": "...",
-        "cover_size": "1024x1024"
-      }
-    }
-  }
-}
-```
-
-Field description:
-- `data.platform` (string): Platform **identifier** (`netease` / `bilibili` / `douyin` …); note that this is not the Chinese name — the `platform` inside the lyrics/danmaku sub-objects is the Chinese name
-- `data.kind` (string): Platform type, `music` / `video` / `live` / `unknown`
-- `data.mode` (string): The branch actually taken this time, `lyric` / `danmaku` / `both`
-- `data.url` (string): Playable direct link (an empty string when parsing fails)
-- `data.is_direct_link` (boolean): Whether the original link itself is a direct link
-- `data.danmaku` (object|null): A response body **exactly the same** as `/v3/vrc-danmaku`; `null` when `mode` does not include danmaku
-- `data.lyric` (object|null): A response body **exactly the same** as `/v3/vrc-lyric`; `null` when `mode` does not include lyrics
-- `data.errors` (object, optional): Appears when one of the sub-requests fails, for example `{"media":"...","danmaku":"..."}`
-
-::: tip Call examples for merge mode
-```bash
-# Direct link + lyrics + cover
-curl -A "Unity demo" "https://api.kipfel.link/v4/vrc?url=https://music.163.com/song?id=347230&merge=1&size=512"
-
-# Direct link + danmaku + subtitles
-curl -A "Unity demo" "https://api.kipfel.link/v4/vrc?url=https://www.bilibili.com/video/BV1aAhm6vEA6&mode=both&limit=5000"
-```
-
+::: warning Merged Response
+The current implementation does not handle `merge=1`, and `mode=both` does not combine lyrics with danmaku. Responses use the corresponding v3 branch structure. Non-Unity clients with `json=1` also receive the full branch JSON, rather than only `success` / `url`. `Accept` / `format` do not control JSON selection in v3 / v4.
 :::
+
+### Call Examples
+
+```bash
+curl -G -A "Unity demo" "https://api.kipfel.link/v4/vrc" --data-urlencode "url=https://music.163.com/song?id=347230" --data-urlencode "media=1"
+curl -G "https://api.kipfel.link/v4/vrc" --data-urlencode "url=https://www.bilibili.com/video/BV1aAhm6vEA6?p=2" --data-urlencode "json=1" --data-urlencode "world=demo"
+curl -I "https://api.kipfel.link/v4/vrc?url=https://music.163.com/song?id=347230"
+```
+
+
+### Video Parts and Collections
+
+Video JSON from v4 adds top-level `playback`. Basic fields are `source`, `title`, `author`, `duration`, `bvid`, `cid`, `page`, `hasParts` and `hasCollection`. Bilibili videos also trigger part and collection lookup.
+
+- `currentId` (number, optional): the current video's / part's video pool ID; play it through `/sell/{currentId}?world={world ID}`.
+- `list` (object, optional): the current video's parts, using the video pool structure below.
+- `collection` (object, optional): the collection list; `collectionError` contains a collection lookup error code when available.
+- `error` (string, optional): examples include `WORLD_REQUIRED`, `WORLD_UNAVAILABLE`, `INVALID_WORLD`, `PART_POOL_UNAVAILABLE` and `PART_METADATA_ERROR`. These describe incomplete metadata or ID assignment and do not necessarily mean the danmaku response failed.
+
+Pass `world` when you need parts / collections. IDs assigned here **do not replace the list manually loaded through `/p`**.
 
 ---
 
 ## Playlist Parsing Interface
 
-Parses a shared playlist (links such as NetEase Cloud Music's `/m/playlist?id=xxx&creatorId=...`) into JSON, where every song carries a title and a **gateway link that can be played directly**.
+**Interface**: `/v1/playlist?url={playlist link}` or `/v4/playlist?url={playlist link}`; always returns JSON.
 
-**Interface**: `/v1/playlist?url={playlist link}` and `/v4/playlist?url={playlist link}` (the same route; the two addresses are equivalent)
-
-**Parameters**:
-
-| Parameter | Description |
-|---|---|
-| `url` (required) | Playlist link; supports `music.163.com/playlist?id=`, `/m/playlist?id=`, `#/playlist?id=`, and the chart `toplist?id=` |
-| `base` | Gateway base address used to generate the inner playback links; when omitted the server's `PUBLIC_BASE_URL` is used, falling back to the current request domain |
-| `encode` | `1` URL-encodes the inner song links (not encoded by default) |
-| `limit` / `offset` | Take only a slice of the playlist (for fetching a large playlist in batches) |
-| `raw` | `1` additionally attaches the raw playlist data returned by the parsing node |
-| `nocache` | `1` skips the server cache (5 days by default) and forces a fresh parse |
-
-**Response**:
+NetEase playlists use the compatibility structure below. Use `/p` for Bilibili parts / collections rather than reading video lists from this compatibility endpoint.
 
 ```json
 {
@@ -510,53 +337,39 @@ Parses a shared playlist (links such as NetEase Cloud Music's `/m/playlist?id=xx
   "platform": "网易云音乐",
   "platform_key": "netease",
   "playlist": {
-    "id": "17883859097",
-    "name": "歌单名称",
-    "creator": "创建者昵称",
-    "creator_id": "9948997429",
-    "cover_url": "https://p1.music.126.net/xxxx.jpg?param=1024y1024",
-    "track_count": 15,
-    "count": 2,
-    "returned": 2,
-    "offset": 0,
+    "id": "https://music.163.com/playlist?id=3778678",
+    "name": "Playlist name",
+    "creator": "",
+    "creator_id": "",
+    "cover_url": "",
+    "track_count": 1,
+    "count": 1,
     "tracks": [
       {
         "index": 1,
-        "id": "3353908798",
-        "title": "春风三月",
-        "name": "春风三月",
-        "artists": "歌手A, 歌手B",
-        "album": "专辑名",
-        "duration": 241,
-        "url": "https://api.kipfel.link/v4/vrc?url=https://music.163.com/song?id=3353908798"
+        "id": "347230",
+        "title": "Song title",
+        "name": "Song title",
+        "artists": "Artist",
+        "album": "Album name",
+        "duration": 326,
+        "url": "https://api.kipfel.link/v4/vrc?url=https%3A%2F%2Fmusic.163.com%2Fsong%3Fid%3D347230"
       }
-    ],
-    "cached": false
+    ]
   }
 }
 ```
 
-Field description:
-- `platform` (string): Chinese platform name; `platform_key` (string): platform identifier (`netease`)
-- `playlist.id` (string): Playlist ID; `name` / `creator` / `creator_id`: playlist information
-- `playlist.cover_url` (string): Direct link to the playlist cover (the server appends the largest-image parameter `?param=1024y1024`)
-- `playlist.track_count` (number): The **total number of tracks** in the playlist; `count`: the number of tracks returned this time
-- `playlist.returned` / `playlist.offset` (number, only present when `limit` is used): the starting point and length of this slice
-- `playlist.cached` (boolean): Whether the server cache was hit this time
-- `playlist.tracks[].index` (number): A **1-based** sequence number (can be fed directly to `/v1/music?i=`)
-- `playlist.tracks[].id` (string): Song ID; `title` and `name` are the same title (both readings are supported)
-- `playlist.tracks[].duration` (number): Duration (seconds)
-- `playlist.tracks[].url` (string): A **gateway link that can be played directly**, pointing to `/v4/vrc` by default (Unity clients get the lyrics JSON, players get a 302 to the direct link)
 
-::: tip Caching
-The whole playlist (including every track and the generated links) is cached on the server for **5 days** (`PLAYLIST_CACHE_TTL`). Add `nocache=1` if the playlist content has changed and you want it to take effect immediately.
-:::
+- `platform_key` (string): platform key; `platform` is the compatibility display name.
+- `playlist.id` (string): currently the source URL; `name` is the playlist name.
+- `playlist.track_count` / `playlist.count` (number): total tracks / tracks in this response.
+- `playlist.tracks[].index` (number): list position starting from 1, **not a world slot ID**.
+- `tracks[].id` / `title` / `name` / `artists` / `album` / `duration`: song ID, title, title alias, artist, album and duration in seconds.
+- `tracks[].url` (string): a `/v4/vrc?url=...` entry for this song, returning lyrics JSON or a 302 based on the UA.
+- `creator`, `creator_id` and `cover_url` are currently empty strings.
 
-**Errors**:
-- `UNSUPPORTED_PLATFORM` (400): Playlists from this platform are not supported yet (currently only NetEase Cloud Music is supported)
-- `PLAYLIST_NOT_FOUND` (404): The playlist does not exist or access is not permitted (private playlists need a login cookie configured on the parsing node)
-- `NO_NODES_AVAILABLE` (503): No parsing nodes are currently available
-- `PLAYLIST_ERROR` (502): Other parsing failure
+Playlist cache duration is controlled in the server's parsing settings; `nocache=1` is not connected here. Select songs using their individual links. The old `i` / `index` / `@N` selection methods are not connected.
 
 ---
 
@@ -564,77 +377,129 @@ The whole playlist (including every track and the generated links) is cached on 
 
 ### Background
 
-VRChat's Udon **cannot construct a `VRCUrl` at runtime**, so the player addresses inside a world can only come from "baked into the world at build time" or "typed in by the player". The world therefore only bakes a batch of empty addresses that **contain no song data at all** (equivalent to baking just one domain), and **the server** decides "which song the n-th address currently plays":
+VRChat Udon cannot construct `VRCUrl` at runtime. A world can bake fixed addresses in advance, with the server assigning the songs or videos behind those IDs.
 
-```text
-GET /poll           Track list of the current playlist (clients render the list from it)
-GET /s/<n>          The real direct link the n-th item currently corresponds to (302); when the UA contains Unity, returns the lyrics JSON instead
-GET /p?u=<playlist> Players switch the playlist (token-free, idempotent)
-```
+::: warning World ID
+Every interface below requires exactly one `world`: 1–64 English letters, digits or underscores. Duplicate parameters and percent-encoded IDs are rejected. An administrator must create and enable the world first; these interfaces do not create it automatically.
+:::
 
-Switching the playlist = changing server state; the client does not need a single change, a re-bake or a re-upload of the world.
+### `GET /poll?world={world ID}`
 
-### `GET /poll`
+`/slots` is an alias. The default pool is music; use `pool=video` for videos. `/pocl?world=...` always reads the video pool.
 
 ```json
 {
+  "type": "music_playlist",
+  "pool": "music",
+  "world": "demo",
+  "max": 100000,
   "ok": true,
-  "zone": 0,
-  "mode": "idpool",
-  "name": "我喜欢的音乐",
+  "name": "Playlist name",
+  "source": "https://music.163.com/playlist?id=3778678",
   "platform": "netease",
-  "source": "https://music.163.com/playlist?id=6886428436",
-  "updatedAt": 1791488029088,
-  "count": 45,
-  "max": 20000,
+  "updatedAt": "2026-10-30T08:00:00Z",
+  "mode": "idpool",
   "songs": [
     {
       "i": 0,
-      "id": "19460184",
-      "title": "Omen",
-      "artist": "The Prodigy",
-      "album": "Invaders Must Die",
-      "duration": 216
+      "id": "347230",
+      "title": "Song title",
+      "artist": "Artist",
+      "album": "Album name",
+      "duration": 326,
+      "songUrl": "https://music.163.com/song?id=347230"
     }
-  ]
+  ],
+  "total": 1
 }
 ```
 
-- `mode` (string): `slot` (slot relay: `i` is a 0-based sequence number) or `idpool` (record id pool: `i` is a record id)
-- `count` (number): The length of this list; `max` (number): the upper bound under the current mode (`slot` = capacity per zone, `idpool` = pool capacity)
-- `songs[].i` (number): **The index the client should use** — use it to build `/s/<i>` for playback
-- `songs[].id` (string): The song's ID on the source platform; `title` / `artist` / `album` / `duration` (seconds)
 
-### `GET /s/<n>`
+- `mode` is always `idpool`; `world` identifies the world, and `max` is the pool capacity.
+- `total` is the current list length; `updatedAt` is an RFC 3339 string, not a millisecond timestamp. There is no `count` field.
+- Music uses `songs`. Each `i` is a server-assigned record ID and may be nonconsecutive; do not generate addresses from list positions.
+- Video uses `items` (may be omitted when empty), including `bvid`, `cid` and `page`. Multi-part entries also include `parts`; `playableTotal` counts playable entries, and `collectionId` is the collection ID when present. The base `songs` field is still serialized; read `items` for video lists.
+- Shared item fields are `id`, `title`, `artist`, `album`, `duration` and `songUrl`. Parts use the same structure; durations are in seconds.
+- `type` can be `music_playlist`, `bilibili_parts` or `bilibili_collection`; `pool` is `music` or `video`.
 
-- **UA contains `Unity`**: returns the **lyrics JSON** of the song in that slot, with a structure exactly the same as `/v3/vrc-lyric` (for the lyrics component inside the world)
-- **Other UA**: 302 redirect to the **real direct link** of the song in that slot (for players; the server parses it itself and will not 302 to a pool address that negotiates by UA)
+### `GET /s/{n}?world={world ID}`
 
-Errors:
+- **UA containing Unity (case-insensitive), or `json=1`**: returns the record's lyrics JSON.
+- **Other clients**: 302 to the record's playable direct link.
+- Videos use `/sell/{n}?world=...`, which always redirects for playback. For text metadata, use `/video-info/{n}?world=...`, returning `{ "success": true, "playback": { ... } }`.
 
-| Case | HTTP | code |
-|---|---|---|
-| `n` is not a valid integer / exceeds the upper bound | 400 | `BAD_SLOT` |
-| That slot currently has no song | 404 | `SLOT_EMPTY` |
-| Direct link parsing failed | 502 | `DIRECT_LINK_FAILED` |
+### `GET /p?world={world ID}&u={playlist ID or link}`
 
-### `GET /p?u={<playlist ID> or <playlist link>}`
+Loads a list without a token and returns the same kind of structure as `/poll`. `url` is an alias for `u`; a bare number is treated as a NetEase playlist ID. Supports NetEase playlists and Bilibili parts / collections.
 
-Players switch the playlist, **token-free** (build it directly in an in-world input field). The response body is **completely isomorphic** to `/poll`, so a client can refresh its list as soon as it receives it.
+Optional `scope`: `auto` (default), `parts` or `collection`, selecting the Bilibili list scope.
 
-- A bare playlist ID is supported (`/p?u=3778678`); the server assembles the full link itself (typing with a controller in VR is better kept as short as possible)
-- **Idempotent**: when the request is for the playlist that is already current, the existing list is returned directly without re-parsing
-- Rate limit: 30 requests per minute per IP
-- The server can close this entry point with `SLOT_PLAYER_LOAD=0` (once closed it returns 404 `PLAYER_LOAD_DISABLED`)
+```bash
+curl -G "https://api.kipfel.link/p" --data-urlencode "world=demo" --data-urlencode "u=3778678"
+curl "https://api.kipfel.link/poll?world=demo"
+curl "https://api.kipfel.link/pocl?world=demo"
+curl -G "https://api.kipfel.link/p" --data-urlencode "world=demo" --data-urlencode "u=https://www.bilibili.com/video/BV1aAhm6vEA6" --data-urlencode "scope=parts"
+curl -I "https://api.kipfel.link/s/0?world=demo"
+curl "https://api.kipfel.link/video-info/0?world=demo"
+```
 
-::: warning Has side effects
-`/p` **really does replace the playlist currently in use by that instance** (the `/poll` and `/s/<n>` of other rooms/worlds change accordingly). Be careful not to trigger it by accident while debugging.
+
+::: warning Side Effects
+`/p` replaces the current list for **the same world and pool**. Rooms sharing a world share that list; different worlds and music / video pools are independent. IDs remain reserved during the protection period, but expired records can be recycled when the pool fills. Do not treat a record ID as a permanent song ID.
 :::
 
-::: tip Difference between the two modes
-- **Slot relay** (`mode: "slot"`): the `n` of `/s/<n>` is a **sequence number**, and the server keeps one global table → multiple rooms/worlds will **override each other's playlists**
-- **Record id pool** (`mode: "idpool"`): `n` is a **record id** (the same song always has the same id), and the server keeps zero session state → multiple rooms do not interfere with each other and URLs can be shared directly; the cost is that the address pool size baked by the client must match the pool capacity (`max`)
-:::
+---
+
+## Parsing Preview Interface
+
+**Interface**: `GET /preview?url={link}&mode=auto`. Individual media returns JSON without UA-based playback redirects; NetEase playlists receive a 302 to `/v4/playlist`. `mode` accepts `auto`, `video` and `music`; other values fall back to `auto`.
+
+**JSON Response Example**:
+
+```json
+{
+  "success": true,
+  "requestId": "req_example",
+  "platform": {
+    "key": "netease",
+    "label": "网易云音乐",
+    "kind": "music",
+    "active": true,
+    "color": "#e60026"
+  },
+  "kind": "music",
+  "mediaUrl": "https://example.com/audio.mp3",
+  "mediaType": "audio",
+  "degraded": false,
+  "meta": {
+    "title": "Song title",
+    "author": "Artist",
+    "durationSeconds": 326,
+    "stats": {
+      "views": 0,
+      "likes": 0,
+      "comments": 0,
+      "shares": 0
+    }
+  },
+  "lyric": {
+    "count": 1,
+    "lines": [
+      {
+        "time": 18.466,
+        "text": "Lyrics"
+      }
+    ]
+  },
+  "timings": {
+    "totalMs": 120,
+    "mediaMs": 100
+  },
+  "cached": false
+}
+```
+
+`requestId` is the gateway request ID; `platform` is a platform info object. `mediaUrl` / `mediaType` describe playable media, and `meta.durationSeconds` is in seconds. `lyric.lines` and optional `lyric.translated` also use seconds. `danmaku.count` / `danmaku.preview` contain the count / preview; use v3 / v4 for full comments. Durations in `timings` are milliseconds; `cached` indicates a cached parsing result. Optional `subtitles` entries use `{ "from": 0, "to": 1.5, "text": "Subtitle" }` (seconds), and optional `collection` contains `title` and `items` (`title` / `url`). Empty optional content may be omitted. On failure, check `success: false` and `error.code` / `error.message`; optional `redirectUrl` is an operator rule redirect. This structure differs from v1 / v3 / v4; do not mix their fields.
 
 ---
 
@@ -642,43 +507,39 @@ Players switch the playlist, **token-free** (build it directly in an in-world in
 
 ### Error Response Format
 
-The error response format of all interfaces is unified as follows:
+Legacy v1 / v3 / v4 parameter validation and ordinary playback parsing errors use this structure:
 
 ```json
 {
   "error": true,
   "status": 400,
-  "code": "ERROR_CODE",
-  "message": "错误描述信息"
+  "code": "PARSE_ERROR",
+  "message": "链接解析失败，请检查链接是否正确"
 }
 ```
 
-Common error codes:
+
+Business errors from `/p`, `/poll`, `/slots`, `/pocl`, `/s/{n}`, `/sell/{n}` and `/video-info/{n}` contain `error`, `code`, `message` and optional `details`, **without a `status` field**. Read the HTTP status from the response itself.
 
 | code | HTTP | Description |
 |---|---|---|
-| `METHOD_NOT_ALLOWED` | 405 | Missing the required url request parameter |
-| `IM_A_TEAPOT` | 418 | The url parameter is empty |
-| `INVALID_URL` | 422 | The provided parameters do not contain a valid URL link |
-| `FORBIDDEN_URL` | 403 | This link contains an unsafe target address and has been blocked by the system |
-| `CONTENT_RESTRICTED` | 451 | Due to copyright or compliance reasons, parsing this content is temporarily not supported |
-| `PARSE_ERROR` | 400 / 500 | Parsing failed |
-| `NO_NODES_AVAILABLE` | 503 | No parsing nodes are currently available |
-| `UNSUPPORTED_PLATFORM` | 400 | Playlists from this platform are not supported for parsing yet |
-| `PLAYLIST_NOT_FOUND` | 404 | The playlist does not exist or access is not permitted |
-| `PLAYLIST_EMPTY` | 404 | The playlist contains no playable tracks |
-| `PLAYLIST_ERROR` | 502 | Playlist parsing failed |
-| `MISSING_SOURCE` | 400 | The playlist address is missing when switching playlists |
-| `BAD_SLOT` | 400 | The slot number is invalid or exceeds the upper bound |
-| `SLOT_EMPTY` | 404 | That slot currently has no song assigned |
-| `DIRECT_LINK_FAILED` | 502 | Slot direct link parsing failed |
-| `SLOT_ERROR` | 502 | Other slot error |
-| `PLAYER_LOAD_DISABLED` | 404 | The player-side playlist switching entry point is closed |
-| `LOAD_FAILED` | 502 | Loading the playlist failed |
-| `RATE_LIMIT_EXCEEDED` | 429 | Too many requests (e.g. `/p` allows 30 per minute per IP) |
+| `METHOD_NOT_ALLOWED` | 405 | Missing url parameter |
+| `IM_A_TEAPOT` | 418 | Empty url |
+| `INVALID_URL / UNSUPPORTED_PLATFORM` | 422 | Invalid URL / unsupported platform |
+| `CONTENT_RESTRICTED` | 451 | Restricted content |
+| `PARSE_ERROR` | 400 / 403 | Playback / non-Unity JSON parsing failure; rule blocks use 403 |
+| `INVALID_WORLD / INVALID_POOL` | 400 | Invalid world or pool parameter |
+| `INVALID_INPUT / INVALID_LIST_SCOPE` | 400 | Missing list source or invalid scope |
+| `UNSUPPORTED_PLAYLIST` | 400 | Unsupported platform for lists |
+| `WORLD_OR_SLOT_NOT_FOUND` | 404 | World or record not found |
+| `WORLD_DISABLED` | 403 | World disabled |
+| `SLOT_POOL_FULL` | 409 | Pool full and remaining records protected |
+| `SLOT_MEDIA_ERROR` | 502 | Record media URL parsing failed |
 
-::: tip The "soft failure" of the lyrics/danmaku interfaces
-`/v3/vrc-lyric`, `/v3/vrc-danmaku`, and `/v4/vrc` (Unity branch) **do not raise an error when the content cannot be parsed**: they still return `success: true`, only with empty arrays and empty cover strings. Clients do not need a dedicated fallback error for this case.
+::: tip Soft Failures for Lyrics / Danmaku
+After parameter validation, parsing failures in the Unity branch of v3 / v4 still return HTTP 200 and an empty `success: true` response. Danmaku uses `data.platform: "generic"` and `data.comments: []`; lyrics use `generic`, empty lyrics and empty cover fields. These empty responses may omit `cover_mode`. Missing parameters or invalid URLs still return validation errors.
+
+The v1 JSON branch instead returns `{ "code": -1, "message": "...", "log_id": "req_...", "data": {} }` on parsing failure, usually with HTTP 200, or 403 for a rule block. Do not use HTTP status alone to decide whether parsing succeeded.
 :::
 
 ---
