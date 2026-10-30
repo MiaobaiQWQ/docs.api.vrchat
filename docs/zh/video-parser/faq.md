@@ -11,7 +11,7 @@ description: "VRChat 视频解析常见问题解答：支持哪些平台、直�
 
 ### VRChat 视频解析支持哪些平台？
 
-当前 Go 工作区原生支持抖音、Bilibili、Twitter(X)、Instagram、快手、AcFun 六个视频平台；音乐支持网易云、酷狗、QQ音乐、酷我、汽水音乐。
+目前支持抖音、Bilibili、Twitter(X)、Instagram、快手、AcFun 六个视频平台；音乐支持网易云、酷狗、QQ音乐、酷我、汽水音乐。
 
 ::: info 已支持的平台
 - **视频平台**：抖音、Bilibili、Twitter(X)、Instagram、快手、AcFun
@@ -21,7 +21,7 @@ description: "VRChat 视频解析常见问题解答：支持哪些平台、直�
 :::
 
 ::: warning 注意
-YouTube、YouTube Music、咪咕在当前工作区中为停用 / 未接入状态。以上是原生实现范围；独立部署的节点能力请以实际配置为准。
+YouTube、YouTube Music、咪咕暂不支持。
 :::
 
 ## 直播解析

@@ -11,7 +11,7 @@ description: "VRChat ビデオ解析のよくある質問：対応プラット�
 
 ### VRChat ビデオ解析はどのプラットフォームに対応していますか？
 
-現在の Go ワークスペースは Douyin、Bilibili、Twitter(X)、Instagram、Kuaishou、AcFun の 6 つのビデオプラットフォームにネイティブ対応しています。音楽は NetEase、Kugou、QQ Music、Kuwo、Qishui に対応しています。
+現在、 Douyin、Bilibili、Twitter(X)、Instagram、Kuaishou、AcFun の 6 つのビデオプラットフォームに対応しています。音楽は NetEase、Kugou、QQ Music、Kuwo、Qishui に対応しています。
 
 ::: info サポートされているプラットフォーム
 - **ビデオプラットフォーム**: Douyin、Bilibili、Twitter(X)、Instagram、Kuaishou、AcFun
@@ -21,7 +21,7 @@ description: "VRChat ビデオ解析のよくある質問：対応プラット�
 :::
 
 ::: warning 注意
-YouTube、YouTube Music、Migu は現在のワークスペースでは無効 / 未実装です。上記はネイティブ解析器の範囲で、別途デプロイしたノードの機能は実際の設定によります。
+YouTube、YouTube Music、Migu は現在対応していません。
 :::
 
 ## ライブ配信の解析

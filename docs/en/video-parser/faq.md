@@ -11,7 +11,7 @@ This page answers the most frequently asked questions about the api.kipfel.link 
 
 ### Which platforms does the VRChat video parser support?
 
-The current Go workspace has native parsers for six video platforms: Douyin, Bilibili, Twitter(X), Instagram, Kuaishou and AcFun. Music parsers cover NetEase, Kugou, QQ Music, Kuwo and Qishui.
+The service supports six video platforms: Douyin, Bilibili, Twitter(X), Instagram, Kuaishou and AcFun. Music parsers cover NetEase, Kugou, QQ Music, Kuwo and Qishui.
 
 ::: info Supported Platforms
 - **Video Platforms**: Douyin, Bilibili, Twitter(X), Instagram, Kuaishou, AcFun
@@ -21,7 +21,7 @@ The current Go workspace has native parsers for six video platforms: Douyin, Bil
 :::
 
 ::: warning Note
-YouTube, YouTube Music and Migu are retired / not implemented in the current workspace. The list above describes native parsers; separately deployed nodes depend on their actual configuration.
+YouTube, YouTube Music and Migu are currently unsupported.
 :::
 
 ## Live Stream Parsing

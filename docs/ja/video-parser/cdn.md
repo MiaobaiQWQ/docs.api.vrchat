@@ -12,7 +12,7 @@ VRChat マップの URL リストは最大 100 個しかありません。必要
 :::
 
 ::: tip 提案
-VRChat プレイヤーでは、インターフェースとして `api.kipfel.vrchat.org.cn` ドメインを使用することをお勧めします。
+VRChat プレイヤーでは、インターフェースとして `api.kipfel.link` ドメインを使用することをお勧めします。
 :::
 
 ## Bilibili CDN

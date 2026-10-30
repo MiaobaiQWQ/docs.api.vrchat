@@ -85,7 +85,7 @@ v1 JSON uses `code` / `data.content.play_url`. For v3 / v4, read danmaku from `d
 
 ## World Slots and Video Parts
 
-Have an administrator create a world ID first, then bake `/s/{n}?world={world ID}` (music) and `/sell/{n}?world={world ID}` (video) into the world. Read music through `/poll?world=...`, video through `/pocl?world=...`, and load lists through `/p?world=...&u={link}`. Bilibili supports `scope=parts` / `scope=collection`; always use returned `i` values.
+Use an enabled world ID and bake `/s/{n}?world={world ID}` (music) and `/sell/{n}?world={world ID}` (video) into the world. Read music through `/poll?world=...`, video through `/pocl?world=...`, and load lists through `/p?world=...&u={link}`. Bilibili supports `scope=parts` / `scope=collection`; always use returned `i` values.
 
 ## More Help
 

@@ -12,7 +12,7 @@ VRChat地图限制URLlist最大只有100个，请按需选添。
 :::
 
 ::: tip 建议
-建议在 VRChat 播放器使用 `api.kipfel.vrchat.org.cn` 域名作为接口。
+建议在 VRChat 播放器使用 `api.kipfel.link` 域名作为接口。
 :::
 
 ## Bilibili CDN

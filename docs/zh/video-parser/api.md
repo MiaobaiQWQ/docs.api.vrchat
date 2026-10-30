@@ -7,7 +7,7 @@ description: "VRChat 视频解析 API 完整接口文档：v1 视频与音乐、
 
 ## 项目概述
 
-VRC 视频解析是一个多源视频/音频解析代理网关，专为 VRChat 玩家设计，提供免费、快捷的视频和音频解析服务。
+VRC 视频解析专为 VRChat 玩家设计，提供免费、快捷的视频和音频解析服务。
 
 ## 基础信息
 
@@ -16,15 +16,11 @@ VRC 视频解析是一个多源视频/音频解析代理网关，专为 VRChat �
 https://api.kipfel.link/
 ```
 
-#### 另一个域名（部署内容不同）
+#### 备用接口地址
 
 ```text
 https://api.kipfel.vrchat.org.cn/
 ```
-
-::: tip 文档对应版本
-以下调用与 JSON 结构按当前 Go 网关工作区实现整理。两个域名独立部署，接口清单不代表两个域名已同步上线；请以实际部署版本为准。
-:::
 
 ### User-Agent 要求
 ::: warning 注意
@@ -94,7 +90,7 @@ https://api.kipfel.vrchat.org.cn/
 字段说明：
 - `code` (Number)：业务状态码，`0` 表示成功。
 - `message` (String)：业务响应信息，通常为 `"success"`。
-- `log_id` (String)：网关请求 ID。
+- `log_id` (String)：请求 ID。
 - `data.video_id` (String)：从链接提取的 BV 号；提取不到时为请求 ID。
 - `data.avid` (String)：从输入的 av 链接提取的 AV 号，否则为空字符串。
 - `data.bvid` (String)：从输入链接提取并转为大写的 BV 号，否则为空字符串。
@@ -140,7 +136,7 @@ https://api.kipfel.vrchat.org.cn/
 ---
 
 ::: tip 返回字段
-v1 的 `log_id` 是网关请求 ID。`video_id` 在能提取 BV 号时使用 BV 号，否则为请求 ID；`avid` / `bvid` 仅从输入提取，不保证平台原始大小写或 AV / BV 互转。`author.user_id` 和分类当前为空，`favorite` 为 0；话题、提及、背景音乐为空数组 / 对象。v1 可用 `-json`、`json=1` 或 `Accept: application/json` 选择 JSON。
+v1 的 `log_id` 是请求 ID。`video_id` 在能提取 BV 号时使用 BV 号，否则为请求 ID；`avid` / `bvid` 仅从输入提取，不保证平台原始大小写或 AV / BV 互转。`author.user_id` 和分类当前为空，`favorite` 为 0；话题、提及、背景音乐为空数组 / 对象。v1 可用 `-json`、`json=1` 或 `Accept: application/json` 选择 JSON。
 :::
 
 ### 备用视频解析接口
@@ -270,7 +266,7 @@ v3 接口面向需要弹幕、歌词的播放器。**UA 含 `Unity` 或 `unity`�
 - `data.audio_id` / `data.album_id` / `data.singer_id` (string)：当前兼容结构中为空字符串。
 
 ::: tip 封面图
-封面模式由服务端后台设置，客户端看 `cover_mode` / `cover_encoding` 决定怎么读：
+根据响应中的 `cover_mode` / `cover_encoding` 读取封面：
 - `base64`（默认）：`cover_encoding: "jpeg"`，读取 `cover_base64`；成功时 `cover_size: "128x128"`。
 - `palette`：`cover_encoding: "palette64"`，读取 `cover_width`、`cover_height`、`cover_palette`、`cover_pixels`。成功时为 128×128、64 色，`cover_origin: "top-left"`。像素从左到右、从上到下排列，每个字符在 `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_` 中的位置就是调色板下标；调色板为十进制 RGB。**像素字符串不是图片 Base64**。
 - `url`：`cover_encoding: "url"`，读取 `cover_url`，客户端自行下载图片。
@@ -369,7 +365,7 @@ v4 的视频 JSON 额外返回顶层 `playback`。基本字段有 `source`、`ti
 - `tracks[].url` (string)：该曲的 `/v4/vrc?url=...`，按 UA 返回歌词 JSON 或 302。
 - `creator`、`creator_id`、`cover_url` 当前为空字符串。
 
-歌单缓存时长由后台解析设置控制，当前入口没有接入 `nocache=1`。选歌时使用每首歌的链接；旧版 `i` / `index` / `@N` 选曲方式当前没有接入。
+当前歌单接口不支持 `nocache=1`。选歌时使用每首歌的链接；旧版 `i` / `index` / `@N` 选曲方式当前没有接入。
 
 ---
 
@@ -380,7 +376,7 @@ v4 的视频 JSON 额外返回顶层 `playback`。基本字段有 `source`、`ti
 VRChat 的 Udon 在运行时无法构造 `VRCUrl`，世界可以预先烤入一批固定地址，由服务器分配编号对应的歌曲或视频。
 
 ::: warning 世界编号
-以下接口都必须传一次 `world`，内容为 1–64 位英文字母、数字、下划线，不接受重复参数或百分号编码。先由管理员创建并启用该世界，接口不会自动创建世界。
+以下接口都必须传一次 `world`，内容为 1–64 位英文字母、数字、下划线，不接受重复参数或百分号编码。请使用已开通的世界编号。
 :::
 
 ### `GET /poll?world={世界编号}`
@@ -499,7 +495,7 @@ curl "https://api.kipfel.link/video-info/0?world=demo"
 }
 ```
 
-`requestId` 是网关请求 ID；`platform` 是平台信息对象；`mediaUrl` / `mediaType` 为播放地址 / 类型；`meta` 为媒体信息，`durationSeconds` 单位秒。`lyric.lines` 与可选的 `lyric.translated` 使用秒；`danmaku.count` / `danmaku.preview` 为弹幕总数 / 预览列表，完整弹幕使用 v3 / v4。`timings` 内时长单位毫秒，`cached` 表示解析结果是否来自缓存。可选 `subtitles` 条目为 `{ "from": 0, "to": 1.5, "text": "字幕" }`（秒），可选 `collection` 包含 `title`、`items`（`title` / `url`）。这些字段没有内容时可能省略。失败时查看 `success: false` 与 `error.code` / `error.message`；可选 `redirectUrl` 是运营规则指定的跳转地址。此结构与 v1 / v3 / v4 不同，不要混用字段。
+`requestId` 是请求 ID；`platform` 是平台信息对象；`mediaUrl` / `mediaType` 为播放地址 / 类型；`meta` 为媒体信息，`durationSeconds` 单位秒。`lyric.lines` 与可选的 `lyric.translated` 使用秒；`danmaku.count` / `danmaku.preview` 为弹幕总数 / 预览列表，完整弹幕使用 v3 / v4。`timings` 内时长单位毫秒，`cached` 表示解析结果是否来自缓存。可选 `subtitles` 条目为 `{ "from": 0, "to": 1.5, "text": "字幕" }`（秒），可选 `collection` 包含 `title`、`items`（`title` / `url`）。这些字段没有内容时可能省略。失败时查看 `success: false` 与 `error.code` / `error.message`；可选 `redirectUrl` 是跳转地址。此结构与 v1 / v3 / v4 不同，不要混用字段。
 
 ---
 

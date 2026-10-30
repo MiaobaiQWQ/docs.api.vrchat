@@ -85,7 +85,7 @@ v1 JSON 使用 `code` / `data.content.play_url`；v3 / v4 弹幕读取 `data.com
 
 ## 世界槽位与视频分 P
 
-先由管理员创建世界编号，再将 `/s/{n}?world={世界编号}`（音乐）与 `/sell/{n}?world={世界编号}`（视频）烤入世界。`/poll?world=...` 读取音乐，`/pocl?world=...` 读取视频；用 `/p?world=...&u={链接}` 加载列表。哔哩哔哩可加 `scope=parts` / `scope=collection`，编号以返回的 `i` 为准。
+使用已开通的世界编号，将 `/s/{n}?world={世界编号}`（音乐）与 `/sell/{n}?world={世界编号}`（视频）烤入世界。`/poll?world=...` 读取音乐，`/pocl?world=...` 读取视频；用 `/p?world=...&u={链接}` 加载列表。哔哩哔哩可加 `scope=parts` / `scope=collection`，编号以返回的 `i` 为准。
 
 ## 更多帮助
 

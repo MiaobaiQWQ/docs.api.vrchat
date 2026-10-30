@@ -12,7 +12,7 @@ VRChat map URL lists have a maximum of 100 entries. Please add them as needed.
 :::
 
 ::: tip Suggestion
-It is recommended to use the `api.kipfel.vrchat.org.cn` domain as the interface for VRChat players.
+It is recommended to use the `api.kipfel.link` domain as the interface for VRChat players.
 :::
 
 ## Bilibili CDN

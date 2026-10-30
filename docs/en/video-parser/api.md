@@ -7,7 +7,7 @@ description: "VRChat video API reference: v1 video and music, v3 danmaku and lyr
 
 ## Project Overview
 
-VRC Video Parsing is a multi-source video/audio parsing proxy gateway designed for VRChat players, providing free and fast video and audio parsing services.
+VRC Video Parsing provides free and fast video and audio parsing for VRChat players.
 
 ## Basic Information
 
@@ -16,15 +16,11 @@ VRC Video Parsing is a multi-source video/audio parsing proxy gateway designed f
 https://api.kipfel.link/
 ```
 
-#### Another Domain (different deployment contents)
+#### Alternative Interface Address
 
 ```text
 https://api.kipfel.vrchat.org.cn/
 ```
-
-::: tip Documented Version
-The calls and JSON structures below describe the current Go gateway workspace. The domains are separate deployments; this list does not confirm that both have been updated. Check the deployed version you use.
-:::
 
 ### User-Agent Requirements
 ::: warning Note
@@ -94,7 +90,7 @@ The calls and JSON structures below describe the current Go gateway workspace. T
 Field description:
 - `code` (Number): Business status code, `0` indicates success.
 - `message` (String): Business response message, usually `"success"`.
-- `log_id` (String): Gateway request ID.
+- `log_id` (String): Request ID.
 - `data.video_id` (String): BV ID extracted from the link; otherwise the request ID.
 - `data.avid` (String): AV ID extracted from an av input link; otherwise empty.
 - `data.bvid` (String): BV ID extracted from input and uppercased; otherwise empty.
@@ -140,7 +136,7 @@ Field description:
 ---
 
 ::: tip Response Fields
-In v1, `log_id` is the gateway request ID. `video_id` uses an extracted BV ID, otherwise the request ID. `avid` / `bvid` are extracted from input only; original casing and AV / BV conversion are not guaranteed. `author.user_id` and category fields are empty, `favorite` is 0, and hashtags, mentions and music information are empty arrays / objects. Select JSON through `-json`, `json=1` or `Accept: application/json`.
+In v1, `log_id` is the request ID. `video_id` uses an extracted BV ID, otherwise the request ID. `avid` / `bvid` are extracted from input only; original casing and AV / BV conversion are not guaranteed. `author.user_id` and category fields are empty, `favorite` is 0, and hashtags, mentions and music information are empty arrays / objects. Select JSON through `-json`, `json=1` or `Accept: application/json`.
 :::
 
 ### Alternative Video Parsing Interface
@@ -270,7 +266,7 @@ Field descriptions:
 - `data.audio_id` / `data.album_id` / `data.singer_id` (string): currently empty strings in this compatibility response.
 
 ::: tip Cover Image
-The server administrator selects the cover mode. Check `cover_mode` / `cover_encoding` before reading it:
+Read cover art according to `cover_mode` / `cover_encoding` in the response:
 - `base64` (default): `cover_encoding: "jpeg"`; read `cover_base64`. A successful conversion sets `cover_size: "128x128"`.
 - `palette`: `cover_encoding: "palette64"`; read `cover_width`, `cover_height`, `cover_palette` and `cover_pixels`. A successful image is 128×128 with 64 colors and `cover_origin: "top-left"`. Pixels run left to right, top to bottom. Each character's position in `ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_` is its palette index; palette colors are decimal RGB. **This pixel string is not a Base64 image**.
 - `url`: `cover_encoding: "url"`; download the image from `cover_url`.
@@ -369,7 +365,7 @@ NetEase playlists use the compatibility structure below. Use `/p` for Bilibili p
 - `tracks[].url` (string): a `/v4/vrc?url=...` entry for this song, returning lyrics JSON or a 302 based on the UA.
 - `creator`, `creator_id` and `cover_url` are currently empty strings.
 
-Playlist cache duration is controlled in the server's parsing settings; `nocache=1` is not connected here. Select songs using their individual links. The old `i` / `index` / `@N` selection methods are not connected.
+The playlist endpoint does not support `nocache=1`. Select songs using their individual links. The old `i` / `index` / `@N` selection methods are not connected.
 
 ---
 
@@ -380,7 +376,7 @@ Playlist cache duration is controlled in the server's parsing settings; `nocache
 VRChat Udon cannot construct `VRCUrl` at runtime. A world can bake fixed addresses in advance, with the server assigning the songs or videos behind those IDs.
 
 ::: warning World ID
-Every interface below requires exactly one `world`: 1–64 English letters, digits or underscores. Duplicate parameters and percent-encoded IDs are rejected. An administrator must create and enable the world first; these interfaces do not create it automatically.
+Every interface below requires exactly one `world`: 1–64 English letters, digits or underscores. Duplicate parameters and percent-encoded IDs are rejected. Use an enabled world ID.
 :::
 
 ### `GET /poll?world={world ID}`
@@ -499,7 +495,7 @@ curl "https://api.kipfel.link/video-info/0?world=demo"
 }
 ```
 
-`requestId` is the gateway request ID; `platform` is a platform info object. `mediaUrl` / `mediaType` describe playable media, and `meta.durationSeconds` is in seconds. `lyric.lines` and optional `lyric.translated` also use seconds. `danmaku.count` / `danmaku.preview` contain the count / preview; use v3 / v4 for full comments. Durations in `timings` are milliseconds; `cached` indicates a cached parsing result. Optional `subtitles` entries use `{ "from": 0, "to": 1.5, "text": "Subtitle" }` (seconds), and optional `collection` contains `title` and `items` (`title` / `url`). Empty optional content may be omitted. On failure, check `success: false` and `error.code` / `error.message`; optional `redirectUrl` is an operator rule redirect. This structure differs from v1 / v3 / v4; do not mix their fields.
+`requestId` is the request ID; `platform` is a platform info object. `mediaUrl` / `mediaType` describe playable media, and `meta.durationSeconds` is in seconds. `lyric.lines` and optional `lyric.translated` also use seconds. `danmaku.count` / `danmaku.preview` contain the count / preview; use v3 / v4 for full comments. Durations in `timings` are milliseconds; `cached` indicates a cached parsing result. Optional `subtitles` entries use `{ "from": 0, "to": 1.5, "text": "Subtitle" }` (seconds), and optional `collection` contains `title` and `items` (`title` / `url`). Empty optional content may be omitted. On failure, check `success: false` and `error.code` / `error.message`; optional `redirectUrl` is a redirect address. This structure differs from v1 / v3 / v4; do not mix their fields.
 
 ---
 

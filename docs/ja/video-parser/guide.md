@@ -85,7 +85,7 @@ v1 JSON は `code` / `data.content.play_url` を使用します。v3 / v4 の弾
 
 ## ワールドのスロットとビデオのパート
 
-管理者によるワールド番号の作成後、`/s/{n}?world={ワールド番号}`（音楽）と `/sell/{n}?world={ワールド番号}`（ビデオ）をワールドに事前登録します。音楽は `/poll?world=...`、ビデオは `/pocl?world=...`、一覧のロードは `/p?world=...&u={リンク}`。Bilibili は `scope=parts` / `scope=collection` に対応し、返された `i` を使います。
+有効なワールド番号を使用して、`/s/{n}?world={ワールド番号}`（音楽）と `/sell/{n}?world={ワールド番号}`（ビデオ）をワールドに事前登録します。音楽は `/poll?world=...`、ビデオは `/pocl?world=...`、一覧のロードは `/p?world=...&u={リンク}`。Bilibili は `scope=parts` / `scope=collection` に対応し、返された `i` を使います。
 
 ## その他のヘルプ
 
