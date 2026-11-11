@@ -158,7 +158,7 @@ v1 の `log_id` はゲートウェイのリクエスト ID。`video_id` は抽�
 **応答**：成功時は再生直リンクへ 302。`json=1` または `Accept: application/json` で `/v1/vrc-json` と同じ JSON を取得できます。
 
 ::: warning JSON アドレス
-`/v1/music-json` は登録されていません。`/v1/music?url=...&json=1` を使用してください。`/v1/musickfc-json` は利用できます。`i` / `index` / `@N` による選曲は接続されていません。
+`/v1/music-json` は登録されていません。`/v1/music?json=1&url=...` を使用してください。`/v1/musickfc-json` は利用できます。`i` / `index` / `@N` による選曲は接続されていません。
 :::
 
 ---
@@ -174,6 +174,30 @@ v1 の `log_id` はゲートウェイのリクエスト ID。`video_id` は抽�
 
 ---
 
+
+## 音楽 CDN と伴奏 {#music-playback}
+
+**インターフェース**：`/v1/music`、`/v3/vrc-lyric`、`/v4/vrc`（または `/v4/url`）。
+
+**パラメータ**：
+
+| パラメータ | 説明 |
+|---|---|
+| `cdn` | 任意。利用可能な CDN の識別子（例：`aly`）。省略時は既定の経路を使用します。 |
+| `track` | 任意。`original` はオリジナル音源（既定値）、`accompaniment` は伴奏音源（QQ Music、Kugou）を指定します。 |
+| `url` | 必須。曲の完全な URL。`cdn`、`track`、`json` などの API パラメータはすべて `url` より前に指定します。 |
+
+**呼び出し例**：
+
+```bash
+curl -G "https://api.kipfel.link/v1/music" --data-urlencode "cdn=aly" --data-urlencode "url=https://www.kugou.com/mixsong/j2i4p51.html"
+curl -G "https://api.kipfel.link/v3/vrc-lyric" --data-urlencode "track=accompaniment" --data-urlencode "json=1" --data-urlencode "url=https://www.kugou.com/mixsong/j2i4p51.html"
+curl -G "https://api.kipfel.link/v4/vrc" --data-urlencode "cdn=aly" --data-urlencode "track=accompaniment" --data-urlencode "url=https://www.kugou.com/mixsong/j2i4p51.html"
+```
+
+**応答**：通常の再生リクエストが成功すると、指定した音源へ 302 リダイレクトします。伴奏は MP4 です。V1 の JSON では再生 URL は `data.content.play_url` に入ります。V3/V4 の歌詞 JSON では、`cdn`、`track`、または `media=1` を指定するとトップレベルの `url` に再生 URL が入ります。
+
+---
 
 ## v3 高度なインターフェース
 
@@ -276,7 +300,7 @@ v3 は弾幕や歌詞を必要とするプレイヤー向けです。**UA に `U
 
 ```bash
 curl -G -A "Unity demo" "https://api.kipfel.link/v3/vrc-danmaku" --data-urlencode "url=https://www.bilibili.com/video/BV1aAhm6vEA6"
-curl -G "https://api.kipfel.link/v3/vrc-lyric" --data-urlencode "url=https://music.163.com/song?id=347230" --data-urlencode "json=1"
+curl -G "https://api.kipfel.link/v3/vrc-lyric" --data-urlencode "json=1" --data-urlencode "url=https://music.163.com/song?id=347230"
 ```
 
 ---
@@ -302,8 +326,8 @@ v4 はビデオと音楽を 1 つの入口にまとめ、既定ではリンク�
 ### 呼び出し例
 
 ```bash
-curl -G -A "Unity demo" "https://api.kipfel.link/v4/vrc" --data-urlencode "url=https://music.163.com/song?id=347230" --data-urlencode "media=1"
-curl -G "https://api.kipfel.link/v4/vrc" --data-urlencode "url=https://www.bilibili.com/video/BV1aAhm6vEA6?p=2" --data-urlencode "json=1" --data-urlencode "world=demo"
+curl -G -A "Unity demo" "https://api.kipfel.link/v4/vrc" --data-urlencode "media=1" --data-urlencode "url=https://music.163.com/song?id=347230"
+curl -G "https://api.kipfel.link/v4/vrc" --data-urlencode "json=1" --data-urlencode "world=demo" --data-urlencode "url=https://www.bilibili.com/video/BV1aAhm6vEA6?p=2"
 curl -I "https://api.kipfel.link/v4/vrc?url=https://music.163.com/song?id=347230"
 ```
 

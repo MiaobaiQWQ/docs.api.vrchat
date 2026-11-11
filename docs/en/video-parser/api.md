@@ -158,7 +158,7 @@ In v1, `log_id` is the request ID. `video_id` uses an extracted BV ID, otherwise
 **Response**: 302 to playable media on success. Add `json=1` or send `Accept: application/json` for JSON in the `/v1/vrc-json` format.
 
 ::: warning JSON Address
-`/v1/music-json` is not registered. Use `/v1/music?url=...&json=1`; `/v1/musickfc-json` remains available. `i` / `index` / `@N` song selection is not connected.
+`/v1/music-json` is not registered. Use `/v1/music?json=1&url=...`; `/v1/musickfc-json` remains available. `i` / `index` / `@N` song selection is not connected.
 :::
 
 ---
@@ -174,6 +174,30 @@ In v1, `log_id` is the request ID. `video_id` uses an extracted BV ID, otherwise
 
 ---
 
+
+## Music CDN and Accompaniment {#music-playback}
+
+**Endpoints**: `/v1/music`, `/v3/vrc-lyric`, and `/v4/vrc` (or `/v4/url`).
+
+**Parameters**:
+
+| Parameter | Description |
+|---|---|
+| `cdn` | Optional. Select an available CDN alias, for example `aly`. Omit it to use the default route. |
+| `track` | Optional. `original` plays the original track (default). `accompaniment` plays the instrumental track for QQ Music and Kugou. |
+| `url` | Required. The complete song link. Place API parameters such as `cdn`, `track`, and `json` before `url`. |
+
+**Examples**:
+
+```bash
+curl -G "https://api.kipfel.link/v1/music" --data-urlencode "cdn=aly" --data-urlencode "url=https://www.kugou.com/mixsong/j2i4p51.html"
+curl -G "https://api.kipfel.link/v3/vrc-lyric" --data-urlencode "track=accompaniment" --data-urlencode "json=1" --data-urlencode "url=https://www.kugou.com/mixsong/j2i4p51.html"
+curl -G "https://api.kipfel.link/v4/vrc" --data-urlencode "cdn=aly" --data-urlencode "track=accompaniment" --data-urlencode "url=https://www.kugou.com/mixsong/j2i4p51.html"
+```
+
+**Response**: A successful playback request returns a 302 redirect to the selected track. Accompaniment is served as MP4. In V1 JSON, the playback URL is `data.content.play_url`. In V3/V4 lyrics JSON, passing `cdn`, `track`, or `media=1` adds the playback URL as the top-level `url`.
+
+---
 
 ## v3 Advanced Interface
 
@@ -276,7 +300,7 @@ The base palette fields remain present and empty in other modes. Missing covers 
 
 ```bash
 curl -G -A "Unity demo" "https://api.kipfel.link/v3/vrc-danmaku" --data-urlencode "url=https://www.bilibili.com/video/BV1aAhm6vEA6"
-curl -G "https://api.kipfel.link/v3/vrc-lyric" --data-urlencode "url=https://music.163.com/song?id=347230" --data-urlencode "json=1"
+curl -G "https://api.kipfel.link/v3/vrc-lyric" --data-urlencode "json=1" --data-urlencode "url=https://music.163.com/song?id=347230"
 ```
 
 ---
@@ -302,8 +326,8 @@ The current implementation does not handle `merge=1`, and `mode=both` does not c
 ### Call Examples
 
 ```bash
-curl -G -A "Unity demo" "https://api.kipfel.link/v4/vrc" --data-urlencode "url=https://music.163.com/song?id=347230" --data-urlencode "media=1"
-curl -G "https://api.kipfel.link/v4/vrc" --data-urlencode "url=https://www.bilibili.com/video/BV1aAhm6vEA6?p=2" --data-urlencode "json=1" --data-urlencode "world=demo"
+curl -G -A "Unity demo" "https://api.kipfel.link/v4/vrc" --data-urlencode "media=1" --data-urlencode "url=https://music.163.com/song?id=347230"
+curl -G "https://api.kipfel.link/v4/vrc" --data-urlencode "json=1" --data-urlencode "world=demo" --data-urlencode "url=https://www.bilibili.com/video/BV1aAhm6vEA6?p=2"
 curl -I "https://api.kipfel.link/v4/vrc?url=https://music.163.com/song?id=347230"
 ```
 

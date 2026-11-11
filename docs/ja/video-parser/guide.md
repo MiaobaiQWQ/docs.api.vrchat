@@ -77,8 +77,8 @@ https://api.kipfel.link/v1/vrc?url=https://b23.tv/xxxx
 再生直リンクには通常のプレイヤー UA を使用し、歌詞 / 弾幕には `Unity` を含む UA、または `json=1` を使用します。別々のリクエストであり、1 回に 2 つの UA を送る意味ではありません。
 
 ```bash
-curl -G "https://api.kipfel.link/v1/music" --data-urlencode "url=https://music.163.com/song?id=347230" --data-urlencode "json=1"
-curl -G -A "Unity demo" "https://api.kipfel.link/v4/vrc" --data-urlencode "url=https://music.163.com/song?id=347230" --data-urlencode "media=1"
+curl -G "https://api.kipfel.link/v1/music" --data-urlencode "json=1" --data-urlencode "url=https://music.163.com/song?id=347230"
+curl -G -A "Unity demo" "https://api.kipfel.link/v4/vrc" --data-urlencode "media=1" --data-urlencode "url=https://music.163.com/song?id=347230"
 ```
 
 v1 JSON は `code` / `data.content.play_url` を使用します。v3 / v4 の弾幕は `data.comments`、歌詞は `data.lyrics`（時刻は秒）、カバーは `cover_mode` / `cover_encoding` に従って取得してください。詳細は [API ドキュメント](/ja/video-parser/api) を参照してください。

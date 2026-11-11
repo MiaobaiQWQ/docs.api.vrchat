@@ -15,109 +15,47 @@ VRChat map URL lists have a maximum of 100 entries. Please add them as needed.
 It is recommended to use the `api.kipfel.link` domain as the interface for VRChat players.
 :::
 
+## Parser API
+
+- `api.kipfel.link`
+
 ## Bilibili CDN
 
-### Main Line
 - `upos-sz-mirroraliov.bilivideo.com`
-
-### Domestic Backup
 - `upos-sz-mirrorhw.bilivideo.com`
 - `upos-sz-mirrorcos.bilivideo.com`
 - `upos-hz-mirroraliov.bilivideo.com`
-- `cn-zjwz5-dx-v-07.bilivideo.com`
-
-### Overseas/Hong Kong, Macau, Taiwan
 - `upos-hz-mirrorakam.akamaized.net`
-
-### Other Bilibili Domains
-- `d1--cn-gotcha104.bilivideo.com`
-- `d1--cn-gotcha104b.bilivideo.com`
-- `cn-jssz-cm-02-08.bilivideo.com`
-- `cn-jssz-cm-02-07.bilivideo.com`
-- `cn-jxnc-cm-01-02.bilivideo.com`
-- `d1--cn-gotcha204-4.bilivideo.com`
-- `d1--cn-gotcha204b.bilivideo.com`
-- `d1--ov-gotcha105.bilivideo.com`
-- `d1--ov-gotcha107.bilivideo.com`
-- `d1--ov-gotcha208.bilivideo.com`
-- `d1--ov-gotcha209.bilivideo.com`
-- `d1--ov-gotcha210.bilivideo.com`
-
-## Kuaishou CDN
-
-### Main Line
-- `txmov2.a.kwimgs.com`
-
-### Domestic Backup
-- `txmov2.a.yximgs.com`
-- `ali2.a.yximgs.com`
-
-### Temporary Domain
-- `v2.kwaicdn.com`
-
-### Upload/Distribution Nodes
-- `upmov.a.kwimgs.com`
-
-## Douyin CDN
-
-### Main Line
-- `v1.douyinvod.com`
-
-### Commonly Used Domestic Backup
-- `v3.douyinvod.com`
-- `v5.douyinvod.com`
-- `v9.douyinvod.com`
-- `v26.douyinvod.com`
-- `v26-default.ixigua.com`
-- `v3-default.ixigua.com`
-- `v3-default.365yg.com`
-- `v5-dy-o-abtest.zjcdn.com`
-
-### Overseas Nodes
-- `v16m-default.akamaized.net`
-
-## Kuaishou Live CDN
-
-### Main Line
-- `tx-origin.hlspull.yximgs.com`
-
-### Domestic Backup
-- `ws-origin.hlspull.yximgs.com`
-- `hw-origin.hlspull.yximgs.com`
-- `ali-origin.hlspull.yximgs.com`
 
 ## Bilibili Live CDN
 
-### Main Line
+- `d1--ov-gotcha207.bilivideo.com`
+- `d1--ov-gotcha105.bilivideo.com`
 - `d1--cn-gotcha104.bilivideo.com`
-- `d1--cn-gotcha104b.bilivideo.com`
 
-### Available Domestic Nodes
-- `cn-jssz-cm-02-08.bilivideo.com`
-- `cn-jssz-cm-02-07.bilivideo.com`
-- `cn-jxnc-cm-01-02.bilivideo.com`
-- `d1--cn-gotcha204-4.bilivideo.com`
-- `d1--cn-gotcha204b.bilivideo.com`
+## Kuaishou CDN
 
-### Overseas Nodes (HLS only)
-- `d1--ov-gotcha105.bilivideo.com` (Wangsu)
-- `d1--ov-gotcha107.bilivideo.com` (Baidu Cloud Zenlayer)
-- `d1--ov-gotcha208.bilivideo.com` (Huawei Cloud)
-- `d1--ov-gotcha209.bilivideo.com` (Aliyun)
-- `d1--ov-gotcha210.bilivideo.com` (Akamai)
+- `txmov2.a.kwimgs.com`
+- `ali2.a.yximgs.com`
+
+## Douyin CDN
+
+- `v5-dy-ov-experiment.zjcdn.com`
+- `v27-cold.douyinvod.com`
+- `v5-se-sjy-daily-cold.douyinvod.com`
+- `pull-hs-f5.flive.douyincdn.com`
+- `v3.douyinvod.com`
+
+## AcFun CDN
+
+- `tx-safety-video.acfun.cn`
 
 ## Music CDN
 
-### NetEase Cloud Music
-- `m701.music.126.net`
-- `m801.music.126.net`
-
-### Kugou Music
-- `sharefs.kugou.com`
-
-### QQ Music
-- `aqqmusic.tc.qq.com`
-- `sjy6.stream.qqmusic.qq.com`
+- `music-api-qedge.kipfel.cloud`
+- `music-api.kipfel.cloud`
+- `music-api-ally.kipfel.cloud`
+- `music-api-tx.kipfel.cloud`
 
 ## Full Domain List
 
@@ -125,53 +63,26 @@ Below is a summary of all domains that need to be added to the whitelist:
 
 ```
 api.kipfel.link
-api.kipfel.vrchat.org.cn
-
 upos-sz-mirroraliov.bilivideo.com
 upos-sz-mirrorhw.bilivideo.com
 upos-sz-mirrorcos.bilivideo.com
 upos-hz-mirroraliov.bilivideo.com
-cn-zjwz5-dx-v-07.bilivideo.com
 upos-hz-mirrorakam.akamaized.net
-d1--cn-gotcha104.bilivideo.com
-d1--cn-gotcha104b.bilivideo.com
-cn-jssz-cm-02-08.bilivideo.com
-cn-jssz-cm-02-07.bilivideo.com
-cn-jxnc-cm-01-02.bilivideo.com
-d1--cn-gotcha204-4.bilivideo.com
-d1--cn-gotcha204b.bilivideo.com
-d1--ov-gotcha105.bilivideo.com
-d1--ov-gotcha107.bilivideo.com
-d1--ov-gotcha208.bilivideo.com
-d1--ov-gotcha209.bilivideo.com
-d1--ov-gotcha210.bilivideo.com
-
+d1--ov-gotcha207.bilivideo.com
 txmov2.a.kwimgs.com
-txmov2.a.yximgs.com
 ali2.a.yximgs.com
-v2.kwaicdn.com
-upmov.a.kwimgs.com
-tx-origin.hlspull.yximgs.com
-ws-origin.hlspull.yximgs.com
-hw-origin.hlspull.yximgs.com
-ali-origin.hlspull.yximgs.com
-
-v1.douyinvod.com
+v5-dy-ov-experiment.zjcdn.com
+v27-cold.douyinvod.com
+v5-se-sjy-daily-cold.douyinvod.com
+pull-hs-f5.flive.douyincdn.com
+tx-safety-video.acfun.cn
 v3.douyinvod.com
-v5.douyinvod.com
-v9.douyinvod.com
-v26.douyinvod.com
-v26-default.ixigua.com
-v3-default.ixigua.com
-v3-default.365yg.com
-v5-dy-o-abtest.zjcdn.com
-v16m-default.akamaized.net
-
-m701.music.126.net
-m801.music.126.net
-sharefs.kugou.com
-aqqmusic.tc.qq.com
-sjy6.stream.qqmusic.qq.com
+d1--ov-gotcha105.bilivideo.com
+d1--cn-gotcha104.bilivideo.com
+music-api-qedge.kipfel.cloud
+music-api.kipfel.cloud
+music-api-ally.kipfel.cloud
+music-api-tx.kipfel.cloud
 ```
 
 ## How to add to VRChat map

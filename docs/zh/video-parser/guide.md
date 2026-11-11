@@ -77,8 +77,8 @@ https://api.kipfel.link/v1/vrc?url=https://b23.tv/xxxx
 只要直链就用普通播放器 UA；歌词 / 弹幕组件使用含 `Unity` 的 UA，或加 `json=1`。这是两次独立请求，不是在一次请求里放两个 UA。
 
 ```bash
-curl -G "https://api.kipfel.link/v1/music" --data-urlencode "url=https://music.163.com/song?id=347230" --data-urlencode "json=1"
-curl -G -A "Unity demo" "https://api.kipfel.link/v4/vrc" --data-urlencode "url=https://music.163.com/song?id=347230" --data-urlencode "media=1"
+curl -G "https://api.kipfel.link/v1/music" --data-urlencode "json=1" --data-urlencode "url=https://music.163.com/song?id=347230"
+curl -G -A "Unity demo" "https://api.kipfel.link/v4/vrc" --data-urlencode "media=1" --data-urlencode "url=https://music.163.com/song?id=347230"
 ```
 
 v1 JSON 使用 `code` / `data.content.play_url`；v3 / v4 弹幕读取 `data.comments`，歌词读取 `data.lyrics`（时间单位秒）。封面按 `cover_mode` / `cover_encoding` 读取。完整字段见 [接口文档](/zh/video-parser/api)。

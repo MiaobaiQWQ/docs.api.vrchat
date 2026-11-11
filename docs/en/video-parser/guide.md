@@ -77,8 +77,8 @@ The alternative addresses below currently use the same handlers as the main inte
 Use an ordinary player UA for playable media. Lyrics / danmaku components use a UA containing `Unity`, or `json=1`. These are separate requests, not two UAs in one request.
 
 ```bash
-curl -G "https://api.kipfel.link/v1/music" --data-urlencode "url=https://music.163.com/song?id=347230" --data-urlencode "json=1"
-curl -G -A "Unity demo" "https://api.kipfel.link/v4/vrc" --data-urlencode "url=https://music.163.com/song?id=347230" --data-urlencode "media=1"
+curl -G "https://api.kipfel.link/v1/music" --data-urlencode "json=1" --data-urlencode "url=https://music.163.com/song?id=347230"
+curl -G -A "Unity demo" "https://api.kipfel.link/v4/vrc" --data-urlencode "media=1" --data-urlencode "url=https://music.163.com/song?id=347230"
 ```
 
 v1 JSON uses `code` / `data.content.play_url`. For v3 / v4, read danmaku from `data.comments`, lyrics from `data.lyrics` (timestamps in seconds), and covers according to `cover_mode` / `cover_encoding`. See the [API reference](/en/video-parser/api) for complete fields.

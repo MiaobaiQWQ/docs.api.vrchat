@@ -15,109 +15,47 @@ VRChat地图限制URLlist最大只有100个，请按需选添。
 建议在 VRChat 播放器使用 `api.kipfel.link` 域名作为接口。
 :::
 
+## 解析接口
+
+- `api.kipfel.link`
+
 ## Bilibili CDN
 
-### 主线路
 - `upos-sz-mirroraliov.bilivideo.com`
-
-### 国内备用
 - `upos-sz-mirrorhw.bilivideo.com`
 - `upos-sz-mirrorcos.bilivideo.com`
 - `upos-hz-mirroraliov.bilivideo.com`
-- `cn-zjwz5-dx-v-07.bilivideo.com`
-
-### 海外/港澳台
 - `upos-hz-mirrorakam.akamaized.net`
-
-### 其他 Bilibili 域名
-- `d1--cn-gotcha104.bilivideo.com`
-- `d1--cn-gotcha104b.bilivideo.com`
-- `cn-jssz-cm-02-08.bilivideo.com`
-- `cn-jssz-cm-02-07.bilivideo.com`
-- `cn-jxnc-cm-01-02.bilivideo.com`
-- `d1--cn-gotcha204-4.bilivideo.com`
-- `d1--cn-gotcha204b.bilivideo.com`
-- `d1--ov-gotcha105.bilivideo.com`
-- `d1--ov-gotcha107.bilivideo.com`
-- `d1--ov-gotcha208.bilivideo.com`
-- `d1--ov-gotcha209.bilivideo.com`
-- `d1--ov-gotcha210.bilivideo.com`
-
-## 快手 CDN
-
-### 主线路
-- `txmov2.a.kwimgs.com`
-
-### 国内备用
-- `txmov2.a.yximgs.com`
-- `ali2.a.yximgs.com`
-
-### 临时域名
-- `v2.kwaicdn.com`
-
-### 上传/分发节点
-- `upmov.a.kwimgs.com`
-
-## 抖音 CDN
-
-### 主线路
-- `v1.douyinvod.com`
-
-### 国内常用备用
-- `v3.douyinvod.com`
-- `v5.douyinvod.com`
-- `v9.douyinvod.com`
-- `v26.douyinvod.com`
-- `v26-default.ixigua.com`
-- `v3-default.ixigua.com`
-- `v3-default.365yg.com`
-- `v5-dy-o-abtest.zjcdn.com`
-
-### 海外节点
-- `v16m-default.akamaized.net`
-
-## 快手直播 CDN
-
-### 主线路
-- `tx-origin.hlspull.yximgs.com`
-
-### 国内备用
-- `ws-origin.hlspull.yximgs.com`
-- `hw-origin.hlspull.yximgs.com`
-- `ali-origin.hlspull.yximgs.com`
 
 ## Bilibili 直播 CDN
 
-### 主线路
+- `d1--ov-gotcha207.bilivideo.com`
+- `d1--ov-gotcha105.bilivideo.com`
 - `d1--cn-gotcha104.bilivideo.com`
-- `d1--cn-gotcha104b.bilivideo.com`
 
-### 国内可用节点
-- `cn-jssz-cm-02-08.bilivideo.com`
-- `cn-jssz-cm-02-07.bilivideo.com`
-- `cn-jxnc-cm-01-02.bilivideo.com`
-- `d1--cn-gotcha204-4.bilivideo.com`
-- `d1--cn-gotcha204b.bilivideo.com`
+## 快手 CDN
 
-### 海外节点（仅 HLS）
-- `d1--ov-gotcha105.bilivideo.com`（网宿）
-- `d1--ov-gotcha107.bilivideo.com`（百度云 Zenlayer）
-- `d1--ov-gotcha208.bilivideo.com`（华为云）
-- `d1--ov-gotcha209.bilivideo.com`（阿里云）
-- `d1--ov-gotcha210.bilivideo.com`（Akamai）
+- `txmov2.a.kwimgs.com`
+- `ali2.a.yximgs.com`
+
+## 抖音 CDN
+
+- `v5-dy-ov-experiment.zjcdn.com`
+- `v27-cold.douyinvod.com`
+- `v5-se-sjy-daily-cold.douyinvod.com`
+- `pull-hs-f5.flive.douyincdn.com`
+- `v3.douyinvod.com`
+
+## AcFun CDN
+
+- `tx-safety-video.acfun.cn`
 
 ## 音乐 CDN
 
-### 网易云音乐
-- `m701.music.126.net`
-- `m801.music.126.net`
-
-### 酷狗音乐
-- `sharefs.kugou.com`
-
-### QQ 音乐
-- `aqqmusic.tc.qq.com`
-- `sjy6.stream.qqmusic.qq.com`
+- `music-api-qedge.kipfel.cloud`
+- `music-api.kipfel.cloud`
+- `music-api-ally.kipfel.cloud`
+- `music-api-tx.kipfel.cloud`
 
 ## 完整域名列表
 
@@ -125,53 +63,26 @@ VRChat地图限制URLlist最大只有100个，请按需选添。
 
 ```
 api.kipfel.link
-api.kipfel.vrchat.org.cn
-
 upos-sz-mirroraliov.bilivideo.com
 upos-sz-mirrorhw.bilivideo.com
 upos-sz-mirrorcos.bilivideo.com
 upos-hz-mirroraliov.bilivideo.com
-cn-zjwz5-dx-v-07.bilivideo.com
 upos-hz-mirrorakam.akamaized.net
-d1--cn-gotcha104.bilivideo.com
-d1--cn-gotcha104b.bilivideo.com
-cn-jssz-cm-02-08.bilivideo.com
-cn-jssz-cm-02-07.bilivideo.com
-cn-jxnc-cm-01-02.bilivideo.com
-d1--cn-gotcha204-4.bilivideo.com
-d1--cn-gotcha204b.bilivideo.com
-d1--ov-gotcha105.bilivideo.com
-d1--ov-gotcha107.bilivideo.com
-d1--ov-gotcha208.bilivideo.com
-d1--ov-gotcha209.bilivideo.com
-d1--ov-gotcha210.bilivideo.com
-
+d1--ov-gotcha207.bilivideo.com
 txmov2.a.kwimgs.com
-txmov2.a.yximgs.com
 ali2.a.yximgs.com
-v2.kwaicdn.com
-upmov.a.kwimgs.com
-tx-origin.hlspull.yximgs.com
-ws-origin.hlspull.yximgs.com
-hw-origin.hlspull.yximgs.com
-ali-origin.hlspull.yximgs.com
-
-v1.douyinvod.com
+v5-dy-ov-experiment.zjcdn.com
+v27-cold.douyinvod.com
+v5-se-sjy-daily-cold.douyinvod.com
+pull-hs-f5.flive.douyincdn.com
+tx-safety-video.acfun.cn
 v3.douyinvod.com
-v5.douyinvod.com
-v9.douyinvod.com
-v26.douyinvod.com
-v26-default.ixigua.com
-v3-default.ixigua.com
-v3-default.365yg.com
-v5-dy-o-abtest.zjcdn.com
-v16m-default.akamaized.net
-
-m701.music.126.net
-m801.music.126.net
-sharefs.kugou.com
-aqqmusic.tc.qq.com
-sjy6.stream.qqmusic.qq.com
+d1--ov-gotcha105.bilivideo.com
+d1--cn-gotcha104.bilivideo.com
+music-api-qedge.kipfel.cloud
+music-api.kipfel.cloud
+music-api-ally.kipfel.cloud
+music-api-tx.kipfel.cloud
 ```
 
 ## 如何添加到 VRChat 地图
@@ -180,7 +91,6 @@ sjy6.stream.qqmusic.qq.com
 
 1. 在白名单配置中添加上述域名
 2. 注意 URLlist 最大只有 100 个，请按需选择。
-3. 音乐链接需要给我发送email，我会给你提供。
 
 ## 申请添加解析站支持
 

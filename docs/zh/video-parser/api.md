@@ -158,7 +158,7 @@ v1 的 `log_id` 是请求 ID。`video_id` 在能提取 BV 号时使用 BV 号，
 **响应**：成功时 302 到播放直链。需要 JSON 时加 `json=1`，或发送 `Accept: application/json`，格式同 `/v1/vrc-json`。
 
 ::: warning JSON 地址
-当前没有注册 `/v1/music-json`。请使用 `/v1/music?url=...&json=1`；`/v1/musickfc-json` 仍可用。`i` / `index` / `@N` 选曲方式当前不生效。
+当前没有注册 `/v1/music-json`。请使用 `/v1/music?json=1&url=...`；`/v1/musickfc-json` 仍可用。`i` / `index` / `@N` 选曲方式当前不生效。
 :::
 
 ---
@@ -174,6 +174,30 @@ v1 的 `log_id` 是请求 ID。`video_id` 在能提取 BV 号时使用 BV 号，
 
 ---
 
+
+## 音乐线路与伴奏 {#music-playback}
+
+**接口**：`/v1/music`、`/v3/vrc-lyric`、`/v4/vrc`（或 `/v4/url`）。
+
+**参数**：
+
+| 参数 | 说明 |
+|---|---|
+| `cdn` | 可选，指定可用的线路参数，例如 `aly`；省略时使用默认线路 |
+| `track` | 可选，`original` 播放原版（默认），`accompaniment` 播放纯伴奏（QQ 音乐、酷狗） |
+| `url` | 必填，完整歌曲链接。把 `cdn`、`track`、`json` 等接口参数都写在 `url` 前面 |
+
+**调用示例**：
+
+```bash
+curl -G "https://api.kipfel.link/v1/music" --data-urlencode "cdn=aly" --data-urlencode "url=https://www.kugou.com/mixsong/j2i4p51.html"
+curl -G "https://api.kipfel.link/v3/vrc-lyric" --data-urlencode "track=accompaniment" --data-urlencode "json=1" --data-urlencode "url=https://www.kugou.com/mixsong/j2i4p51.html"
+curl -G "https://api.kipfel.link/v4/vrc" --data-urlencode "cdn=aly" --data-urlencode "track=accompaniment" --data-urlencode "url=https://www.kugou.com/mixsong/j2i4p51.html"
+```
+
+**响应**：普通播放请求成功时返回 302，跳转到所选音轨；伴奏为 MP4。V1 的 JSON 播放地址在 `data.content.play_url`。V3/V4 返回歌词等 JSON 时，指定 `cdn`、`track` 或 `media=1` 会在顶层 `url` 返回播放地址。
+
+---
 
 ## v3 高级接口
 
@@ -276,7 +300,7 @@ v3 接口面向需要弹幕、歌词的播放器。**UA 含 `Unity` 或 `unity`�
 
 ```bash
 curl -G -A "Unity demo" "https://api.kipfel.link/v3/vrc-danmaku" --data-urlencode "url=https://www.bilibili.com/video/BV1aAhm6vEA6"
-curl -G "https://api.kipfel.link/v3/vrc-lyric" --data-urlencode "url=https://music.163.com/song?id=347230" --data-urlencode "json=1"
+curl -G "https://api.kipfel.link/v3/vrc-lyric" --data-urlencode "json=1" --data-urlencode "url=https://music.163.com/song?id=347230"
 ```
 
 ---
@@ -302,8 +326,8 @@ v4 把视频与音乐放到一个入口，默认按链接自动选择弹幕或�
 ### 调用示例
 
 ```bash
-curl -G -A "Unity demo" "https://api.kipfel.link/v4/vrc" --data-urlencode "url=https://music.163.com/song?id=347230" --data-urlencode "media=1"
-curl -G "https://api.kipfel.link/v4/vrc" --data-urlencode "url=https://www.bilibili.com/video/BV1aAhm6vEA6?p=2" --data-urlencode "json=1" --data-urlencode "world=demo"
+curl -G -A "Unity demo" "https://api.kipfel.link/v4/vrc" --data-urlencode "media=1" --data-urlencode "url=https://music.163.com/song?id=347230"
+curl -G "https://api.kipfel.link/v4/vrc" --data-urlencode "json=1" --data-urlencode "world=demo" --data-urlencode "url=https://www.bilibili.com/video/BV1aAhm6vEA6?p=2"
 curl -I "https://api.kipfel.link/v4/vrc?url=https://music.163.com/song?id=347230"
 ```
 

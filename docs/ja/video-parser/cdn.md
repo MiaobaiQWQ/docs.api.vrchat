@@ -15,109 +15,47 @@ VRChat マップの URL リストは最大 100 個しかありません。必要
 VRChat プレイヤーでは、インターフェースとして `api.kipfel.link` ドメインを使用することをお勧めします。
 :::
 
+## 解析 API
+
+- `api.kipfel.link`
+
 ## Bilibili CDN
 
-### メインライン
 - `upos-sz-mirroraliov.bilivideo.com`
-
-### 国内バックアップ
 - `upos-sz-mirrorhw.bilivideo.com`
 - `upos-sz-mirrorcos.bilivideo.com`
 - `upos-hz-mirroraliov.bilivideo.com`
-- `cn-zjwz5-dx-v-07.bilivideo.com`
-
-### 海外/香港・マカオ・台湾
 - `upos-hz-mirrorakam.akamaized.net`
-
-### その他の Bilibili ドメイン
-- `d1--cn-gotcha104.bilivideo.com`
-- `d1--cn-gotcha104b.bilivideo.com`
-- `cn-jssz-cm-02-08.bilivideo.com`
-- `cn-jssz-cm-02-07.bilivideo.com`
-- `cn-jxnc-cm-01-02.bilivideo.com`
-- `d1--cn-gotcha204-4.bilivideo.com`
-- `d1--cn-gotcha204b.bilivideo.com`
-- `d1--ov-gotcha105.bilivideo.com`
-- `d1--ov-gotcha107.bilivideo.com`
-- `d1--ov-gotcha208.bilivideo.com`
-- `d1--ov-gotcha209.bilivideo.com`
-- `d1--ov-gotcha210.bilivideo.com`
-
-## Kuaishou CDN
-
-### メインライン
-- `txmov2.a.kwimgs.com`
-
-### 国内バックアップ
-- `txmov2.a.yximgs.com`
-- `ali2.a.yximgs.com`
-
-### 一時ドメイン
-- `v2.kwaicdn.com`
-
-### アップロード/配信ノード
-- `upmov.a.kwimgs.com`
-
-## Douyin CDN
-
-### メインライン
-- `v1.douyinvod.com`
-
-### 国内常用バックアップ
-- `v3.douyinvod.com`
-- `v5.douyinvod.com`
-- `v9.douyinvod.com`
-- `v26.douyinvod.com`
-- `v26-default.ixigua.com`
-- `v3-default.ixigua.com`
-- `v3-default.365yg.com`
-- `v5-dy-o-abtest.zjcdn.com`
-
-### 海外ノード
-- `v16m-default.akamaized.net`
-
-## Kuaishou ライブ CDN
-
-### メインライン
-- `tx-origin.hlspull.yximgs.com`
-
-### 国内バックアップ
-- `ws-origin.hlspull.yximgs.com`
-- `hw-origin.hlspull.yximgs.com`
-- `ali-origin.hlspull.yximgs.com`
 
 ## Bilibili ライブ CDN
 
-### メインライン
+- `d1--ov-gotcha207.bilivideo.com`
+- `d1--ov-gotcha105.bilivideo.com`
 - `d1--cn-gotcha104.bilivideo.com`
-- `d1--cn-gotcha104b.bilivideo.com`
 
-### 国内利用可能ノード
-- `cn-jssz-cm-02-08.bilivideo.com`
-- `cn-jssz-cm-02-07.bilivideo.com`
-- `cn-jxnc-cm-01-02.bilivideo.com`
-- `d1--cn-gotcha204-4.bilivideo.com`
-- `d1--cn-gotcha204b.bilivideo.com`
+## Kuaishou CDN
 
-### 海外ノード（HLS のみ）
-- `d1--ov-gotcha105.bilivideo.com`（Wangsu）
-- `d1--ov-gotcha107.bilivideo.com`（Baidu Cloud Zenlayer）
-- `d1--ov-gotcha208.bilivideo.com`（Huawei Cloud）
-- `d1--ov-gotcha209.bilivideo.com`（Aliyun）
-- `d1--ov-gotcha210.bilivideo.com`（Akamai）
+- `txmov2.a.kwimgs.com`
+- `ali2.a.yximgs.com`
+
+## Douyin CDN
+
+- `v5-dy-ov-experiment.zjcdn.com`
+- `v27-cold.douyinvod.com`
+- `v5-se-sjy-daily-cold.douyinvod.com`
+- `pull-hs-f5.flive.douyincdn.com`
+- `v3.douyinvod.com`
+
+## AcFun CDN
+
+- `tx-safety-video.acfun.cn`
 
 ## 音楽 CDN
 
-### NetEase Cloud Music
-- `m701.music.126.net`
-- `m801.music.126.net`
-
-### Kugou Music
-- `sharefs.kugou.com`
-
-### QQ Music
-- `aqqmusic.tc.qq.com`
-- `sjy6.stream.qqmusic.qq.com`
+- `music-api-qedge.kipfel.cloud`
+- `music-api.kipfel.cloud`
+- `music-api-ally.kipfel.cloud`
+- `music-api-tx.kipfel.cloud`
 
 ## 完全なドメインリスト
 
@@ -125,53 +63,26 @@ VRChat プレイヤーでは、インターフェースとして `api.kipfel.lin
 
 ```
 api.kipfel.link
-api.kipfel.vrchat.org.cn
-
 upos-sz-mirroraliov.bilivideo.com
 upos-sz-mirrorhw.bilivideo.com
 upos-sz-mirrorcos.bilivideo.com
 upos-hz-mirroraliov.bilivideo.com
-cn-zjwz5-dx-v-07.bilivideo.com
 upos-hz-mirrorakam.akamaized.net
-d1--cn-gotcha104.bilivideo.com
-d1--cn-gotcha104b.bilivideo.com
-cn-jssz-cm-02-08.bilivideo.com
-cn-jssz-cm-02-07.bilivideo.com
-cn-jxnc-cm-01-02.bilivideo.com
-d1--cn-gotcha204-4.bilivideo.com
-d1--cn-gotcha204b.bilivideo.com
-d1--ov-gotcha105.bilivideo.com
-d1--ov-gotcha107.bilivideo.com
-d1--ov-gotcha208.bilivideo.com
-d1--ov-gotcha209.bilivideo.com
-d1--ov-gotcha210.bilivideo.com
-
+d1--ov-gotcha207.bilivideo.com
 txmov2.a.kwimgs.com
-txmov2.a.yximgs.com
 ali2.a.yximgs.com
-v2.kwaicdn.com
-upmov.a.kwimgs.com
-tx-origin.hlspull.yximgs.com
-ws-origin.hlspull.yximgs.com
-hw-origin.hlspull.yximgs.com
-ali-origin.hlspull.yximgs.com
-
-v1.douyinvod.com
+v5-dy-ov-experiment.zjcdn.com
+v27-cold.douyinvod.com
+v5-se-sjy-daily-cold.douyinvod.com
+pull-hs-f5.flive.douyincdn.com
+tx-safety-video.acfun.cn
 v3.douyinvod.com
-v5.douyinvod.com
-v9.douyinvod.com
-v26.douyinvod.com
-v26-default.ixigua.com
-v3-default.ixigua.com
-v3-default.365yg.com
-v5-dy-o-abtest.zjcdn.com
-v16m-default.akamaized.net
-
-m701.music.126.net
-m801.music.126.net
-sharefs.kugou.com
-aqqmusic.tc.qq.com
-sjy6.stream.qqmusic.qq.com
+d1--ov-gotcha105.bilivideo.com
+d1--cn-gotcha104.bilivideo.com
+music-api-qedge.kipfel.cloud
+music-api.kipfel.cloud
+music-api-ally.kipfel.cloud
+music-api-tx.kipfel.cloud
 ```
 
 ## VRChat マップへの追加方法
