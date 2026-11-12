@@ -405,7 +405,7 @@ VRChat の Udon は実行時に `VRCUrl` を生成できません。ワールド
 
 ### `GET /poll?world={ワールド番号}`
 
-`/slots` は別名です。既定は音楽プールで、`pool=video` でビデオプールを読み取ります。`/pocl?world=...` はビデオプール専用です。
+`/slots` は別名です。`pool` を省略すると音楽プールを読み取ります。`/pocl?world=...` はビデオプール専用です。
 
 ```json
 {
@@ -440,8 +440,8 @@ VRChat の Udon は実行時に `VRCUrl` を生成できません。ワールド
 | --- | --- |
 | `world` / `max` | ワールド番号 / プール容量。 |
 | `mode` | `idpool` 固定。 |
-| `pool` | 音楽は `music`、ビデオは `video`。 |
-| `type` | `music_playlist`、`bilibili_parts`、`bilibili_collection` のいずれか。 |
+| `pool` | 音楽は `music`、ビデオのパートは `video`、コレクション・お気に入りは `collection`。 |
+| `type` | `music_playlist`、`bilibili_parts`、`bilibili_collection`、`bilibili_collections` のいずれか。 |
 | `total` | 現在の一覧の件数。`count` は返しません。 |
 | `updatedAt` | RFC 3339 形式の時刻文字列。例は `2026-10-30T08:00:00Z`。 |
 
@@ -451,6 +451,7 @@ VRChat の Udon は実行時に `VRCUrl` を生成できません。ワールド
 | --- | --- | --- |
 | 音楽 | `songs` | `i` はサーバーが割り当てたレコード番号です。 |
 | ビデオ | `items` | 項目には `bvid`、`cid`、`page` があり、複数パートには `parts` が付きます。`playableTotal` は再生可能件数、`collectionId` はコレクションがある場合の ID です。 |
+| コレクション・お気に入り | `items` | 取得元によっては `folders` も返ります。 |
 
 楽曲、ビデオ、パートでは `id`、`title`、`artist`、`album`、`duration`、`songUrl` を共通で使用します。長さの単位は秒です。
 
@@ -458,11 +459,17 @@ VRChat の Udon は実行時に `VRCUrl` を生成できません。ワールド
 ビデオプールでも基本構造の `songs` は出力されます。ビデオ一覧は `items` を読み取り、省略されている場合は空の一覧として扱ってください。再生 URL には項目の `i` を使用します。番号は連続しない場合があります。
 :::
 
-### `GET /s/{n}?world={ワールド番号}`
+### レコード番号による再生と詳細の取得
 
-- **UA に Unity を含む（大文字小文字を区別しない）、または `json=1`**：該当記録の歌詞 JSON を返します。
-- **それ以外**：再生直リンクへ 302 リダイレクトします。
-- ビデオは `/sell/{n}?world=...` を使用し、常に再生リダイレクトを返します。テキスト情報は `/video-info/{n}?world=...` で取得でき、`{ "success": true, "playback": { ... } }` を返します。
+| 内容 | 現在の一覧 | 再生と詳細 |
+| --- | --- | --- |
+| 音楽プレイリスト | `/poll?world=Lucent_01&pool=music` の `songs` | `/s/{i}?world=Lucent_01`。Unity UA（大文字・小文字は不問）または `json=1` では曲ごとの歌詞 JSON、その他は 302 を返します。 |
+| ビデオのパート | `/poll?world=Lucent_01&pool=video` の `items` | `/sell/{i}?world=Lucent_01` は 302 を返します。詳細 JSON は `/video-info/{i}?world=Lucent_01` で取得します。 |
+| コレクション・お気に入り | `/poll?world=Lucent_01&pool=collection` の `items` | `/sell/{i}?world=Lucent_01&pool=collection` は Unity UA または `json=1` で詳細 JSON、その他は 302 を返します。詳細は `/video-info/{i}?world=Lucent_01&pool=collection` でも取得できます。 |
+
+選んだ項目の `i` を使います。ビデオ項目に `parts` がある場合は、選んだパートの `parts[].i` を使います。レコード番号はプールごとに独立しています。詳細の取得に成功すると `{ "success": true, "playback": { ... } }` を返します。
+
+新しいプレイリストやビデオのパート一覧は、下記の `/p` で読み込みます。現在の一覧は対象プールの `/poll` で取得します。
 
 ### `GET /p?world={ワールド番号}&u={プレイリストIDまたはリンク}`
 
@@ -472,10 +479,13 @@ VRChat の Udon は実行時に `VRCUrl` を生成できません。ワールド
 
 ```bash
 curl -G "https://api.kipfel.link/p" --data-urlencode "world=demo" --data-urlencode "u=3778678"
-curl "https://api.kipfel.link/poll?world=demo"
+curl "https://api.kipfel.link/poll?world=demo&pool=music"
+curl "https://api.kipfel.link/poll?world=demo&pool=video"
+curl "https://api.kipfel.link/poll?world=demo&pool=collection"
 curl "https://api.kipfel.link/pocl?world=demo"
 curl -G "https://api.kipfel.link/p" --data-urlencode "world=demo" --data-urlencode "u=https://www.bilibili.com/video/BV1aAhm6vEA6" --data-urlencode "scope=parts"
 curl -I "https://api.kipfel.link/s/0?world=demo"
+curl -I "https://api.kipfel.link/sell/0?world=demo"
 curl "https://api.kipfel.link/video-info/0?world=demo"
 ```
 

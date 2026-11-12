@@ -405,7 +405,7 @@ VRChat 的 Udon 在运行时无法构造 `VRCUrl`，世界可以预先烤入一�
 
 ### `GET /poll?world={世界编号}`
 
-`/slots` 是别名。默认读音乐池，`pool=video` 读视频池；`/pocl?world=...` 固定读视频池。
+`/slots` 是别名。省略 `pool` 时读取音乐池，`/pocl?world=...` 固定读取视频池。
 
 ```json
 {
@@ -440,8 +440,8 @@ VRChat 的 Udon 在运行时无法构造 `VRCUrl`，世界可以预先烤入一�
 | --- | --- |
 | `world` / `max` | 世界编号 / 池容量。 |
 | `mode` | 固定为 `idpool`。 |
-| `pool` | `music`（音乐池）或 `video`（视频池）。 |
-| `type` | `music_playlist`（音乐歌单）、`bilibili_parts`（B 站分 P）或 `bilibili_collection`（B 站合集）。 |
+| `pool` | `music`（音乐池）、`video`（视频分 P 池）或 `collection`（合集／收藏夹池）。 |
+| `type` | `music_playlist`（音乐歌单）、`bilibili_parts`（B 站分 P）、`bilibili_collection`（B 站合集）或 `bilibili_collections`（合集／收藏夹列表）。 |
 | `total` | 当前列表条数。接口不返回 `count`。 |
 | `updatedAt` | RFC 3339 时间字符串，例如 `2026-10-30T08:00:00Z`。 |
 
@@ -451,6 +451,7 @@ VRChat 的 Udon 在运行时无法构造 `VRCUrl`，世界可以预先烤入一�
 | --- | --- | --- |
 | 音乐 | `songs` | `i` 为服务器分配的记录编号。 |
 | 视频 | `items` | 条目包含 `bvid`、`cid`、`page`，多分 P 条目另有 `parts`。`playableTotal` 为可播放项数量，有合集时返回 `collectionId`。 |
+| 合集／收藏夹 | `items` | 部分来源另返回 `folders`。 |
 
 歌曲、视频和分 P 共用 `id`、`title`、`artist`、`album`、`duration`、`songUrl`。其中 `duration` 的单位为秒。
 
@@ -458,11 +459,17 @@ VRChat 的 Udon 在运行时无法构造 `VRCUrl`，世界可以预先烤入一�
 视频池也会返回基础 `songs` 字段，读取视频列表时请用 `items`，省略时按空列表处理。构造播放地址时使用条目的 `i`。编号可能不连续，列表下标不能用作播放编号。
 :::
 
-### `GET /s/{n}?world={世界编号}`
+### 按编号播放和读取详情
 
-- **UA 含 Unity（不区分大小写）或 `json=1`**：返回该记录的歌词 JSON。
-- **其它客户端**：302 到该记录的播放直链。
-- 视频使用 `/sell/{n}?world=...`，始终返回播放重定向；文字信息使用 `/video-info/{n}?world=...`，返回 `{ "success": true, "playback": { ... } }`。
+| 内容 | 获取当前列表 | 播放与详情 |
+| --- | --- | --- |
+| 音乐歌单 | `/poll?world=Lucent_01&pool=music`，读取 `songs` | `/s/{i}?world=Lucent_01`。Unity UA（不区分大小写）或 `json=1` 返回单首歌词 JSON，其余客户端返回 302。 |
+| 视频分 P | `/poll?world=Lucent_01&pool=video`，读取 `items` | `/sell/{i}?world=Lucent_01` 返回 302。需要详情 JSON 时使用 `/video-info/{i}?world=Lucent_01`。 |
+| 合集／收藏夹 | `/poll?world=Lucent_01&pool=collection`，读取 `items` | `/sell/{i}?world=Lucent_01&pool=collection`。Unity UA 或 `json=1` 返回详情 JSON，其余客户端返回 302。详情也可用 `/video-info/{i}?world=Lucent_01&pool=collection`。 |
+
+播放哪一 P，就取对应条目的 `i`。如果视频条目有 `parts`，取所选分 P 的 `parts[].i`。音乐、视频和合集的编号各自独立。详情接口的成功响应为 `{ "success": true, "playback": { ... } }`。
+
+要换歌单或分 P 来源，先用下方的 `/p` 加载。只查看当前列表时，直接请求对应池的 `/poll`。
 
 ### `GET /p?world={世界编号}&u={歌单ID或链接}`
 
@@ -472,16 +479,19 @@ VRChat 的 Udon 在运行时无法构造 `VRCUrl`，世界可以预先烤入一�
 
 ```bash
 curl -G "https://api.kipfel.link/p" --data-urlencode "world=demo" --data-urlencode "u=3778678"
-curl "https://api.kipfel.link/poll?world=demo"
+curl "https://api.kipfel.link/poll?world=demo&pool=music"
+curl "https://api.kipfel.link/poll?world=demo&pool=video"
+curl "https://api.kipfel.link/poll?world=demo&pool=collection"
 curl "https://api.kipfel.link/pocl?world=demo"
 curl -G "https://api.kipfel.link/p" --data-urlencode "world=demo" --data-urlencode "u=https://www.bilibili.com/video/BV1aAhm6vEA6" --data-urlencode "scope=parts"
 curl -I "https://api.kipfel.link/s/0?world=demo"
+curl -I "https://api.kipfel.link/sell/0?world=demo"
 curl "https://api.kipfel.link/video-info/0?world=demo"
 ```
 
 
 ::: warning 有副作用
-`/p` 会替换**同一个 world、同一个池**的当前列表。同一世界的房间看到同一份列表，不同世界与音乐 / 视频池互相独立。编号在保护期内保留，池满后可回收过期记录，所以不要把记录编号当作歌曲永久 ID。
+`/p` 会替换**同一个 world、同一个池**的当前列表。同一世界的房间看到同一份列表，不同世界以及音乐、视频、合集池互相独立。编号在保护期内保留，池满后可回收过期记录，所以不要把记录编号当作歌曲永久 ID。
 :::
 
 ---

@@ -405,7 +405,7 @@ Every interface below requires exactly one `world`: 1–64 English letters, digi
 
 ### `GET /poll?world={world ID}`
 
-`/slots` is an alias. The default pool is music; use `pool=video` for videos. `/pocl?world=...` always reads the video pool.
+`/slots` is an alias. Omitting `pool` reads the music pool. `/pocl?world=...` always reads the video pool.
 
 ```json
 {
@@ -440,8 +440,8 @@ Every interface below requires exactly one `world`: 1–64 English letters, digi
 | --- | --- |
 | `world` / `max` | World ID / pool capacity. |
 | `mode` | Always `idpool`. |
-| `pool` | `music` or `video`. |
-| `type` | `music_playlist`, `bilibili_parts` or `bilibili_collection`. |
+| `pool` | `music`, `video` (video parts), or `collection` (collections and favorites). |
+| `type` | `music_playlist`, `bilibili_parts`, `bilibili_collection` or `bilibili_collections`. |
 | `total` | Current list length. The response has no `count` field. |
 | `updatedAt` | RFC 3339 timestamp string, for example `2026-10-30T08:00:00Z`. |
 
@@ -451,6 +451,7 @@ Every interface below requires exactly one `world`: 1–64 English letters, digi
 | --- | --- | --- |
 | Music | `songs` | Each `i` is a server-assigned record ID. |
 | Video | `items` | Entries include `bvid`, `cid` and `page`. Multi-part entries also have `parts`. The response includes `playableTotal` for playable entries and `collectionId` when a collection is present. |
+| Collections and favorites | `items` | Some sources also return `folders`. |
 
 Songs, videos and parts share `id`, `title`, `artist`, `album`, `duration` and `songUrl`. Durations are in seconds.
 
@@ -458,11 +459,17 @@ Songs, videos and parts share `id`, `title`, `artist`, `album`, `duration` and `
 The video pool also serializes the base `songs` field. Read `items` for video lists and treat a missing field as an empty list. Use each entry's `i` to build playback URLs, since server-assigned IDs can be nonconsecutive.
 :::
 
-### `GET /s/{n}?world={world ID}`
+### Playback and details by record ID
 
-- **UA containing Unity (case-insensitive), or `json=1`**: returns the record's lyrics JSON.
-- **Other clients**: 302 to the record's playable direct link.
-- Videos use `/sell/{n}?world=...`, which always redirects for playback. For text metadata, use `/video-info/{n}?world=...`, returning `{ "success": true, "playback": { ... } }`.
+| Content | Current list | Playback and details |
+| --- | --- | --- |
+| Music playlist | `/poll?world=Lucent_01&pool=music`, read `songs` | `/s/{i}?world=Lucent_01`. A Unity UA (case-insensitive) or `json=1` returns lyrics JSON for one song. Other clients receive a 302. |
+| Video parts | `/poll?world=Lucent_01&pool=video`, read `items` | `/sell/{i}?world=Lucent_01` returns a 302. For details JSON, use `/video-info/{i}?world=Lucent_01`. |
+| Collections and favorites | `/poll?world=Lucent_01&pool=collection`, read `items` | `/sell/{i}?world=Lucent_01&pool=collection` returns details JSON for a Unity UA or `json=1` and a 302 for other clients. `/video-info/{i}?world=Lucent_01&pool=collection` also returns details. |
+
+Use the chosen entry's `i`. If a video entry contains `parts`, use the selected part's `parts[].i`. Record IDs are independent across pools. The details endpoint returns `{ "success": true, "playback": { ... } }` on success.
+
+Use `/p` below to load a new playlist or set of video parts. Use `/poll` for the current list in the selected pool.
 
 ### `GET /p?world={world ID}&u={playlist ID or link}`
 
@@ -472,16 +479,19 @@ Optional `scope`: `auto` (default), `parts` or `collection`, selecting the Bilib
 
 ```bash
 curl -G "https://api.kipfel.link/p" --data-urlencode "world=demo" --data-urlencode "u=3778678"
-curl "https://api.kipfel.link/poll?world=demo"
+curl "https://api.kipfel.link/poll?world=demo&pool=music"
+curl "https://api.kipfel.link/poll?world=demo&pool=video"
+curl "https://api.kipfel.link/poll?world=demo&pool=collection"
 curl "https://api.kipfel.link/pocl?world=demo"
 curl -G "https://api.kipfel.link/p" --data-urlencode "world=demo" --data-urlencode "u=https://www.bilibili.com/video/BV1aAhm6vEA6" --data-urlencode "scope=parts"
 curl -I "https://api.kipfel.link/s/0?world=demo"
+curl -I "https://api.kipfel.link/sell/0?world=demo"
 curl "https://api.kipfel.link/video-info/0?world=demo"
 ```
 
 
 ::: warning Side Effects
-`/p` replaces the current list for **the same world and pool**. Rooms sharing a world share that list; different worlds and music / video pools are independent. IDs remain reserved during the protection period, but expired records can be recycled when the pool fills. Do not treat a record ID as a permanent song ID.
+`/p` replaces the current list for **the same world and pool**. Rooms sharing a world share that list; different worlds and the music, video and collection pools are independent. IDs remain reserved during the protection period, but expired records can be recycled when the pool fills. Do not treat a record ID as a permanent song ID.
 :::
 
 ---
