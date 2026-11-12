@@ -34,6 +34,53 @@ html {
   padding-bottom: 60px;
 }
 
+/* 让正文随可用宽度收缩，侧栏和目录交给 VitePress 的响应式导航。 */
+.VPDoc > .container > .content {
+  min-inline-size: 0;
+}
+
+.VPDoc .vp-doc table {
+  display: table;
+  inline-size: 100%;
+}
+
+.VPDoc .vp-doc :is(th, td) {
+  padding-inline: clamp(8px, 1.25vw, 16px);
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+.VPDoc .vp-doc :not(pre) > code {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 639px) {
+  .VPDoc {
+    padding-inline: clamp(12px, 4vw, 24px);
+  }
+
+  .VPDoc .vp-doc div[class*='language-'],
+  .VPDoc .vp-doc .vp-code-group > .tabs {
+    margin-inline: 0;
+  }
+}
+
+/* 三语导航与文档侧栏使用同一个窄屏断点。 */
+@media (768px <= width < 960px) {
+  .VPNavBar .content-body > :is(.menu, .translations, .appearance, .social-links, .extra) {
+    display: none;
+  }
+
+  .VPNavBar .VPNavBarHamburger {
+    display: flex;
+  }
+
+  .VPNav .VPNavScreen {
+    display: block;
+  }
+}
+
 /* 侧边栏平滑过渡效果 */
 .VPDocOutlineItem details > summary {
   cursor: pointer;
