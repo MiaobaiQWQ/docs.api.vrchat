@@ -434,13 +434,29 @@ VRChat 的 Udon 在运行时无法构造 `VRCUrl`，世界可以预先烤入一�
 }
 ```
 
+#### 清单字段
 
-- `mode` 固定为 `idpool`；`world` 是世界编号，`max` 是池容量。
-- `total` 为当前列表条数；`updatedAt` 是 RFC 3339 时间字符串，不是毫秒时间戳；不返回 `count`。
-- 音乐使用 `songs`；`i` 是服务器分配的记录编号，可能不连续，不要按列表序号拼地址。
-- 视频使用 `items`（空时可能省略），包含 `bvid`、`cid`、`page`，多分 P 条目还有 `parts`；`playableTotal` 为可播放项数量，`collectionId` 为合集 ID（如有）。基础 `songs` 仍会序列化，视频列表请读 `items`。
-- 条目共用 `id`、`title`、`artist`、`album`、`duration`、`songUrl`；分 P 也使用同样结构，时长单位秒。
-- `type` 可为 `music_playlist`、`bilibili_parts`、`bilibili_collection`；`pool` 为 `music` 或 `video`。
+| 字段 | 说明 |
+| --- | --- |
+| `world` / `max` | 世界编号 / 池容量。 |
+| `mode` | 固定为 `idpool`。 |
+| `pool` | `music`（音乐池）或 `video`（视频池）。 |
+| `type` | `music_playlist`（音乐歌单）、`bilibili_parts`（B 站分 P）或 `bilibili_collection`（B 站合集）。 |
+| `total` | 当前列表条数。接口不返回 `count`。 |
+| `updatedAt` | RFC 3339 时间字符串，例如 `2026-10-30T08:00:00Z`。 |
+
+#### 按池读取列表
+
+| 池 | 列表字段 | 条目与附加字段 |
+| --- | --- | --- |
+| 音乐 | `songs` | `i` 为服务器分配的记录编号。 |
+| 视频 | `items` | 条目包含 `bvid`、`cid`、`page`，多分 P 条目另有 `parts`。`playableTotal` 为可播放项数量，有合集时返回 `collectionId`。 |
+
+歌曲、视频和分 P 共用 `id`、`title`、`artist`、`album`、`duration`、`songUrl`。其中 `duration` 的单位为秒。
+
+::: tip 列表读取和播放编号
+视频池也会返回基础 `songs` 字段，读取视频列表时请用 `items`，省略时按空列表处理。构造播放地址时使用条目的 `i`。编号可能不连续，列表下标不能用作播放编号。
+:::
 
 ### `GET /s/{n}?world={世界编号}`
 
@@ -467,59 +483,6 @@ curl "https://api.kipfel.link/video-info/0?world=demo"
 ::: warning 有副作用
 `/p` 会替换**同一个 world、同一个池**的当前列表。同一世界的房间看到同一份列表，不同世界与音乐 / 视频池互相独立。编号在保护期内保留，池满后可回收过期记录，所以不要把记录编号当作歌曲永久 ID。
 :::
-
----
-
-## 解析预览接口
-
-**接口**：`GET /preview?url={链接}&mode=auto`。单条媒体返回 JSON，不按 UA 切换成播放重定向；网易云歌单会 302 到 `/v4/playlist`。`mode` 可为 `auto`、`video`、`music`，其它值按 `auto` 处理。
-
-**JSON 响应示例**：
-
-```json
-{
-  "success": true,
-  "requestId": "req_example",
-  "platform": {
-    "key": "netease",
-    "label": "网易云音乐",
-    "kind": "music",
-    "active": true,
-    "color": "#e60026"
-  },
-  "kind": "music",
-  "mediaUrl": "https://example.com/audio.mp3",
-  "mediaType": "audio",
-  "degraded": false,
-  "meta": {
-    "title": "海阔天空",
-    "author": "Beyond",
-    "durationSeconds": 326,
-    "stats": {
-      "views": 0,
-      "likes": 0,
-      "comments": 0,
-      "shares": 0
-    }
-  },
-  "lyric": {
-    "count": 1,
-    "lines": [
-      {
-        "time": 18.466,
-        "text": "歌词内容"
-      }
-    ]
-  },
-  "timings": {
-    "totalMs": 120,
-    "mediaMs": 100
-  },
-  "cached": false
-}
-```
-
-`requestId` 是请求 ID；`platform` 是平台信息对象；`mediaUrl` / `mediaType` 为播放地址 / 类型；`meta` 为媒体信息，`durationSeconds` 单位秒。`lyric.lines` 与可选的 `lyric.translated` 使用秒；`danmaku.count` / `danmaku.preview` 为弹幕总数 / 预览列表，完整弹幕使用 v3 / v4。`timings` 内时长单位毫秒，`cached` 表示解析结果是否来自缓存。可选 `subtitles` 条目为 `{ "from": 0, "to": 1.5, "text": "字幕" }`（秒），可选 `collection` 包含 `title`、`items`（`title` / `url`）。这些字段没有内容时可能省略。失败时查看 `success: false` 与 `error.code` / `error.message`；可选 `redirectUrl` 是跳转地址。此结构与 v1 / v3 / v4 不同，不要混用字段。
 
 ---
 

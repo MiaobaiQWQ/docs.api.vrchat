@@ -434,13 +434,29 @@ Every interface below requires exactly one `world`: 1–64 English letters, digi
 }
 ```
 
+#### List fields
 
-- `mode` is always `idpool`; `world` identifies the world, and `max` is the pool capacity.
-- `total` is the current list length; `updatedAt` is an RFC 3339 string, not a millisecond timestamp. There is no `count` field.
-- Music uses `songs`. Each `i` is a server-assigned record ID and may be nonconsecutive; do not generate addresses from list positions.
-- Video uses `items` (may be omitted when empty), including `bvid`, `cid` and `page`. Multi-part entries also include `parts`; `playableTotal` counts playable entries, and `collectionId` is the collection ID when present. The base `songs` field is still serialized; read `items` for video lists.
-- Shared item fields are `id`, `title`, `artist`, `album`, `duration` and `songUrl`. Parts use the same structure; durations are in seconds.
-- `type` can be `music_playlist`, `bilibili_parts` or `bilibili_collection`; `pool` is `music` or `video`.
+| Field | Description |
+| --- | --- |
+| `world` / `max` | World ID / pool capacity. |
+| `mode` | Always `idpool`. |
+| `pool` | `music` or `video`. |
+| `type` | `music_playlist`, `bilibili_parts` or `bilibili_collection`. |
+| `total` | Current list length. The response has no `count` field. |
+| `updatedAt` | RFC 3339 timestamp string, for example `2026-10-30T08:00:00Z`. |
+
+#### Reading each pool
+
+| Pool | List field | Entry and response fields |
+| --- | --- | --- |
+| Music | `songs` | Each `i` is a server-assigned record ID. |
+| Video | `items` | Entries include `bvid`, `cid` and `page`. Multi-part entries also have `parts`. The response includes `playableTotal` for playable entries and `collectionId` when a collection is present. |
+
+Songs, videos and parts share `id`, `title`, `artist`, `album`, `duration` and `songUrl`. Durations are in seconds.
+
+::: tip List fields and playback IDs
+The video pool also serializes the base `songs` field. Read `items` for video lists and treat a missing field as an empty list. Use each entry's `i` to build playback URLs, since server-assigned IDs can be nonconsecutive.
+:::
 
 ### `GET /s/{n}?world={world ID}`
 
@@ -467,59 +483,6 @@ curl "https://api.kipfel.link/video-info/0?world=demo"
 ::: warning Side Effects
 `/p` replaces the current list for **the same world and pool**. Rooms sharing a world share that list; different worlds and music / video pools are independent. IDs remain reserved during the protection period, but expired records can be recycled when the pool fills. Do not treat a record ID as a permanent song ID.
 :::
-
----
-
-## Parsing Preview Interface
-
-**Interface**: `GET /preview?url={link}&mode=auto`. Individual media returns JSON without UA-based playback redirects; NetEase playlists receive a 302 to `/v4/playlist`. `mode` accepts `auto`, `video` and `music`; other values fall back to `auto`.
-
-**JSON Response Example**:
-
-```json
-{
-  "success": true,
-  "requestId": "req_example",
-  "platform": {
-    "key": "netease",
-    "label": "网易云音乐",
-    "kind": "music",
-    "active": true,
-    "color": "#e60026"
-  },
-  "kind": "music",
-  "mediaUrl": "https://example.com/audio.mp3",
-  "mediaType": "audio",
-  "degraded": false,
-  "meta": {
-    "title": "Song title",
-    "author": "Artist",
-    "durationSeconds": 326,
-    "stats": {
-      "views": 0,
-      "likes": 0,
-      "comments": 0,
-      "shares": 0
-    }
-  },
-  "lyric": {
-    "count": 1,
-    "lines": [
-      {
-        "time": 18.466,
-        "text": "Lyrics"
-      }
-    ]
-  },
-  "timings": {
-    "totalMs": 120,
-    "mediaMs": 100
-  },
-  "cached": false
-}
-```
-
-`requestId` is the request ID; `platform` is a platform info object. `mediaUrl` / `mediaType` describe playable media, and `meta.durationSeconds` is in seconds. `lyric.lines` and optional `lyric.translated` also use seconds. `danmaku.count` / `danmaku.preview` contain the count / preview; use v3 / v4 for full comments. Durations in `timings` are milliseconds; `cached` indicates a cached parsing result. Optional `subtitles` entries use `{ "from": 0, "to": 1.5, "text": "Subtitle" }` (seconds), and optional `collection` contains `title` and `items` (`title` / `url`). Empty optional content may be omitted. On failure, check `success: false` and `error.code` / `error.message`; optional `redirectUrl` is a redirect address. This structure differs from v1 / v3 / v4; do not mix their fields.
 
 ---
 

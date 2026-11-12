@@ -434,13 +434,29 @@ VRChat の Udon は実行時に `VRCUrl` を生成できません。ワールド
 }
 ```
 
+#### 一覧のフィールド
 
-- `mode` は常に `idpool`。`world` はワールド番号、`max` はプール容量。
-- `total` は現在の一覧件数。`updatedAt` は RFC 3339 の文字列で、ミリ秒タイムスタンプではありません。`count` は返しません。
-- 音楽は `songs` を使用します。`i` はサーバーが割り当てた記録番号で、連番とは限りません。一覧順からアドレスを組み立てないでください。
-- ビデオは `items`（空の場合は省略されることがあります）を使用し、`bvid`、`cid`、`page` を含みます。複数パートには `parts` が付き、`playableTotal` は再生可能件数、`collectionId` はコレクション ID（存在する場合）です。基本構造の `songs` も出力されますが、ビデオ一覧は `items` を読み取ってください。
-- 共通項目は `id`、`title`、`artist`、`album`、`duration`、`songUrl`。パートも同じ構造で、長さの単位は秒です。
-- `type` は `music_playlist`、`bilibili_parts`、`bilibili_collection`。`pool` は `music` または `video`。
+| フィールド | 説明 |
+| --- | --- |
+| `world` / `max` | ワールド番号 / プール容量。 |
+| `mode` | `idpool` 固定。 |
+| `pool` | 音楽は `music`、ビデオは `video`。 |
+| `type` | `music_playlist`、`bilibili_parts`、`bilibili_collection` のいずれか。 |
+| `total` | 現在の一覧の件数。`count` は返しません。 |
+| `updatedAt` | RFC 3339 形式の時刻文字列。例は `2026-10-30T08:00:00Z`。 |
+
+#### プール別の一覧
+
+| プール | 一覧フィールド | 項目と追加フィールド |
+| --- | --- | --- |
+| 音楽 | `songs` | `i` はサーバーが割り当てたレコード番号です。 |
+| ビデオ | `items` | 項目には `bvid`、`cid`、`page` があり、複数パートには `parts` が付きます。`playableTotal` は再生可能件数、`collectionId` はコレクションがある場合の ID です。 |
+
+楽曲、ビデオ、パートでは `id`、`title`、`artist`、`album`、`duration`、`songUrl` を共通で使用します。長さの単位は秒です。
+
+::: tip 一覧の読み取りと再生番号
+ビデオプールでも基本構造の `songs` は出力されます。ビデオ一覧は `items` を読み取り、省略されている場合は空の一覧として扱ってください。再生 URL には項目の `i` を使用します。番号は連続しない場合があります。
+:::
 
 ### `GET /s/{n}?world={ワールド番号}`
 
@@ -467,59 +483,6 @@ curl "https://api.kipfel.link/video-info/0?world=demo"
 ::: warning 副作用があります
 `/p` は**同じ world、同じプール**の現在の一覧を置き換えます。同一ワールドの部屋は一覧を共有し、別ワールドと音楽 / ビデオプールは独立しています。番号は保護期間中保持されますが、満杯になると期限切れ記録が再利用されます。記録番号を永久の曲 ID として扱わないでください。
 :::
-
----
-
-## 解析プレビューインターフェース
-
-**インターフェース**：`GET /preview?url={リンク}&mode=auto`。単一メディアは UA による再生リダイレクトをせず JSON を返します。NetEase のプレイリストは `/v4/playlist` へ 302。`mode` は `auto`、`video`、`music`、それ以外は `auto` として処理します。
-
-**JSON 応答例**：
-
-```json
-{
-  "success": true,
-  "requestId": "req_example",
-  "platform": {
-    "key": "netease",
-    "label": "网易云音乐",
-    "kind": "music",
-    "active": true,
-    "color": "#e60026"
-  },
-  "kind": "music",
-  "mediaUrl": "https://example.com/audio.mp3",
-  "mediaType": "audio",
-  "degraded": false,
-  "meta": {
-    "title": "曲名",
-    "author": "歌手名",
-    "durationSeconds": 326,
-    "stats": {
-      "views": 0,
-      "likes": 0,
-      "comments": 0,
-      "shares": 0
-    }
-  },
-  "lyric": {
-    "count": 1,
-    "lines": [
-      {
-        "time": 18.466,
-        "text": "歌詞"
-      }
-    ]
-  },
-  "timings": {
-    "totalMs": 120,
-    "mediaMs": 100
-  },
-  "cached": false
-}
-```
-
-`requestId` はゲートウェイのリクエスト ID、`platform` はプラットフォーム情報オブジェクトです。`mediaUrl` / `mediaType` は再生 URL / 種類、`meta.durationSeconds` は秒です。`lyric.lines` と任意の `lyric.translated` も秒を使用します。`danmaku.count` / `danmaku.preview` は件数 / プレビューで、全弾幕は v3 / v4 を使用してください。`timings` はミリ秒、`cached` は解析キャッシュの利用を示します。任意の `subtitles` は `{ "from": 0, "to": 1.5, "text": "字幕" }`（秒）、任意の `collection` は `title` と `items`（`title` / `url`）を含みます。空の場合は省略されることがあります。失敗時は `success: false` と `error.code` / `error.message` を確認し、任意の `redirectUrl` は運用ルールの転送先です。この構造は v1 / v3 / v4 と異なるため、項目を混用しないでください。
 
 ---
 
